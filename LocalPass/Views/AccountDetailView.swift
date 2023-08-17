@@ -9,9 +9,11 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
-    @EnvironmentObject private var accountViewModel: AccountViewModel
+    @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State var showPassword: Bool = false
-    let account: Account
+    @State var newUrl: String = ""
+    @State var urlField: Bool = false
+    var account: Account
     
     var body: some View {
         ScrollView {
@@ -21,8 +23,13 @@ struct AccountDetailView: View {
                     .fontWeight(.semibold)
                 
                 usernameItem
-                
                 passwordItem
+                
+                if account.url != nil {
+                    urlItem
+                } else {
+                    noUrlItem
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical)
@@ -34,16 +41,16 @@ struct AccountDetailView: View {
 
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var accountViewModel = AccountViewModel()
-        AccountDetailView(account: AccountTestDataService.accounts.first!)
-            .environmentObject(accountViewModel)
+        @StateObject var accountsViewModel = AccountsViewModel()
+        AccountDetailView(account: AccountTestDataService.accounts.last!)
+            .environmentObject(accountsViewModel)
     }
 }
 
 extension AccountDetailView {
     private var closeButton: some View {
         Button {
-           accountViewModel.selectedAccount = nil
+           accountsViewModel.selectedAccount = nil
        } label: {
            Image(systemName: "xmark")
                .font(.headline)
@@ -58,7 +65,7 @@ extension AccountDetailView {
     
     private var usernameItem: some View {
         Button {
-            
+            accountsViewModel.copyToClipboard(text: account.username)
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
@@ -69,14 +76,6 @@ extension AccountDetailView {
                     .fontWeight(.semibold)
                 
                 Spacer()
-                
-                Button {
-                    accountViewModel.copyToClipboard(text: account.username)
-                } label: {
-                    Image(systemName: "clipboard.fill")
-                        .resizable()
-                        .scaledToFit()
-                }
             }
             .foregroundColor(.primary)
             .padding()
@@ -90,7 +89,7 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            
+            accountsViewModel.copyToClipboard(text: account.password)
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
@@ -109,14 +108,6 @@ extension AccountDetailView {
                         .resizable()
                         .scaledToFit()
                 }
-                
-                Button {
-                    accountViewModel.copyToClipboard(text: account.password)
-                } label: {
-                    Image(systemName: "clipboard.fill")
-                        .resizable()
-                        .scaledToFit()
-                }
             }
             .foregroundColor(.primary)
             .padding()
@@ -128,7 +119,48 @@ extension AccountDetailView {
         .padding(.horizontal)
     }
     
-    private var urls: some View {
-        Text("urls")
+    private var urlItem: some View {
+        Button {
+            accountsViewModel.copyToClipboard(text: account.url ?? "")
+        } label: {
+            HStack {
+                Image(systemName: "link.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                
+                Text(account.url ?? "")
+                    .fontWeight(.semibold)
+                
+                Spacer()
+            }
+            .foregroundColor(.primary)
+            .padding()
+        }
+        .frame(height: 55)
+        .frame(maxWidth: .infinity)
+        .background(Color("AccentColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
+    private var noUrlItem: some View {
+        Button {
+            withAnimation(.spring()) {
+                urlField = true
+            }
+        } label: {
+            if urlField {
+                TextField("Enter url...", text: $newUrl)
+            } else {
+                Text("Add URL")
+            }
+        }
+        .foregroundColor(.primary)
+        .padding()
+        .frame(height: 55)
+        .frame(maxWidth: urlField ? .infinity : nil)
+        .background(Color("AccentColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
     }
 }

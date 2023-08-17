@@ -1,5 +1,5 @@
 //
-//  AccountViewModel.swift
+//  AccountsViewModel.swift
 //  LocalPass
 //
 //  Created by Reuben on 17/08/2023.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class AccountViewModel: ObservableObject {
+class AccountsViewModel: ObservableObject {
     // Test data
     @Published var testAccounts: [Account]
     

@@ -11,7 +11,7 @@ struct Account: Identifiable, Equatable {
     let name: String
     let username: String // Change!
     let password: String // Change!
-    let urls: [String]?
+    var url: String?
     let creationDateTime: Date = Date()
     let updatedDateTime: Date = Date()
     
@@ -25,10 +25,10 @@ struct Account: Identifiable, Equatable {
         lhs.id == rhs.id
     }
     
-    init(name: String, username: String, password: String, urls: [String]? = nil) {
+    init(name: String, username: String, password: String, url: String? = nil) {
         self.name = name
         self.username = username
         self.password = password
-        self.urls = urls
+        self.url = url
     }
 }

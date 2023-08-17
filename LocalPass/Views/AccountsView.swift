@@ -9,14 +9,14 @@ import SwiftUI
 
 struct AccountsView: View {
     
-    @EnvironmentObject private var accountViewModel: AccountViewModel
+    @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State var showAccountDetailView: Bool = false
     
     var body: some View {
         ZStack {
             accountList
         }
-        .sheet(item: $accountViewModel.selectedAccount, onDismiss: nil) { account in
+        .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { account in
             AccountDetailView(account: account)
         }
     }
@@ -24,9 +24,9 @@ struct AccountsView: View {
 
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var accountViewModel = AccountViewModel()
+        @StateObject var accountsViewModel = AccountsViewModel()
         AccountsView()
-            .environmentObject(accountViewModel)
+            .environmentObject(accountsViewModel)
     }
 }
 
@@ -34,7 +34,7 @@ extension AccountsView {
     private var accountList: some View {
         NavigationStack {
             ScrollView {
-                ForEach($accountViewModel.testAccounts) { $account in
+                ForEach($accountsViewModel.testAccounts) { $account in
                     AccountListItemView(account: $account)
                         .padding(.vertical, 4)
                 }

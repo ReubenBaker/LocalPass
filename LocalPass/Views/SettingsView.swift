@@ -16,6 +16,9 @@ struct SettingsView: View {
             Text("Settings View")
             TextField("Test", text: $testText)
                 .padding()
+            NavigationStack {
+                
+            }
         }
     }
 }

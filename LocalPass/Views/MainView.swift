@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject private var accountViewModel = AccountViewModel()
+    @StateObject private var accountsViewModel = AccountsViewModel()
     @State var selectedTab: Int = 0
     
     var body: some View {
@@ -20,7 +20,7 @@ struct MainView: View {
                         Label("Accounts", systemImage: "lock.rectangle.stack.fill")
                     }
                     .tag(0)
-                    .environmentObject(accountViewModel)
+                    .environmentObject(accountsViewModel)
                 
                 SettingsView()
                     .tabItem {

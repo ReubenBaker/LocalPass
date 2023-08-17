@@ -9,13 +9,12 @@ import SwiftUI
 
 struct AccountListItemView: View {
     
-    @EnvironmentObject private var accountViewModel: AccountViewModel
+    @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @Binding var account: Account
-    @State var showAccountDetailView: Bool = false
     
     var body: some View {
         Button {
-            accountViewModel.selectedAccount = account
+            accountsViewModel.selectedAccount = account
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
@@ -28,7 +27,7 @@ struct AccountListItemView: View {
                 Spacer()
                 
                 Button {
-                    accountViewModel.copyToClipboard(text: account.password)
+                    accountsViewModel.copyToClipboard(text: account.password)
                 } label: {
                     Image(systemName: "lock.circle.fill")
                         .resizable()
@@ -48,8 +47,8 @@ struct AccountListItemView: View {
 
 struct AccountListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var accountViewModel = AccountViewModel()
-        AccountListItemView(account: $accountViewModel.testAccounts.first!)
-            .environmentObject(accountViewModel)
+        @StateObject var accountsViewModel = AccountsViewModel()
+        AccountListItemView(account: $accountsViewModel.testAccounts.first!)
+            .environmentObject(accountsViewModel)
     }
 }
