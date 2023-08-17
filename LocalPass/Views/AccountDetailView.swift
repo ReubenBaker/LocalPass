@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct AccountDetailView: View {
+    
+    let account: Account
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            Text(account.name)
+            Text(account.username)
+        }
     }
 }
 
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountDetailView()
+        AccountDetailView(account: AccountTestDataService.accounts.first!)
     }
 }

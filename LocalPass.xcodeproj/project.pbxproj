@@ -13,11 +13,12 @@
 		1BF1A7DD2A8E4F7D00663733 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BF1A7DC2A8E4F7D00663733 /* Preview Assets.xcassets */; };
 		1BF1A7E82A8E504000663733 /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7E72A8E504000663733 /* AccountsView.swift */; };
 		1BF1A7EA2A8E505300663733 /* AccountListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7E92A8E505300663733 /* AccountListItemView.swift */; };
-		1BF1A7EC2A8E508800663733 /* PageNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7EB2A8E508800663733 /* PageNavigationView.swift */; };
+		1BF1A7EC2A8E508800663733 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7EB2A8E508800663733 /* MainView.swift */; };
 		1BF1A7EE2A8E509300663733 /* AccountDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7ED2A8E509300663733 /* AccountDetailView.swift */; };
 		1BF1A7F22A8E510200663733 /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7F12A8E510200663733 /* AccountModel.swift */; };
 		1BF1A7F42A8E511600663733 /* AccountTestDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7F32A8E511600663733 /* AccountTestDataService.swift */; };
 		1BF1A7F62A8E514700663733 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7F52A8E514700663733 /* AccountViewModel.swift */; };
+		1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7F72A8E557800663733 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,11 +29,12 @@
 		1BF1A7DC2A8E4F7D00663733 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1BF1A7E72A8E504000663733 /* AccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsView.swift; sourceTree = "<group>"; };
 		1BF1A7E92A8E505300663733 /* AccountListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountListItemView.swift; sourceTree = "<group>"; };
-		1BF1A7EB2A8E508800663733 /* PageNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageNavigationView.swift; sourceTree = "<group>"; };
+		1BF1A7EB2A8E508800663733 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		1BF1A7ED2A8E509300663733 /* AccountDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailView.swift; sourceTree = "<group>"; };
 		1BF1A7F12A8E510200663733 /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
 		1BF1A7F32A8E511600663733 /* AccountTestDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTestDataService.swift; sourceTree = "<group>"; };
 		1BF1A7F52A8E514700663733 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
+		1BF1A7F72A8E557800663733 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +99,9 @@
 			isa = PBXGroup;
 			children = (
 				1BF1A7E72A8E504000663733 /* AccountsView.swift */,
+				1BF1A7F72A8E557800663733 /* SettingsView.swift */,
 				1BF1A7E92A8E505300663733 /* AccountListItemView.swift */,
-				1BF1A7EB2A8E508800663733 /* PageNavigationView.swift */,
+				1BF1A7EB2A8E508800663733 /* MainView.swift */,
 				1BF1A7ED2A8E509300663733 /* AccountDetailView.swift */,
 			);
 			path = Views;
@@ -190,11 +193,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BF1A7EC2A8E508800663733 /* PageNavigationView.swift in Sources */,
+				1BF1A7EC2A8E508800663733 /* MainView.swift in Sources */,
 				1BF1A7D82A8E4F7C00663733 /* ContentView.swift in Sources */,
 				1BF1A7F22A8E510200663733 /* AccountModel.swift in Sources */,
 				1BF1A7D62A8E4F7C00663733 /* LocalPassApp.swift in Sources */,
 				1BF1A7F62A8E514700663733 /* AccountViewModel.swift in Sources */,
+				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,
 				1BF1A7EE2A8E509300663733 /* AccountDetailView.swift in Sources */,
 				1BF1A7E82A8E504000663733 /* AccountsView.swift in Sources */,
 				1BF1A7EA2A8E505300663733 /* AccountListItemView.swift in Sources */,
