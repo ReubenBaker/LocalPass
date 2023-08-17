@@ -145,12 +145,23 @@ extension AccountDetailView {
     
     private var noUrlItem: some View {
         Button {
-            withAnimation(.spring()) {
+            withAnimation() {
                 urlField = true
             }
         } label: {
             if urlField {
-                TextField("Enter url...", text: $newUrl)
+                HStack() {
+                    TextField("Enter url...", text: $newUrl)
+                    
+                    Button {
+                        withAnimation() {
+                            urlField = false
+                        }
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+
+                }
             } else {
                 Text("Add URL")
             }
