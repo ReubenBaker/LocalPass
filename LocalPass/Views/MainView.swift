@@ -29,9 +29,6 @@ struct MainView: View {
                     .tag(1)
             }
         }
-        .sheet(item: $accountViewModel.selectedAccount, onDismiss: nil) { account in
-            AccountDetailView(account: account)
-        }
     }
 }
 

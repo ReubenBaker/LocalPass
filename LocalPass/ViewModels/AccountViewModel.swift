@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class AccountViewModel: ObservableObject {
     // Test data
@@ -17,5 +18,9 @@ class AccountViewModel: ObservableObject {
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts
+    }
+    
+    func copyToClipboard(text: String) {
+        UIPasteboard.general.string = text
     }
 }

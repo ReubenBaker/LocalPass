@@ -23,11 +23,12 @@ struct AccountListItemView: View {
                     .scaledToFit()
                 
                 Text(account.name)
+                    .fontWeight(.semibold)
                 
                 Spacer()
                 
                 Button {
-                    
+                    accountViewModel.copyToClipboard(text: account.password)
                 } label: {
                     Image(systemName: "lock.circle.fill")
                         .resizable()

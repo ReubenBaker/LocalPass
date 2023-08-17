@@ -14,13 +14,10 @@ struct AccountsView: View {
     
     var body: some View {
         ZStack {
-            ScrollView {
-                ForEach($accountViewModel.testAccounts) { $account in
-                    AccountListItemView(account: $account)
-                        .padding(.vertical, 4)
-                }
-            }
-            .listStyle(PlainListStyle())
+            accountList
+        }
+        .sheet(item: $accountViewModel.selectedAccount, onDismiss: nil) { account in
+            AccountDetailView(account: account)
         }
     }
 }
@@ -34,9 +31,15 @@ struct AccountsView_Previews: PreviewProvider {
 }
 
 extension AccountsView {
-    var accountList: some View {
-        ScrollView {
-//            ForEach(
+    private var accountList: some View {
+        NavigationStack {
+            ScrollView {
+                ForEach($accountViewModel.testAccounts) { $account in
+                    AccountListItemView(account: $account)
+                        .padding(.vertical, 4)
+                }
+            }
+            .navigationTitle("Accounts")
         }
     }
 }

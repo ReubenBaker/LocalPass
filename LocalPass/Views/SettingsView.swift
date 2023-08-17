@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
+    @State var testText: String = ""
+    
     var body: some View {
-        Text("Settings View")
+        VStack {
+            Text("Settings View")
+            TextField("Test", text: $testText)
+                .padding()
+        }
     }
 }
 
