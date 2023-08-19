@@ -10,7 +10,6 @@ import SwiftUI
 struct AccountsView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
-    @State var showAccountDetailView: Bool = false
     
     var body: some View {
         ZStack {

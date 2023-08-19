@@ -11,9 +11,15 @@ struct AccountDetailView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State var showPassword: Bool = false
-    @State var newUrl: String = ""
+    @State var account: Account
     @State var urlField: Bool = false
-    var account: Account
+    @State var newUrl: String = "" {
+        didSet {
+            account = Account(name: account.name, username: account.username, password: account.password, url: newUrl)
+            print("account url: \(account.url ?? "nil")")
+            print("newUrl: \(newUrl)")
+        }
+    }
     
     var body: some View {
         ScrollView {
@@ -25,10 +31,12 @@ struct AccountDetailView: View {
                 usernameItem
                 passwordItem
                 
-                if account.url != nil {
-                    urlItem
-                } else {
-                    noUrlItem
+                if let account = accountsViewModel.selectedAccount {
+                    if account.url != nil {
+                        urlItem
+                    } else {
+                        noUrlItem
+                    }
                 }
             }
             .frame(maxWidth: .infinity)
@@ -42,6 +50,7 @@ struct AccountDetailView: View {
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        
         AccountDetailView(account: AccountTestDataService.accounts.last!)
             .environmentObject(accountsViewModel)
     }
@@ -65,7 +74,7 @@ extension AccountDetailView {
     
     private var usernameItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: account.username)
+            print(accountsViewModel.selectedAccount ?? "nil")
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
@@ -106,7 +115,7 @@ extension AccountDetailView {
                 } label: {
                     Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                         .resizable()
-                        .scaledToFit()
+                    .scaledToFit()
                 }
             }
             .foregroundColor(.primary)
@@ -128,7 +137,7 @@ extension AccountDetailView {
                     .resizable()
                     .scaledToFit()
                 
-                Text(account.url ?? "")
+                Text(accountsViewModel.selectedAccount?.url ?? "")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -152,6 +161,14 @@ extension AccountDetailView {
             if urlField {
                 HStack() {
                     TextField("Enter url...", text: $newUrl)
+                        .multilineTextAlignment(.leading)
+                        .onSubmit {
+                            accountsViewModel.selectedAccount?.url = newUrl
+                            
+                            if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == accountsViewModel.selectedAccount?.id }) {
+                                accountsViewModel.testAccounts[index] = accountsViewModel.selectedAccount!
+                            }
+                        }
                     
                     Button {
                         withAnimation() {
@@ -160,7 +177,6 @@ extension AccountDetailView {
                     } label: {
                         Image(systemName: "xmark")
                     }
-
                 }
             } else {
                 Text("Add URL")

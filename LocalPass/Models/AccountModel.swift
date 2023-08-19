@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Account: Identifiable, Equatable {
     let name: String
@@ -13,7 +14,7 @@ struct Account: Identifiable, Equatable {
     let password: String // Change!
     var url: String?
     let creationDateTime: Date = Date()
-    let updatedDateTime: Date = Date()
+    var updatedDateTime: Date = Date()
     
     // Identifiable
     var id: String {
