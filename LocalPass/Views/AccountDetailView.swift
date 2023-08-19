@@ -11,33 +11,33 @@ struct AccountDetailView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State var showPassword: Bool = false
-    @State var account: Account
     @State var urlField: Bool = false
-    @State var newUrl: String = "" {
-        didSet {
-            account = Account(name: account.name, username: account.username, password: account.password, url: newUrl)
-            print("account url: \(account.url ?? "nil")")
-            print("newUrl: \(newUrl)")
-        }
+    @State var newUrl: String = ""
+    var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter
     }
     
     var body: some View {
         ScrollView {
             VStack {
-                Text(account.name)
+                Text(accountsViewModel.selectedAccount?.name ?? "default")
                     .font(.title)
                     .fontWeight(.semibold)
                 
                 usernameItem
                 passwordItem
                 
-                if let account = accountsViewModel.selectedAccount {
-                    if account.url != nil {
-                        urlItem
-                    } else {
-                        noUrlItem
-                    }
+                if accountsViewModel.selectedAccount?.url != nil {
+                    urlItem
+                } else {
+                    noUrlItem
                 }
+                
+                creationDateTimeItem
+                UpdatedDateTimeItem
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical)
@@ -51,7 +51,7 @@ struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
         
-        AccountDetailView(account: AccountTestDataService.accounts.last!)
+        AccountDetailView()
             .environmentObject(accountsViewModel)
     }
 }
@@ -74,14 +74,14 @@ extension AccountDetailView {
     
     private var usernameItem: some View {
         Button {
-            print(accountsViewModel.selectedAccount ?? "nil")
+            
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
                     .resizable()
                     .scaledToFit()
                 
-                Text(account.username)
+                Text(accountsViewModel.selectedAccount?.username ?? "default")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -98,14 +98,14 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: account.password)
+            accountsViewModel.copyToClipboard(text: accountsViewModel.selectedAccount?.password ?? "default")
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
                     .resizable()
                     .scaledToFit()
                 
-                Text(showPassword ? account.password : "************")
+                Text(showPassword ? accountsViewModel.selectedAccount?.password ?? "default" : "************")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -115,7 +115,7 @@ extension AccountDetailView {
                 } label: {
                     Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                         .resizable()
-                    .scaledToFit()
+                        .scaledToFit()
                 }
             }
             .foregroundColor(.primary)
@@ -130,7 +130,7 @@ extension AccountDetailView {
     
     private var urlItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: account.url ?? "")
+            accountsViewModel.copyToClipboard(text: accountsViewModel.selectedAccount?.url ?? "")
         } label: {
             HStack {
                 Image(systemName: "link.circle.fill")
@@ -163,10 +163,12 @@ extension AccountDetailView {
                     TextField("Enter url...", text: $newUrl)
                         .multilineTextAlignment(.leading)
                         .onSubmit {
-                            accountsViewModel.selectedAccount?.url = newUrl
+                            withAnimation() {
+                                accountsViewModel.selectedAccount?.url = newUrl
+                            }
                             
                             if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == accountsViewModel.selectedAccount?.id }) {
-                                accountsViewModel.testAccounts[index] = accountsViewModel.selectedAccount!
+                                accountsViewModel.updateAccount(index: index)
                             }
                         }
                     
@@ -189,5 +191,13 @@ extension AccountDetailView {
         .background(Color("AccentColor"))
         .cornerRadius(10)
         .padding(.horizontal)
+    }
+    
+    private var creationDateTimeItem: some View {
+        Text("Time Created: \(dateFormatter.string(from: accountsViewModel.selectedAccount?.creationDateTime ?? .now))")
+    }
+    
+    private var UpdatedDateTimeItem: some View {
+        Text("Last Updated: \(dateFormatter.string(from: accountsViewModel.selectedAccount?.updatedDateTime ?? .now))")
     }
 }

@@ -15,8 +15,8 @@ struct AccountsView: View {
         ZStack {
             accountList
         }
-        .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { account in
-            AccountDetailView(account: account)
+        .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { _ in 
+            AccountDetailView()
         }
     }
 }
@@ -39,6 +39,29 @@ extension AccountsView {
                 }
             }
             .navigationTitle("Accounts")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Edit")
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Text("+")
+                }
+            }
         }
     }
+    
+//    private var createAccount: some View {
+//        Button {
+//
+//        } label: {
+//            Image(systemName: "plus")
+//                .font(.headline)
+//                .padding()
+//                .foregroundColor(.primary)
+//                .background(.thickMaterial)
+//                .cornerRadius(10)
+//                .shadow(radius: 4)
+//        }
+//    }
 }
