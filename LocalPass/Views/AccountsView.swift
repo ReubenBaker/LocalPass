@@ -31,17 +31,19 @@ struct AccountsView_Previews: PreviewProvider {
 
 extension AccountsView {
     private var accountList: some View {
-        NavigationStack {
-            ScrollView {
+         NavigationStack {
+            List() {
                 ForEach($accountsViewModel.testAccounts) { $account in
                     AccountListItemView(account: $account)
-                        .padding(.vertical, 4)
+                        .listRowSeparator(.hidden)
                 }
+                .onDelete{ accountsViewModel.testAccounts.remove(atOffsets: $0) }
             }
+            .listStyle(PlainListStyle())
             .navigationTitle("Accounts")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Edit")
+                    EditButton()
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {

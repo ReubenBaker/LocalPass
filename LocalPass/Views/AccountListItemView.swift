@@ -22,6 +22,7 @@ struct AccountListItemView: View {
                     .scaledToFit()
                 
                 Text(account.name)
+                    .font(.title3)
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -35,13 +36,13 @@ struct AccountListItemView: View {
                 }
             }
             .foregroundColor(.primary)
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 10)
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
         .background(Color("AccentColor"))
         .cornerRadius(10)
-        .padding(.horizontal)
     }
 }
 
