@@ -10,6 +10,8 @@ import SwiftUI
 struct AccountsView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
+    @State private var showDeleteAlert: Bool = false
+    @State private var accountToDelete: Account?
     
     var body: some View {
         ZStack {
@@ -17,6 +19,9 @@ struct AccountsView: View {
         }
         .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { _ in 
             AccountDetailView()
+        }
+        .alert(isPresented: $showDeleteAlert) {
+            getDeleteAlert()
         }
     }
 }
@@ -29,16 +34,56 @@ struct AccountsView_Previews: PreviewProvider {
     }
 }
 
+// Functions
+extension AccountsView {
+    private func getDeleteAlert() -> Alert {
+        let title: Text = Text("Are you sure you want to delete this account?")
+        let message: Text = Text("This action cannot be undone!")
+        let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
+            if accountToDelete != nil {
+                deleteItem(account: accountToDelete!)
+                accountToDelete = nil
+            }
+        })
+        let cancelButton: Alert.Button = .cancel()
+        
+        return Alert(
+            title: title,
+            message: message,
+            primaryButton: deleteButton,
+            secondaryButton: cancelButton
+        )
+    }
+    
+    private func deleteItem(account: Account) {
+        accountsViewModel.testAccounts.removeAll(where: { $0.id == account.id })
+    }
+}
+
+// Views
 extension AccountsView {
     private var accountList: some View {
          NavigationStack {
-            List() {
+             List {
                 ForEach($accountsViewModel.testAccounts) { $account in
                     AccountListItemView(account: $account)
                         .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                        .padding(.horizontal)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button {
+                                accountToDelete = account
+                                showDeleteAlert.toggle()
+                            } label: {
+                                Image(systemName: "trash.fill")
+                            }
+                            .tint(.red)
+                        }
+                        
+                   Spacer()
                 }
-                .onDelete{ accountsViewModel.testAccounts.remove(atOffsets: $0) }
             }
+            .environment(\.defaultMinListRowHeight, 0)
             .listStyle(PlainListStyle())
             .navigationTitle("Accounts")
             .toolbar {
@@ -52,18 +97,4 @@ extension AccountsView {
             }
         }
     }
-    
-//    private var createAccount: some View {
-//        Button {
-//
-//        } label: {
-//            Image(systemName: "plus")
-//                .font(.headline)
-//                .padding()
-//                .foregroundColor(.primary)
-//                .background(.thickMaterial)
-//                .cornerRadius(10)
-//                .shadow(radius: 4)
-//        }
-//    }
 }
