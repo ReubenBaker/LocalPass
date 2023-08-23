@@ -11,17 +11,20 @@ struct AccountsView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var showDeleteAlert: Bool = false
-    @State private var accountToDelete: Account?
+    @State private var showAddAccountSheet: Bool = false
     
     var body: some View {
         ZStack {
             accountList
         }
-        .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { _ in 
+        .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { _ in
             AccountDetailView()
         }
+        .sheet(isPresented: $showAddAccountSheet, content: {
+            AddAccountView()
+        })
         .alert(isPresented: $showDeleteAlert) {
-            getDeleteAlert()
+            accountsViewModel.getDeleteAlert()
         }
     }
 }
@@ -36,28 +39,7 @@ struct AccountsView_Previews: PreviewProvider {
 
 // Functions
 extension AccountsView {
-    private func getDeleteAlert() -> Alert {
-        let title: Text = Text("Are you sure you want to delete this account?")
-        let message: Text = Text("This action cannot be undone!")
-        let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
-            if accountToDelete != nil {
-                deleteItem(account: accountToDelete!)
-                accountToDelete = nil
-            }
-        })
-        let cancelButton: Alert.Button = .cancel()
-        
-        return Alert(
-            title: title,
-            message: message,
-            primaryButton: deleteButton,
-            secondaryButton: cancelButton
-        )
-    }
-    
-    private func deleteItem(account: Account) {
-        accountsViewModel.testAccounts.removeAll(where: { $0.id == account.id })
-    }
+
 }
 
 // Views
@@ -72,7 +54,7 @@ extension AccountsView {
                         .padding(.horizontal)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                accountToDelete = account
+                                accountsViewModel.accountToDelete = account
                                 showDeleteAlert.toggle()
                             } label: {
                                 Image(systemName: "trash.fill")
@@ -81,6 +63,7 @@ extension AccountsView {
                         }
                         
                    Spacer()
+                        .listRowSeparator(.hidden)
                 }
             }
             .environment(\.defaultMinListRowHeight, 0)
@@ -92,7 +75,12 @@ extension AccountsView {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Text("+")
+                    Button {
+                        showAddAccountSheet.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+
                 }
             }
         }
