@@ -41,7 +41,7 @@ struct AccountListItemView: View {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
     }
 }

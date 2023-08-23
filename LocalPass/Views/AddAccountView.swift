@@ -96,7 +96,7 @@ extension AddAccountView {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
@@ -121,7 +121,7 @@ extension AddAccountView {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
@@ -164,7 +164,7 @@ extension AddAccountView {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
@@ -204,7 +204,7 @@ extension AddAccountView {
         .padding(.horizontal)
         .frame(height: 55)
         .frame(maxWidth: urlField ? .infinity : nil)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }

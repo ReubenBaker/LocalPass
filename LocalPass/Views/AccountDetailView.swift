@@ -81,7 +81,7 @@ extension AccountDetailView {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
@@ -113,7 +113,7 @@ extension AccountDetailView {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
@@ -137,7 +137,7 @@ extension AccountDetailView {
         }
         .frame(height: 55)
         .frame(maxWidth: .infinity)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
@@ -186,7 +186,7 @@ extension AccountDetailView {
         .padding(.horizontal)
         .frame(height: 55)
         .frame(maxWidth: urlField ? .infinity : nil)
-        .background(Color("AccentColor"))
+        .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
     }
