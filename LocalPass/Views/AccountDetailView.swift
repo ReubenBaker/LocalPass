@@ -163,6 +163,7 @@ extension AccountDetailView {
                         .frame(maxHeight: .infinity)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
+                        .tint(.primary)
                         .focused($textFieldFocused)
                         .onAppear {
                             DispatchQueue.main.async {
