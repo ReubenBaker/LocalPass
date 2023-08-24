@@ -11,6 +11,8 @@ struct MainView: View {
     
     @StateObject private var accountsViewModel = AccountsViewModel()
     @State var selectedTab: Int = 0
+    @State var privacyOverlaySize: CGFloat = 0
+    @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
         ZStack {
@@ -27,6 +29,27 @@ struct MainView: View {
                         Label("Settings", systemImage: "gear")
                     }
                     .tag(1)
+            }
+        }
+        .overlay {
+            VStack {
+                Spacer()
+                    .frame(width: .infinity, height: UIScreen.main.bounds.height - privacyOverlaySize)
+                
+                RoundedRectangle(cornerRadius: 20)
+                    .frame(width: .infinity, height: privacyOverlaySize)
+                    .background(.ultraThinMaterial).ignoresSafeArea()
+            }
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .inactive || newPhase == .background {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    privacyOverlaySize = .infinity
+                }
+            } else {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    privacyOverlaySize = 0
+                }
             }
         }
     }
