@@ -11,6 +11,7 @@ struct AccountDetailView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @Environment(\.dismiss) private var dismiss
+    @Binding var account: Account
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
@@ -26,14 +27,14 @@ struct AccountDetailView: View {
     var body: some View {
         ScrollView {
             VStack {
-                Text(accountsViewModel.selectedAccount?.name ?? "deleted")
+                Text(account.name)
                     .font(.title)
                     .fontWeight(.semibold)
                 
                 usernameItem
                 passwordItem
                 
-                if accountsViewModel.selectedAccount?.url != nil {
+                if account.url != nil {
                     urlItem
                 } else {
                     noUrlItem
@@ -57,8 +58,9 @@ struct AccountDetailView: View {
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        @State var account = Account(name: "default", username: "default", password: "default")
         
-        AccountDetailView()
+        AccountDetailView(account: $account)
             .environmentObject(accountsViewModel)
     }
 }
@@ -66,14 +68,14 @@ struct AccountDetailView_Previews: PreviewProvider {
 extension AccountDetailView {
     private var usernameItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: accountsViewModel.selectedAccount?.username ?? "")
+            accountsViewModel.copyToClipboard(text: account.username)
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
                     .resizable()
                     .scaledToFit()
                 
-                Text(accountsViewModel.selectedAccount?.username ?? "deleted")
+                Text(account.username)
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -91,14 +93,14 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: accountsViewModel.selectedAccount?.password ?? "")
+            accountsViewModel.copyToClipboard(text: account.password)
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
                     .resizable()
                     .scaledToFit()
                 
-                Text(showPassword ? accountsViewModel.selectedAccount?.password ?? "" : "************")
+                Text(showPassword ? account.password : "************")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -124,14 +126,14 @@ extension AccountDetailView {
     
     private var urlItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: accountsViewModel.selectedAccount?.url ?? "")
+            accountsViewModel.copyToClipboard(text: account.url ?? "")
         } label: {
             HStack {
                 Image(systemName: "link.circle.fill")
                     .resizable()
                     .scaledToFit()
                 
-                Text(accountsViewModel.selectedAccount?.url ?? "default")
+                Text(account.url ?? "")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -173,12 +175,11 @@ extension AccountDetailView {
                         }
                         .onSubmit {
                             withAnimation() {
-                                accountsViewModel.selectedAccount?.url = newUrl
+                                account.url = newUrl
                             }
                             
-                            if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == accountsViewModel.selectedAccount?.id }) {
-                                accountsViewModel.updateAccount(index: index)
-                            }
+                            account.updatedDateTime = Date()
+                            accountsViewModel.updateAccount(account: account)
                         }
                     
                     Button {
@@ -204,11 +205,7 @@ extension AccountDetailView {
     }
     
     private func creationDateTimeItem() -> some View {
-        var createdText = Text("Never")
-        
-        if let created = accountsViewModel.selectedAccount?.creationDateTime {
-            createdText = Text("\(dateFormatter.string(from: created))")
-        }
+        let createdText = Text("\(dateFormatter.string(from: account.creationDateTime))")
         
         return Text("Time Created: \(createdText)")
     }
@@ -216,7 +213,7 @@ extension AccountDetailView {
     private func updatedDateTimeItem() -> some View {
         var lastUpdatedText = Text("Never")
 
-        if let lastUpdated = accountsViewModel.selectedAccount?.updatedDateTime {
+        if let lastUpdated = account.updatedDateTime {
             lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
         }
         
@@ -225,7 +222,7 @@ extension AccountDetailView {
     
     private var deleteItem: some View {
         Button {
-            accountsViewModel.accountToDelete = accountsViewModel.selectedAccount
+            accountsViewModel.accountToDelete = account
             showDeleteAlert.toggle()
        } label: {
            Text("Delete")

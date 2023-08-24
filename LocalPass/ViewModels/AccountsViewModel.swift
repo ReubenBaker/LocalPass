@@ -12,8 +12,7 @@ class AccountsViewModel: ObservableObject {
     // Test data
     @Published var testAccounts: [Account]
     
-    // Selected account
-    @Published var selectedAccount: Account? = nil
+    @Published var defaultAccount = Account(name: "", username: "", password: "", url: "")
     
     @Published var accountToDelete: Account? = nil
     
@@ -47,10 +46,9 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func updateAccount(index: Int) {
-        if selectedAccount != nil {
-            selectedAccount!.updatedDateTime = Date()
-            testAccounts[index] = selectedAccount!
+    func updateAccount(account: Account) {
+        if let index = testAccounts.firstIndex(where: { $0.id == account.id }) {
+            testAccounts[index] = account
         }
     }
     
@@ -65,7 +63,6 @@ class AccountsViewModel: ObservableObject {
             if self.accountToDelete != nil {
                 self.deleteItem(account: self.accountToDelete!)
                 self.accountToDelete = nil
-                self.selectedAccount = nil
             }
         })
         let cancelButton: Alert.Button = .cancel()

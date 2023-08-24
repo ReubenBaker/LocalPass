@@ -11,14 +11,12 @@ struct AccountsView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var showDeleteAlert: Bool = false
+    @State private var showAccountDetailSheet: Bool = false
     @State private var showAddAccountSheet: Bool = false
     
     var body: some View {
         ZStack {
             accountList
-        }
-        .sheet(item: $accountsViewModel.selectedAccount) { _ in
-            AccountDetailView()
         }
         .sheet(isPresented: $showAddAccountSheet, content: {
             AddAccountView()

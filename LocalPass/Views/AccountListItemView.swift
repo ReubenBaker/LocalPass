@@ -11,10 +11,11 @@ struct AccountListItemView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @Binding var account: Account
+    @State var showAccountDetailViewSheet: Bool = false
     
     var body: some View {
         Button {
-            accountsViewModel.selectedAccount = account
+            showAccountDetailViewSheet.toggle()
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
@@ -38,6 +39,9 @@ struct AccountListItemView: View {
             .foregroundColor(.primary)
             .padding(.horizontal)
             .padding(.vertical, 10)
+            .sheet(isPresented: $showAccountDetailViewSheet) {
+                AccountDetailView(account: $account)
+            }
         }
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
