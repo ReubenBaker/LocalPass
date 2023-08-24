@@ -82,7 +82,7 @@ extension AddAccountView {
             Image(systemName: "tag.circle.fill")
                 .resizable()
                 .scaledToFit()
-                .padding(.vertical)
+                .padding(.vertical, 10)
             
             TextField("Enter account name...", text: $newName)
                 .frame(maxHeight: .infinity)
@@ -104,7 +104,7 @@ extension AddAccountView {
             Image(systemName: "person.circle.fill")
                 .resizable()
                 .scaledToFit()
-                .padding(.vertical)
+                .padding(.vertical, 10)
             
             TextField("Enter username...", text: $newUsername)
                 .frame(maxHeight: .infinity)
@@ -126,7 +126,7 @@ extension AddAccountView {
             Image(systemName: "lock.circle.fill")
                 .resizable()
                 .scaledToFit()
-                .padding(.vertical)
+                .padding(.vertical, 10)
             
             if showPassword {
                 TextField("Enter password...", text: $newPassword)
@@ -150,7 +150,7 @@ extension AddAccountView {
                 Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                     .resizable()
                     .scaledToFit()
-                    .padding(.vertical)
+                    .padding(.vertical, 10)
             }
         }
         .foregroundColor(.primary)
@@ -173,7 +173,7 @@ extension AddAccountView {
                     Image(systemName: "link.circle.fill")
                         .resizable()
                         .scaledToFit()
-                        .padding(.vertical)
+                        .padding(.vertical, 10)
                     
                     TextField("Enter url...", text: $newUrl)
                         .frame(maxHeight: .infinity)

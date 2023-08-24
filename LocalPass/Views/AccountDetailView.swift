@@ -14,6 +14,7 @@ struct AccountDetailView: View {
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
     @State private var newUrl: String = ""
+    @FocusState private var textFieldFocused: Bool
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -77,7 +78,8 @@ extension AccountDetailView {
                 Spacer()
             }
             .foregroundColor(.primary)
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 10)
         }
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
@@ -109,7 +111,8 @@ extension AccountDetailView {
                 }
             }
             .foregroundColor(.primary)
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 10)
         }
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
@@ -153,12 +156,18 @@ extension AccountDetailView {
                     Image(systemName: "link.circle.fill")
                         .resizable()
                         .scaledToFit()
-                        .padding(.vertical)
+                        .padding(.vertical, 10)
                     
                     TextField("Enter url...", text: $newUrl)
                         .frame(maxHeight: .infinity)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
+                        .focused($textFieldFocused)
+                        .onAppear {
+                            DispatchQueue.main.async {
+                                textFieldFocused = true
+                            }
+                        }
                         .onSubmit {
                             withAnimation() {
                                 accountsViewModel.selectedAccount?.url = newUrl
