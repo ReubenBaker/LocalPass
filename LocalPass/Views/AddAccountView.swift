@@ -19,6 +19,7 @@ struct AddAccountView: View {
     @State private var newUrl: String = ""
     @State private var accountSuccess: Bool = false
     @State private var showAccountSuccessAlert: Bool = false
+    @FocusState private var textFieldFocused: Bool
     
     var body: some View {
         ScrollView {
@@ -77,23 +78,20 @@ extension AddAccountView {
 // Views
 extension AddAccountView {
     private var nameItem: some View {
-        Button {
+        HStack {
+            Image(systemName: "tag.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical)
             
-        } label: {
-            HStack {
-                Image(systemName: "tag.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.vertical)
-                
-                TextField("Enter account name...", text: $newName)
-                    .frame(maxHeight: .infinity)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-            }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
+            TextField("Enter account name...", text: $newName)
+                .frame(maxHeight: .infinity)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.leading)
+                .tint(.primary)
         }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
         .frame(height: 55)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
@@ -102,23 +100,20 @@ extension AddAccountView {
     }
     
     private var usernameItem: some View {
-        Button {
-            accountsViewModel.copyToClipboard(text: newUsername)
-        } label: {
-            HStack {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.vertical)
-                
-                TextField("Enter username...", text: $newUsername)
-                    .frame(maxHeight: .infinity)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-            }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
+        HStack {
+            Image(systemName: "person.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical)
+            
+            TextField("Enter username...", text: $newUsername)
+                .frame(maxHeight: .infinity)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.leading)
+                .tint(.primary)
         }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
         .frame(height: 55)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
@@ -127,41 +122,39 @@ extension AddAccountView {
     }
     
     private var passwordItem: some View {
-        Button {
-            accountsViewModel.copyToClipboard(text: newPassword)
-        } label: {
-            HStack {
-                Image(systemName: "lock.circle.fill")
+        HStack {
+            Image(systemName: "lock.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical)
+            
+            if showPassword {
+                TextField("Enter password...", text: $newPassword)
+                    .frame(maxHeight: .infinity)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.leading)
+                    .tint(.primary)
+            } else {
+                SecureField("Enter password...", text: $newPassword)
+                    .frame(maxHeight: .infinity)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.leading)
+                    .tint(.primary)
+            }
+            
+            Spacer()
+            
+            Button {
+                showPassword.toggle()
+            } label: {
+                Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                     .resizable()
                     .scaledToFit()
                     .padding(.vertical)
-                
-                if showPassword {
-                    TextField("Enter password...", text: $newPassword)
-                        .frame(maxHeight: .infinity)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                } else {
-                    SecureField("Enter password...", text: $newPassword)
-                        .frame(maxHeight: .infinity)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                }
-                
-                Spacer()
-                
-                Button {
-                    showPassword.toggle()
-                } label: {
-                    Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical)
-                }
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
         }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
         .frame(height: 55)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
@@ -186,6 +179,13 @@ extension AddAccountView {
                         .frame(maxHeight: .infinity)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
+                        .tint(.primary)
+                        .focused($textFieldFocused)
+                        .onAppear {
+                            DispatchQueue.main.async {
+                                textFieldFocused = true
+                            }
+                        }
                     
                     Button {
                         withAnimation() {
