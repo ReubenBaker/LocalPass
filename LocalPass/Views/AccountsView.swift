@@ -58,18 +58,35 @@ extension AccountsView {
                             }
                             .tint(.red)
                         }
-                        
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == account.id }) {
+                                    accountsViewModel.testAccounts[index].starred.toggle()
+                                    accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+                                }
+                            } label: {
+                                Image(systemName: "star.fill")
+                            }
+                            .tint(.yellow)
+                        }
+                    
                    Spacer()
                         .listRowSeparator(.hidden)
                 }
             }
+            .padding(.horizontal)
             .environment(\.defaultMinListRowHeight, 0)
-            .listStyle(SidebarListStyle())
+            .listStyle(PlainListStyle())
             .scrollContentBackground(.hidden)
             .navigationTitle("Accounts")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
+                    Button {
+                        accountsViewModel.displayCopyPopupOverlay()
+                    } label: {
+                        Text("PU Tog")
+                    }
+
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -82,5 +99,31 @@ extension AccountsView {
                 }
             }
         }
+         .overlay(alignment: .top) {
+             VStack {
+                 Spacer()
+                     .frame(height: accountsViewModel.showCopyPopupOverlay ? 55 : 15)
+                 
+                 ZStack {
+                     Capsule()
+                       
+                     HStack {
+                         Image(systemName: "clipboard.fill")
+                             .foregroundColor(.primary.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
+                         
+                         Text("Copied")
+                             .foregroundColor(.primary.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
+                             .font(.headline)
+                     }
+                 }
+                 .frame(width: accountsViewModel.showCopyPopupOverlay ? 175 : 100, height: accountsViewModel.showCopyPopupOverlay ? 50 : 20)
+                 .background(Color("AccentColor").opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
+                 .foregroundStyle(.ultraThickMaterial.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
+                 .cornerRadius(44)
+                 
+                 Spacer()
+             }
+             .ignoresSafeArea()
+         }
     }
 }

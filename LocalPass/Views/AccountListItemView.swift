@@ -30,6 +30,7 @@ struct AccountListItemView: View {
                 
                 Button {
                     accountsViewModel.copyToClipboard(text: account.password)
+                    accountsViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "lock.circle.fill")
                         .resizable()

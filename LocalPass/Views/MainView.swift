@@ -9,10 +9,10 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject private var accountsViewModel = AccountsViewModel()
-    @State var selectedTab: Int = 0
-    @State var privacyOverlaySize: CGFloat = 0
     @Environment(\.scenePhase) private var scenePhase
+    @StateObject private var accountsViewModel = AccountsViewModel()
+    @State private var selectedTab: Int = 0
+    @State private var privacyOverlaySize: CGFloat = 0
     
     var body: some View {
         ZStack {

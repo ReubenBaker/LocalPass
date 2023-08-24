@@ -18,6 +18,8 @@ class AccountsViewModel: ObservableObject {
     
     @Published var viewItemHeight: CGFloat = 50
     
+    @Published var showCopyPopupOverlay: Bool = false
+    
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts
@@ -73,5 +75,26 @@ class AccountsViewModel: ObservableObject {
             primaryButton: deleteButton,
             secondaryButton: cancelButton
         )
+    }
+    
+    func sortAccountsByStar(accounts: inout [Account]) {
+        let starredAccounts: [Account] = accounts.filter({ $0.starred })
+        let unstarredAccounts: [Account] = accounts.filter({ !$0.starred })
+        
+        accounts = starredAccounts + unstarredAccounts
+    }
+    
+    func displayCopyPopupOverlay() {
+        DispatchQueue.main.async {
+            withAnimation(.spring()) {
+                self.showCopyPopupOverlay = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation(.spring()) {
+                    self.showCopyPopupOverlay = false
+                }
+            }
+        }
     }
 }

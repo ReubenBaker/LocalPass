@@ -30,6 +30,8 @@ struct AccountDetailView: View {
                 Text(account.name)
                     .font(.title)
                     .fontWeight(.semibold)
+                    .lineLimit(2)
+                    .padding()
                 
                 usernameItem
                 passwordItem
@@ -69,6 +71,7 @@ extension AccountDetailView {
     private var usernameItem: some View {
         Button {
             accountsViewModel.copyToClipboard(text: account.username)
+            accountsViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
@@ -94,6 +97,7 @@ extension AccountDetailView {
     private var passwordItem: some View {
         Button {
             accountsViewModel.copyToClipboard(text: account.password)
+            accountsViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
@@ -127,6 +131,7 @@ extension AccountDetailView {
     private var urlItem: some View {
         Button {
             accountsViewModel.copyToClipboard(text: account.url ?? "")
+            accountsViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "link.circle.fill")
