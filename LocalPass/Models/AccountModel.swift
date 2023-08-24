@@ -13,8 +13,9 @@ struct Account: Identifiable, Equatable {
     let username: String // Change!
     let password: String // Change!
     var url: String?
-    let creationDateTime: Date = Date()
-    var updatedDateTime: Date = Date()
+    let creationDateTime: Date
+    var updatedDateTime: Date? = nil
+    var starred: Bool
     
     // Identifiable
     var id: String {
@@ -31,5 +32,7 @@ struct Account: Identifiable, Equatable {
         self.username = username
         self.password = password
         self.url = url
+        self.creationDateTime = Date()
+        self.starred = false
     }
 }

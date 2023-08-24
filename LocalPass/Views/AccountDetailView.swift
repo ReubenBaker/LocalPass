@@ -10,6 +10,7 @@ import SwiftUI
 struct AccountDetailView: View {
     
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
+    @Environment(\.dismiss) private var dismiss
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
@@ -25,7 +26,7 @@ struct AccountDetailView: View {
     var body: some View {
         ScrollView {
             VStack {
-                Text(accountsViewModel.selectedAccount?.name ?? "default")
+                Text(accountsViewModel.selectedAccount?.name ?? "deleted")
                     .font(.title)
                     .fontWeight(.semibold)
                 
@@ -38,8 +39,8 @@ struct AccountDetailView: View {
                     noUrlItem
                 }
                 
-                creationDateTimeItem
-                updatedDateTimeItem
+                creationDateTimeItem()
+                updatedDateTimeItem()
                 deleteItem
             }
             .frame(maxWidth: .infinity)
@@ -72,7 +73,7 @@ extension AccountDetailView {
                     .resizable()
                     .scaledToFit()
                 
-                Text(accountsViewModel.selectedAccount?.username ?? "default")
+                Text(accountsViewModel.selectedAccount?.username ?? "deleted")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -97,7 +98,7 @@ extension AccountDetailView {
                     .resizable()
                     .scaledToFit()
                 
-                Text(showPassword ? accountsViewModel.selectedAccount?.password ?? "default" : "************")
+                Text(showPassword ? accountsViewModel.selectedAccount?.password ?? "" : "************")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -202,12 +203,24 @@ extension AccountDetailView {
         .padding(.horizontal)
     }
     
-    private var creationDateTimeItem: some View {
-        Text("Time Created: \(dateFormatter.string(from: accountsViewModel.selectedAccount?.creationDateTime ?? .now))")
+    private func creationDateTimeItem() -> some View {
+        var createdText = Text("Never")
+        
+        if let created = accountsViewModel.selectedAccount?.creationDateTime {
+            createdText = Text("\(dateFormatter.string(from: created))")
+        }
+        
+        return Text("Time Created: \(createdText)")
     }
     
-    private var updatedDateTimeItem: some View {
-        Text("Last Updated: \(dateFormatter.string(from: accountsViewModel.selectedAccount?.updatedDateTime ?? .now))")
+    private func updatedDateTimeItem() -> some View {
+        var lastUpdatedText = Text("Never")
+
+        if let lastUpdated = accountsViewModel.selectedAccount?.updatedDateTime {
+            lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
+        }
+        
+        return Text("Last Updated: \(lastUpdatedText)")
     }
     
     private var deleteItem: some View {
@@ -228,7 +241,7 @@ extension AccountDetailView {
     
     private var closeButton: some View {
         Button {
-           accountsViewModel.selectedAccount = nil
+           dismiss()
        } label: {
            Image(systemName: "xmark")
                .font(.headline)

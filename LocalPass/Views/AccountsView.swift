@@ -17,7 +17,7 @@ struct AccountsView: View {
         ZStack {
             accountList
         }
-        .sheet(item: $accountsViewModel.selectedAccount, onDismiss: nil) { _ in
+        .sheet(item: $accountsViewModel.selectedAccount) { _ in
             AccountDetailView()
         }
         .sheet(isPresented: $showAddAccountSheet, content: {

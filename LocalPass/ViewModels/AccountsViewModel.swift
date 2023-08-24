@@ -49,6 +49,7 @@ class AccountsViewModel: ObservableObject {
     
     func updateAccount(index: Int) {
         if selectedAccount != nil {
+            selectedAccount!.updatedDateTime = Date()
             testAccounts[index] = selectedAccount!
         }
     }
