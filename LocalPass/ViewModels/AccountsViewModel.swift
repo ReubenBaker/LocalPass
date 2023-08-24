@@ -17,6 +17,8 @@ class AccountsViewModel: ObservableObject {
     
     @Published var accountToDelete: Account? = nil
     
+    @Published var viewItemHeight: CGFloat = 55
+    
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts

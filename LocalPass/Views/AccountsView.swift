@@ -51,7 +51,6 @@ extension AccountsView {
                     AccountListItemView(account: $account)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets())
-                        .padding(.horizontal)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
                                 accountsViewModel.accountToDelete = account
@@ -67,7 +66,8 @@ extension AccountsView {
                 }
             }
             .environment(\.defaultMinListRowHeight, 0)
-            .listStyle(PlainListStyle())
+            .listStyle(SidebarListStyle())
+            .scrollContentBackground(.hidden)
             .navigationTitle("Accounts")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

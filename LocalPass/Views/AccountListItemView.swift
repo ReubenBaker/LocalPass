@@ -39,7 +39,7 @@ struct AccountListItemView: View {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: 55)
+        .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
