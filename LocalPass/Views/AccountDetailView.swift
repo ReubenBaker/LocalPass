@@ -136,7 +136,8 @@ extension AccountDetailView {
                 Spacer()
             }
             .foregroundColor(.primary)
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 10)
         }
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
