@@ -35,7 +35,7 @@ struct MainView: View {
             VStack {
                 Spacer()
                     .frame(width: .infinity, height: UIScreen.main.bounds.height - privacyOverlaySize)
-                
+
                 RoundedRectangle(cornerRadius: 20)
                     .frame(width: .infinity, height: privacyOverlaySize)
                     .background(.ultraThinMaterial).ignoresSafeArea()

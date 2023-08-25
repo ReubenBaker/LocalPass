@@ -18,11 +18,14 @@ struct AccountsView: View {
         ZStack {
             accountList
         }
-        .sheet(isPresented: $showAddAccountSheet, content: {
+        .fullScreenCover(isPresented: $showAddAccountSheet, content: {
             AddAccountView()
         })
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
+        }
+        .overlay(alignment: .top) {
+            CopyPopupOverlayView()
         }
     }
 }
@@ -99,31 +102,5 @@ extension AccountsView {
                 }
             }
         }
-         .overlay(alignment: .top) {
-             VStack {
-                 Spacer()
-                     .frame(height: accountsViewModel.showCopyPopupOverlay ? 55 : 15)
-                 
-                 ZStack {
-                     Capsule()
-                       
-                     HStack {
-                         Image(systemName: "clipboard.fill")
-                             .foregroundColor(.primary.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
-                         
-                         Text("Copied")
-                             .foregroundColor(.primary.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
-                             .font(.headline)
-                     }
-                 }
-                 .frame(width: accountsViewModel.showCopyPopupOverlay ? 175 : 100, height: accountsViewModel.showCopyPopupOverlay ? 50 : 20)
-                 .background(Color("AccentColor").opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
-                 .foregroundStyle(.ultraThickMaterial.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
-                 .cornerRadius(44)
-                 
-                 Spacer()
-             }
-             .ignoresSafeArea()
-         }
     }
 }

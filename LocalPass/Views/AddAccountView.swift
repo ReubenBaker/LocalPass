@@ -19,7 +19,10 @@ struct AddAccountView: View {
     @State private var newUrl: String = ""
     @State private var accountSuccess: Bool = false
     @State private var showAccountSuccessAlert: Bool = false
-    @FocusState private var textFieldFocused: Bool
+    @FocusState private var nameTextFieldFocused: Bool
+    @FocusState private var usernameTextFieldFocused: Bool
+    @FocusState private var passwordTextFieldFocused: Bool
+    @FocusState private var urlTextFieldFocused: Bool
     
     var body: some View {
         ScrollView {
@@ -27,6 +30,7 @@ struct AddAccountView: View {
                 Text(newName != "" ? newName : "New Account")
                     .font(.title)
                     .fontWeight(.semibold)
+                    .padding(.horizontal)
                 
                 nameItem
                 usernameItem
@@ -89,6 +93,13 @@ extension AddAccountView {
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.leading)
                 .tint(.primary)
+                .focused($nameTextFieldFocused)
+                .onTapGesture {
+                    DispatchQueue.main.async {
+                        nameTextFieldFocused = true
+                    }
+                }
+                
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
@@ -111,6 +122,12 @@ extension AddAccountView {
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.leading)
                 .tint(.primary)
+                .focused($usernameTextFieldFocused)
+                .onTapGesture {
+                    DispatchQueue.main.async {
+                        usernameTextFieldFocused = true
+                    }
+                }
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
@@ -134,18 +151,42 @@ extension AddAccountView {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.leading)
                     .tint(.primary)
+                    .focused($passwordTextFieldFocused)
+                    .onTapGesture {
+                        DispatchQueue.main.async {
+                            passwordTextFieldFocused = true
+                        }
+                    }
             } else {
                 SecureField("Enter password...", text: $newPassword)
                     .frame(maxHeight: .infinity)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.leading)
                     .tint(.primary)
+                    .focused($passwordTextFieldFocused)
+                    .onTapGesture {
+                        DispatchQueue.main.async {
+                            passwordTextFieldFocused = true
+                        }
+                    }
             }
             
             Spacer()
             
             Button {
+                let isFocused = passwordTextFieldFocused
+                
                 showPassword.toggle()
+                
+                if isFocused {
+                    DispatchQueue.main.async {
+                        passwordTextFieldFocused = false
+                    }
+                    
+                    DispatchQueue.main.async {
+                        passwordTextFieldFocused = true
+                    }
+                }
             } label: {
                 Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                     .resizable()
@@ -180,10 +221,10 @@ extension AddAccountView {
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
                         .tint(.primary)
-                        .focused($textFieldFocused)
+                        .focused($urlTextFieldFocused)
                         .onAppear {
                             DispatchQueue.main.async {
-                                textFieldFocused = true
+                                urlTextFieldFocused = true
                             }
                         }
                     

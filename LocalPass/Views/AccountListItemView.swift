@@ -40,7 +40,7 @@ struct AccountListItemView: View {
             .foregroundColor(.primary)
             .padding(.horizontal)
             .padding(.vertical, 10)
-            .sheet(isPresented: $showAccountDetailViewSheet) {
+            .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
                 AccountDetailView(account: $account)
             }
         }

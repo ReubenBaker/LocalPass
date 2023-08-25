@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B590E912A95888300FFFEE6 /* AddAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B590E902A95888300FFFEE6 /* AddAccountView.swift */; };
+		1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */; };
 		1BA317DF2A96DDBD00368EDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BA317DE2A96DDBD00368EDB /* LaunchScreen.storyboard */; };
 		1BF1A7D62A8E4F7C00663733 /* LocalPassApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7D52A8E4F7C00663733 /* LocalPassApp.swift */; };
 		1BF1A7D82A8E4F7C00663733 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7D72A8E4F7C00663733 /* ContentView.swift */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		1B590E902A95888300FFFEE6 /* AddAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountView.swift; sourceTree = "<group>"; };
+		1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayView.swift; sourceTree = "<group>"; };
 		1BA317DE2A96DDBD00368EDB /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1BF1A7D22A8E4F7C00663733 /* LocalPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalPass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BF1A7D52A8E4F7C00663733 /* LocalPassApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPassApp.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				1BF1A7F72A8E557800663733 /* SettingsView.swift */,
 				1BF1A7E92A8E505300663733 /* AccountListItemView.swift */,
 				1BF1A7ED2A8E509300663733 /* AccountDetailView.swift */,
+				1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 				1BF1A7F22A8E510200663733 /* AccountModel.swift in Sources */,
 				1BF1A7D62A8E4F7C00663733 /* LocalPassApp.swift in Sources */,
 				1BF1A7F62A8E514700663733 /* AccountsViewModel.swift in Sources */,
+				1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */,
 				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,
 				1BF1A7EE2A8E509300663733 /* AccountDetailView.swift in Sources */,
 				1BF1A7E82A8E504000663733 /* AccountsView.swift in Sources */,

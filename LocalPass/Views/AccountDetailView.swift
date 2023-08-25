@@ -31,7 +31,8 @@ struct AccountDetailView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .lineLimit(2)
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.top, accountsViewModel.showCopyPopupOverlay ? 30 : 0)
                 
                 usernameItem
                 passwordItem
@@ -51,6 +52,9 @@ struct AccountDetailView: View {
         }
         .background(.ultraThinMaterial)
         .overlay(closeButton, alignment: .bottom)
+        .overlay(alignment: .top) {
+            CopyPopupOverlayView()
+        }
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
         }
