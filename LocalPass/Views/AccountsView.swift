@@ -13,6 +13,11 @@ struct AccountsView: View {
     @State private var showDeleteAlert: Bool = false
     @State private var showAccountDetailSheet: Bool = false
     @State private var showAddAccountSheet: Bool = false
+    @State private var sortSelection: String = ""
+    
+    private let sortOptions: [String] = [
+        "Date Added Asc", "Date Added Desc", "Alphabetical"
+    ]
     
     var body: some View {
         ZStack {
@@ -27,6 +32,10 @@ struct AccountsView: View {
         .overlay(alignment: .top) {
             CopyPopupOverlayView()
         }
+        .onChange(of: sortSelection) { _ in
+            accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
+            accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+        }
     }
 }
 
@@ -40,7 +49,7 @@ struct AccountsView_Previews: PreviewProvider {
 
 // Functions
 extension AccountsView {
-
+    
 }
 
 // Views
@@ -60,36 +69,40 @@ extension AccountsView {
                                 Image(systemName: "trash.fill")
                             }
                             .tint(.red)
-                        }
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button {
-                                if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == account.id }) {
+                            
+                            if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == account.id }) {
+                                Button {
                                     accountsViewModel.testAccounts[index].starred.toggle()
                                     accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+                                } label: {
+                                    Image(systemName: accountsViewModel.testAccounts[index].starred ? "star.fill" : "star")
                                 }
-                            } label: {
-                                Image(systemName: "star.fill")
+                                .tint(.yellow)
                             }
-                            .tint(.yellow)
                         }
                     
                    Spacer()
                         .listRowSeparator(.hidden)
+                        .moveDisabled(true)
                 }
             }
             .padding(.horizontal)
             .environment(\.defaultMinListRowHeight, 0)
             .listStyle(PlainListStyle())
             .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
             .navigationTitle("Accounts")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        accountsViewModel.displayCopyPopupOverlay()
+                    Menu {
+                        Picker("Sort", selection: $sortSelection) {
+                            ForEach(sortOptions, id: \.self) {
+                                Text($0)
+                            }
+                        }
                     } label: {
-                        Text("PU Tog")
+                        Text("Sort")
                     }
-
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -98,7 +111,6 @@ extension AccountsView {
                     } label: {
                         Image(systemName: "plus")
                     }
-
                 }
             }
         }

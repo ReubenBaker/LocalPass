@@ -77,6 +77,22 @@ class AccountsViewModel: ObservableObject {
         )
     }
     
+    func sortAccounts(accounts: inout [Account], sortOption: String) {
+        print(sortOption)
+        var sortedAccounts: [Account]? = nil
+        print(accounts)
+        if sortOption == "Date Added Asc" {
+            sortedAccounts = accounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedAscending })
+        } else if sortOption == "Date Added Desc" {
+            sortedAccounts = accounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedDescending })
+        } else if sortOption == "Alphabetical" {
+            sortedAccounts = accounts.sorted(by: { $0.name.compare($1.name) == .orderedAscending })
+        }
+        print(sortedAccounts as Any)
+        print(accounts)
+        accounts = sortedAccounts ?? accounts
+    }
+    
     func sortAccountsByStar(accounts: inout [Account]) {
         let starredAccounts: [Account] = accounts.filter({ $0.starred })
         let unstarredAccounts: [Account] = accounts.filter({ !$0.starred })

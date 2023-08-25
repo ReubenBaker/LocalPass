@@ -81,6 +81,7 @@ extension AccountDetailView {
                 Image(systemName: "person.circle.fill")
                     .resizable()
                     .scaledToFit()
+                    .foregroundColor(Color("AccentColor"))
                 
                 Text(account.username)
                     .fontWeight(.semibold)
@@ -107,6 +108,7 @@ extension AccountDetailView {
                 Image(systemName: "lock.circle.fill")
                     .resizable()
                     .scaledToFit()
+                    .foregroundColor(Color("AccentColor"))
                 
                 Text(showPassword ? account.password : "************")
                     .fontWeight(.semibold)
@@ -119,6 +121,7 @@ extension AccountDetailView {
                     Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                         .resizable()
                         .scaledToFit()
+                        .foregroundColor(Color("AccentColor"))
                 }
             }
             .foregroundColor(.primary)
@@ -141,6 +144,7 @@ extension AccountDetailView {
                 Image(systemName: "link.circle.fill")
                     .resizable()
                     .scaledToFit()
+                    .foregroundColor(Color("AccentColor"))
                 
                 Text(account.url ?? "")
                     .fontWeight(.semibold)
@@ -170,6 +174,7 @@ extension AccountDetailView {
                         .resizable()
                         .scaledToFit()
                         .padding(.vertical, 10)
+                        .foregroundColor(Color("AccentColor"))
                     
                     TextField("Enter url...", text: $newUrl)
                         .frame(maxHeight: .infinity)
@@ -198,6 +203,7 @@ extension AccountDetailView {
                         }
                     } label: {
                         Image(systemName: "xmark")
+                            .foregroundColor(Color("AccentColor"))
                     }
                 }
             } else {
@@ -252,7 +258,7 @@ extension AccountDetailView {
            Image(systemName: "xmark")
                .font(.headline)
                .padding()
-               .foregroundColor(.primary)
+               .foregroundColor(Color("AccentColor"))
                .background(.thickMaterial)
                .cornerRadius(10)
                .shadow(radius: 4)

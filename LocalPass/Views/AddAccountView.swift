@@ -69,7 +69,12 @@ extension AddAccountView {
             title = Text("Account could not be created!")
         }
         
-        let dismissButton: Alert.Button = .default(accountSuccess ? Text("🥳") : Text("😢"))
+        let dismissButton: Alert.Button = .default(accountSuccess ? Text("🥳") : Text("😢"), action: {
+            if accountSuccess {
+                dismiss()
+            }
+        })
+        
 
         return Alert(
             title: title,
@@ -87,6 +92,7 @@ extension AddAccountView {
                 .resizable()
                 .scaledToFit()
                 .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
             
             TextField("Enter account name...", text: $newName)
                 .frame(maxHeight: .infinity)
@@ -116,6 +122,7 @@ extension AddAccountView {
                 .resizable()
                 .scaledToFit()
                 .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
             
             TextField("Enter username...", text: $newUsername)
                 .frame(maxHeight: .infinity)
@@ -144,6 +151,7 @@ extension AddAccountView {
                 .resizable()
                 .scaledToFit()
                 .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
             
             if showPassword {
                 TextField("Enter password...", text: $newPassword)
@@ -188,6 +196,7 @@ extension AddAccountView {
                     .resizable()
                     .scaledToFit()
                     .padding(.vertical, 10)
+                    .foregroundColor(Color("AccentColor"))
             }
         }
         .foregroundColor(.primary)
@@ -211,6 +220,7 @@ extension AddAccountView {
                         .resizable()
                         .scaledToFit()
                         .padding(.vertical, 10)
+                        .foregroundColor(Color("AccentColor"))
                     
                     TextField("Enter url...", text: $newUrl)
                         .frame(maxHeight: .infinity)
@@ -231,6 +241,7 @@ extension AddAccountView {
                         }
                     } label: {
                         Image(systemName: "xmark")
+                            .foregroundColor(Color("AccentColor"))
                     }
                 }
             } else {
@@ -275,7 +286,7 @@ extension AddAccountView {
            Image(systemName: "xmark")
                .font(.headline)
                .padding()
-               .foregroundColor(.primary)
+               .foregroundColor(Color("AccentColor"))
                .background(.thickMaterial)
                .cornerRadius(10)
                .shadow(radius: 4)

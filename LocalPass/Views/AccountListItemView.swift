@@ -18,9 +18,10 @@ struct AccountListItemView: View {
             showAccountDetailViewSheet.toggle()
         } label: {
             HStack {
-                Image(systemName: "person.circle.fill")
+                Image(systemName: account.starred ? "star.fill" : "person.circle.fill")
                     .resizable()
                     .scaledToFit()
+                    .foregroundColor(Color("AccentColor"))
                 
                 Text(account.name)
                     .font(.title3)
@@ -35,6 +36,7 @@ struct AccountListItemView: View {
                     Image(systemName: "lock.circle.fill")
                         .resizable()
                         .scaledToFit()
+                        .foregroundColor(Color("AccentColor"))
                 }
             }
             .foregroundColor(.primary)
