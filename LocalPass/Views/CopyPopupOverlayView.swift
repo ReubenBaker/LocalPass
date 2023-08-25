@@ -20,7 +20,7 @@ struct CopyPopupOverlayView: View {
                 Capsule()
                   
                 HStack(alignment: .center) {
-                    Text("📋 Copied")
+                    Text("Copied")
                         .foregroundColor(.primary.opacity(accountsViewModel.showCopyPopupOverlay ? 1 : 0))
                         .font(.headline)
                 }

@@ -180,10 +180,6 @@ extension AddAccountView {
                 
                 if isFocused {
                     DispatchQueue.main.async {
-                        passwordTextFieldFocused = false
-                    }
-                    
-                    DispatchQueue.main.async {
                         passwordTextFieldFocused = true
                     }
                 }

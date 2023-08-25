@@ -86,7 +86,7 @@ class AccountsViewModel: ObservableObject {
     
     func displayCopyPopupOverlay() {
         DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: 0.75)) {
+            withAnimation(.easeInOut) {
                 self.showCopyPopupOverlay = true
             }
             
