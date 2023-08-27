@@ -20,8 +20,6 @@ class AccountsViewModel: ObservableObject {
     
     @Published var showCopyPopupOverlay: Bool = false
     
-    @Published var privacyOverlaySize: CGFloat = 0
-    
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts

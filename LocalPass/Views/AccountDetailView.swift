@@ -68,9 +68,11 @@ struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
         @State var account = Account(name: "default", username: "default", password: "default")
+        @StateObject var mainViewModel = MainViewModel()
         
         AccountDetailView(account: $account)
             .environmentObject(accountsViewModel)
+            .environmentObject(mainViewModel)
     }
 }
 

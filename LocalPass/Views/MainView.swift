@@ -10,6 +10,7 @@ import SwiftUI
 struct MainView: View {
     
     @Environment(\.scenePhase) private var scenePhase
+    @EnvironmentObject private var mainViewModel: MainViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @State private var selectedTab: Int = 0
     @State private var showPrivacyOverlay: Bool = false
@@ -33,16 +34,15 @@ struct MainView: View {
         }
         .overlay {
             PrivacyOverlayView()
-                .environmentObject(accountsViewModel)
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .inactive || newPhase == .background {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    accountsViewModel.privacyOverlaySize = UIScreen.main.bounds.height
+                    mainViewModel.privacyOverlaySize = UIScreen.main.bounds.height
                 }
             } else {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    accountsViewModel.privacyOverlaySize = 0
+                    mainViewModel.privacyOverlaySize = 0
                 }
             }
         }
@@ -52,9 +52,12 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        @StateObject var mainViewModel = MainViewModel()
         
         MainView()
             .environmentObject(accountsViewModel)
+            .environmentObject(mainViewModel)
+            
     }
 }
 

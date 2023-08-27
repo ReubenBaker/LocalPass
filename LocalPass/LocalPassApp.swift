@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct LocalPassApp: App {
+    
+    @StateObject private var mainViewModel = MainViewModel()
+    
     var body: some Scene {
         WindowGroup {
             MainView()
+                .environmentObject(mainViewModel)
         }
     }
 }
