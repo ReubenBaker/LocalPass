@@ -12,7 +12,7 @@ struct MainView: View {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var accountsViewModel = AccountsViewModel()
     @State private var selectedTab: Int = 0
-    @State private var privacyOverlaySize: CGFloat = 0
+    @State private var showPrivacyOverlay: Bool = false
     
     var body: some View {
         ZStack {
@@ -32,23 +32,17 @@ struct MainView: View {
             }
         }
         .overlay {
-            VStack {
-                Spacer()
-                    .frame(width: .infinity, height: UIScreen.main.bounds.height - privacyOverlaySize)
-
-                RoundedRectangle(cornerRadius: 20)
-                    .frame(width: .infinity, height: privacyOverlaySize)
-                    .background(.ultraThinMaterial).ignoresSafeArea()
-            }
+            PrivacyOverlayView()
+                .environmentObject(accountsViewModel)
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .inactive || newPhase == .background {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    privacyOverlaySize = .infinity
+                    accountsViewModel.privacyOverlaySize = UIScreen.main.bounds.height
                 }
             } else {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    privacyOverlaySize = 0
+                    accountsViewModel.privacyOverlaySize = 0
                 }
             }
         }
@@ -57,7 +51,10 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var accountsViewModel = AccountsViewModel()
+        
         MainView()
+            .environmentObject(accountsViewModel)
     }
 }
 

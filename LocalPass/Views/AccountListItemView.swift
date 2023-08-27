@@ -42,14 +42,14 @@ struct AccountListItemView: View {
             .foregroundColor(.primary)
             .padding(.horizontal)
             .padding(.vertical, 10)
-            .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
-                AccountDetailView(account: $account)
-            }
         }
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
+        .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
+            AccountDetailView(account: $account)
+        }
     }
 }
 

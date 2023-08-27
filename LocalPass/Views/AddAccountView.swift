@@ -43,6 +43,9 @@ struct AddAccountView: View {
         }
         .background(.ultraThinMaterial)
         .overlay(closeButton, alignment: .bottom)
+        .overlay {
+            PrivacyOverlayView()
+        }
         .alert(isPresented: $showAccountSuccessAlert) {
             getAccountSuccessAlert(accountSuccess: accountSuccess)
         }

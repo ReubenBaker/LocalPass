@@ -1,0 +1,33 @@
+//
+//  PrivacyOverlayView.swift
+//  LocalPass
+//
+//  Created by Reuben on 25/08/2023.
+//
+
+import SwiftUI
+
+struct PrivacyOverlayView: View {
+    
+    @EnvironmentObject private var accountsViewModel: AccountsViewModel
+    
+    var body: some View {
+        VStack {
+            Spacer()
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - accountsViewModel.privacyOverlaySize)
+
+            RoundedRectangle(cornerRadius: 20)
+                .frame(width: UIScreen.main.bounds.width, height: accountsViewModel.privacyOverlaySize)
+                .background(.ultraThinMaterial).ignoresSafeArea()
+        }
+    }
+}
+
+struct PrivacyOverlayView_Previews: PreviewProvider {
+    static var previews: some View {
+        @StateObject var accountsViewModel = AccountsViewModel()
+        
+        PrivacyOverlayView()
+            .environmentObject(accountsViewModel)
+    }
+}

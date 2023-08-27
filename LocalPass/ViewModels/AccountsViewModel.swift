@@ -20,6 +20,8 @@ class AccountsViewModel: ObservableObject {
     
     @Published var showCopyPopupOverlay: Bool = false
     
+    @Published var privacyOverlaySize: CGFloat = 0
+    
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts
@@ -78,18 +80,16 @@ class AccountsViewModel: ObservableObject {
     }
     
     func sortAccounts(accounts: inout [Account], sortOption: String) {
-        print(sortOption)
         var sortedAccounts: [Account]? = nil
-        print(accounts)
-        if sortOption == "Date Added Asc" {
+        
+        if sortOption == "Date Added Ascending" {
             sortedAccounts = accounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedAscending })
-        } else if sortOption == "Date Added Desc" {
+        } else if sortOption == "Date Added Descending" {
             sortedAccounts = accounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedDescending })
         } else if sortOption == "Alphabetical" {
             sortedAccounts = accounts.sorted(by: { $0.name.compare($1.name) == .orderedAscending })
         }
-        print(sortedAccounts as Any)
-        print(accounts)
+        
         accounts = sortedAccounts ?? accounts
     }
     

@@ -55,6 +55,9 @@ struct AccountDetailView: View {
         .overlay(alignment: .top) {
             CopyPopupOverlayView()
         }
+        .overlay {
+            PrivacyOverlayView()
+        }
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
         }

@@ -16,7 +16,7 @@ struct AccountsView: View {
     @State private var sortSelection: String = ""
     
     private let sortOptions: [String] = [
-        "Date Added Asc", "Date Added Desc", "Alphabetical"
+        "Date Added Ascending", "Date Added Descending", "Alphabetical"
     ]
     
     var body: some View {
