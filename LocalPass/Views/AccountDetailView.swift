@@ -70,7 +70,7 @@ struct AccountDetailView: View {
         .overlay(alignment: .top) {
             CopyPopupOverlayView()
         }
-        .overlay {
+        .overlay{
             PrivacyOverlayView()
         }
         .alert(isPresented: $showDeleteAlert) {

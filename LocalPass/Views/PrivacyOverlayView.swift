@@ -9,8 +9,7 @@ import SwiftUI
 
 struct PrivacyOverlayView: View {
     
-    @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
+    @EnvironmentObject private var privacyOverlayViewModel: PrivacyOverlayViewModel
     
     var body: some View {
         VStack {
@@ -20,17 +19,6 @@ struct PrivacyOverlayView: View {
             RoundedRectangle(cornerRadius: 20)
                 .frame(width: UIScreen.main.bounds.width, height: privacyOverlayViewModel.privacyOverlaySize)
                 .background(.ultraThinMaterial).ignoresSafeArea()
-        }
-        .onChange(of: scenePhase) { newPhase in
-            if newPhase == .inactive || newPhase == .background {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    privacyOverlayViewModel.privacyOverlaySize = UIScreen.main.bounds.height
-                }
-            } else {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    privacyOverlayViewModel.privacyOverlaySize = 0
-                }
-            }
         }
     }
 }

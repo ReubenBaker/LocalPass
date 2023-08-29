@@ -9,8 +9,10 @@ import SwiftUI
 
 struct MainView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
+    @EnvironmentObject private var privacyOverlayViewModel: PrivacyOverlayViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @State private var selectedTab: Int = 0
     
@@ -22,6 +24,17 @@ struct MainView: View {
         .overlay {
             PrivacyOverlayView()
         }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .inactive || newPhase == .background {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    privacyOverlayViewModel.showPrivacyOverlay = true
+                }
+            } else {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    privacyOverlayViewModel.showPrivacyOverlay = false
+                }
+            }
+        }
     }
 }
 
@@ -30,10 +43,12 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
+        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         MainView()
             .environmentObject(mainViewModel)
             .environmentObject(copyPopupOverlayViewModel)
+            .environmentObject(privacyOverlayViewModel)
     }
 }
 

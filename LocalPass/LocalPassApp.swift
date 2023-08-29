@@ -12,12 +12,14 @@ struct LocalPassApp: App {
     
     @StateObject private var mainViewModel = MainViewModel()
     @StateObject private var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
+    @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     
     var body: some Scene {
         WindowGroup {
             MainView()
                 .environmentObject(mainViewModel)
                 .environmentObject(copyPopupOverlayViewModel)
+                .environmentObject(privacyOverlayViewModel)
         }
     }
 }
