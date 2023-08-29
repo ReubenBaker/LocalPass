@@ -62,6 +62,13 @@ extension MainView {
                 }
                 .tag(0)
                 .environmentObject(accountsViewModel)
+            
+            FileManagerTestView()
+                .tabItem {
+                    Label("FM", systemImage: "folder.fill")
+                }
+                .tag(2)
+                .environmentObject(accountsViewModel)
                 
             
             SettingsView()

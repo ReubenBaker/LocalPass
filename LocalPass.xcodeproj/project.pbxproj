@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B42D4232A9E767300763016 /* AccountsDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4222A9E767300763016 /* AccountsDataService.swift */; };
+		1B42D4252A9E78A200763016 /* FileManagerTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4242A9E78A200763016 /* FileManagerTestView.swift */; };
 		1B5543432A99252300F0B703 /* PrivacyOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5543422A99252300F0B703 /* PrivacyOverlayView.swift */; };
 		1B590E912A95888300FFFEE6 /* AddAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B590E902A95888300FFFEE6 /* AddAccountView.swift */; };
 		1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B42D4222A9E767300763016 /* AccountsDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsDataService.swift; sourceTree = "<group>"; };
+		1B42D4242A9E78A200763016 /* FileManagerTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerTestView.swift; sourceTree = "<group>"; };
 		1B5543422A99252300F0B703 /* PrivacyOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyOverlayView.swift; sourceTree = "<group>"; };
 		1B590E902A95888300FFFEE6 /* AddAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountView.swift; sourceTree = "<group>"; };
 		1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayView.swift; sourceTree = "<group>"; };
@@ -123,6 +127,7 @@
 				1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */,
 				1B5543422A99252300F0B703 /* PrivacyOverlayView.swift */,
 				1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */,
+				1B42D4242A9E78A200763016 /* FileManagerTestView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -143,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				1BF1A7F32A8E511600663733 /* AccountTestDataService.swift */,
+				1B42D4222A9E767300763016 /* AccountsDataService.swift */,
 			);
 			path = DataServices;
 			sourceTree = "<group>";
@@ -233,7 +239,9 @@
 				1BF1A7E82A8E504000663733 /* AccountsView.swift in Sources */,
 				1BF1A7EA2A8E505300663733 /* AccountListItemView.swift in Sources */,
 				1BF1A7F42A8E511600663733 /* AccountTestDataService.swift in Sources */,
+				1B42D4232A9E767300763016 /* AccountsDataService.swift in Sources */,
 				1B590E912A95888300FFFEE6 /* AddAccountView.swift in Sources */,
+				1B42D4252A9E78A200763016 /* FileManagerTestView.swift in Sources */,
 				1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -35,4 +35,14 @@ struct Account: Identifiable, Equatable {
         self.creationDateTime = Date()
         self.starred = false
     }
+    
+    init(name: String, username: String, password: String, url: String?, creationDateTime: Date, updatedDateTime: Date?, starred: Bool) {
+        self.name = name
+        self.username = username
+        self.password = password
+        self.url = url
+        self.creationDateTime = creationDateTime
+        self.updatedDateTime = updatedDateTime
+        self.starred = starred
+    }
 }

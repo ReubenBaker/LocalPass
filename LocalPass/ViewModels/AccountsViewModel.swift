@@ -12,6 +12,9 @@ class AccountsViewModel: ObservableObject {
     // Test data
     @Published var testAccounts: [Account]
     
+    // Actual data
+    @Published var accounts: [Account]?
+    
     @Published var accountToDelete: Account? = nil
     
     @Published var viewItemHeight: CGFloat = 50
@@ -19,6 +22,10 @@ class AccountsViewModel: ObservableObject {
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts
+        
+        let accountsDataService = AccountsDataService()
+        let accounts = accountsDataService.getAccountData()
+        self.accounts = accounts
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil) -> Bool {
