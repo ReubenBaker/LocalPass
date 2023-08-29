@@ -14,7 +14,6 @@ struct AccountsView: View {
     @State private var showAccountDetailSheet: Bool = false
     @State private var showAddAccountSheet: Bool = false
     @State private var sortSelection: String = ""
-    
     private let sortOptions: [String] = [
         "Date Added Ascending", "Date Added Descending", "Alphabetical"
     ]
@@ -29,34 +28,32 @@ struct AccountsView: View {
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
         }
-        .overlay(alignment: .top) {
-            CopyPopupOverlayView()
-        }
         .overlay {
             PrivacyOverlayView()
-                .hidden()
+                .hidden() // Fix: Prevents strange behaviour of overlay in accountDetailView
         }
         .onChange(of: sortSelection) { _ in
-            accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
-            accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+            sortAccounts(sortSelection: sortSelection)
         }
     }
 }
 
+// Preview
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         
         AccountsView()
-            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
     }
 }
 
 // Functions
 extension AccountsView {
-    
+    private func sortAccounts(sortSelection: String) {
+        accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
+        accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+    }
 }
 
 // Views

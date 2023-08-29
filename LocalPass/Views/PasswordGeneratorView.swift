@@ -40,8 +40,6 @@ struct PasswordGeneratorView: View {
                             specialCount: specialCount
                         )
                     }
-                    
-                    accountsViewModel.copyToClipboard(text: password)
                 } label: {
                     Text("Generate")
                         .font(.headline)
@@ -60,6 +58,7 @@ struct PasswordGeneratorView: View {
     }
 }
 
+// Preview
 struct PasswordGeneratorView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
@@ -70,6 +69,7 @@ struct PasswordGeneratorView_Previews: PreviewProvider {
     }
 }
 
+// Views
 extension PasswordGeneratorView {
     private var closeButton: some View {
         Button {

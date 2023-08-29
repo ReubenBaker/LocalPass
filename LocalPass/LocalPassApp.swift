@@ -10,12 +10,14 @@ import SwiftUI
 @main
 struct LocalPassApp: App {
     
-    @StateObject var mainViewModel = MainViewModel()
+    @StateObject private var mainViewModel = MainViewModel()
+    @StateObject private var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
     
     var body: some Scene {
         WindowGroup {
             MainView()
                 .environmentObject(mainViewModel)
+                .environmentObject(copyPopupOverlayViewModel)
         }
     }
 }

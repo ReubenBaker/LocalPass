@@ -10,36 +10,37 @@ import SwiftUI
 struct PrivacyOverlayView: View {
     
     @Environment(\.scenePhase) private var scenePhase
-    @EnvironmentObject private var mainViewModel: MainViewModel
+    @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     
     var body: some View {
         VStack {
             Spacer()
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - mainViewModel.privacyOverlaySize)
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - privacyOverlayViewModel.privacyOverlaySize)
 
             RoundedRectangle(cornerRadius: 20)
-                .frame(width: UIScreen.main.bounds.width, height: mainViewModel.privacyOverlaySize)
+                .frame(width: UIScreen.main.bounds.width, height: privacyOverlayViewModel.privacyOverlaySize)
                 .background(.ultraThinMaterial).ignoresSafeArea()
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .inactive || newPhase == .background {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    mainViewModel.privacyOverlaySize = UIScreen.main.bounds.height
+                    privacyOverlayViewModel.privacyOverlaySize = UIScreen.main.bounds.height
                 }
             } else {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    mainViewModel.privacyOverlaySize = 0
+                    privacyOverlayViewModel.privacyOverlaySize = 0
                 }
             }
         }
     }
 }
 
+// Preview
 struct PrivacyOverlayView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
+        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         PrivacyOverlayView()
-            .environmentObject(mainViewModel)
+            .environmentObject(privacyOverlayViewModel)
     }
 }

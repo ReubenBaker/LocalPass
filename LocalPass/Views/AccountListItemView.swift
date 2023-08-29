@@ -9,11 +9,38 @@ import SwiftUI
 
 struct AccountListItemView: View {
     
+    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
+    @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
-    @State var showAccountDetailViewSheet: Bool = false
+    @State private var showAccountDetailViewSheet: Bool = false
     
     var body: some View {
+        accountListItem
+        .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
+            AccountDetailView(account: $account)
+        }
+    }
+}
+
+// Preview
+struct AccountListItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        @StateObject var mainViewModel = MainViewModel()
+        @StateObject var accountsViewModel = AccountsViewModel()
+        @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
+        @State var account = Account(name: "default", username: "default", password: "default")
+        
+        AccountListItemView(account: $account)
+            .environmentObject(mainViewModel)
+            .environmentObject(accountsViewModel)
+            .environmentObject(copyPopupOverlayViewModel)
+    }
+}
+
+// Views
+extension AccountListItemView {
+    private var accountListItem: some View {
         Button {
             showAccountDetailViewSheet.toggle()
         } label: {
@@ -30,8 +57,8 @@ struct AccountListItemView: View {
                 Spacer()
                 
                 Button {
-                    accountsViewModel.copyToClipboard(text: account.password)
-                    accountsViewModel.displayCopyPopupOverlay()
+                    mainViewModel.copyToClipboard(text: account.password)
+                    copyPopupOverlayViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "lock.circle.fill")
                         .resizable()
@@ -47,18 +74,5 @@ struct AccountListItemView: View {
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
-        .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
-            AccountDetailView(account: $account)
-        }
-    }
-}
-
-struct AccountListItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        @StateObject var accountsViewModel = AccountsViewModel()
-        @State var account = Account(name: "default", username: "default", password: "default")
-        
-        AccountListItemView(account: $account)
-            .environmentObject(accountsViewModel)
     }
 }

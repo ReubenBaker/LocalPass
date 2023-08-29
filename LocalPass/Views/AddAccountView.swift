@@ -14,9 +14,9 @@ struct AddAccountView: View {
     @State private var newName: String = ""
     @State private var newUsername: String = ""
     @State var newPassword: String = ""
+    @State private var newUrl: String = ""
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
-    @State private var newUrl: String = ""
     @State private var accountSuccess: Bool = false
     @State private var showAccountSuccessAlert: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
@@ -28,12 +28,7 @@ struct AddAccountView: View {
     var body: some View {
         ScrollView {
             VStack {
-                Text(newName != "" ? newName : "New Account")
-                    .font(.title)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
-                    .padding(.horizontal)
-                
+                titleItem
                 nameItem
                 usernameItem
                 passwordItem
@@ -58,20 +53,19 @@ struct AddAccountView: View {
     }
 }
 
+// Preview
 struct AddAccountView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         
         AddAccountView()
-            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
     }
 }
 
 // Functions
 extension AddAccountView {
-    func getAccountSuccessAlert(accountSuccess: Bool) -> Alert {
+    private func getAccountSuccessAlert(accountSuccess: Bool) -> Alert {
         var title: Text = Text("")
         
         if accountSuccess {
@@ -86,7 +80,6 @@ extension AddAccountView {
             }
         })
         
-
         return Alert(
             title: title,
             message: nil,
@@ -97,6 +90,14 @@ extension AddAccountView {
 
 // Views
 extension AddAccountView {
+    private var titleItem: some View {
+        Text(newName != "" ? newName : "New Account")
+            .font(.title)
+            .fontWeight(.semibold)
+            .lineLimit(2)
+            .padding(.horizontal)
+    }
+    
     private var nameItem: some View {
         HStack {
             Image(systemName: "tag.circle.fill")
@@ -116,7 +117,6 @@ extension AddAccountView {
                         nameTextFieldFocused = true
                     }
                 }
-                
         }
         .foregroundColor(.primary)
         .padding(.horizontal)

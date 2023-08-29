@@ -14,6 +14,8 @@
 		1BEC56B72A9D63E3009FE9FA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56B62A9D63E3009FE9FA /* MainViewModel.swift */; };
 		1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */; };
 		1BEC56BB2A9D7636009FE9FA /* PasswordGeneratorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BA2A9D7636009FE9FA /* PasswordGeneratorViewModel.swift */; };
+		1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */; };
+		1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */; };
 		1BF1A7D62A8E4F7C00663733 /* LocalPassApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF1A7D52A8E4F7C00663733 /* LocalPassApp.swift */; };
 		1BF1A7DA2A8E4F7D00663733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BF1A7D92A8E4F7D00663733 /* Assets.xcassets */; };
 		1BF1A7DD2A8E4F7D00663733 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BF1A7DC2A8E4F7D00663733 /* Preview Assets.xcassets */; };
@@ -35,6 +37,8 @@
 		1BEC56B62A9D63E3009FE9FA /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
 		1BEC56BA2A9D7636009FE9FA /* PasswordGeneratorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorViewModel.swift; sourceTree = "<group>"; };
+		1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayViewModel.swift; sourceTree = "<group>"; };
+		1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyOverlayViewModel.swift; sourceTree = "<group>"; };
 		1BF1A7D22A8E4F7C00663733 /* LocalPass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalPass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BF1A7D52A8E4F7C00663733 /* LocalPassApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPassApp.swift; sourceTree = "<group>"; };
 		1BF1A7D92A8E4F7D00663733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 				1BF1A7F52A8E514700663733 /* AccountsViewModel.swift */,
 				1BEC56B62A9D63E3009FE9FA /* MainViewModel.swift */,
 				1BEC56BA2A9D7636009FE9FA /* PasswordGeneratorViewModel.swift */,
+				1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */,
+				1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -219,8 +225,10 @@
 				1BEC56BB2A9D7636009FE9FA /* PasswordGeneratorViewModel.swift in Sources */,
 				1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */,
 				1BEC56B72A9D63E3009FE9FA /* MainViewModel.swift in Sources */,
+				1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */,
 				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,
 				1B5543432A99252300F0B703 /* PrivacyOverlayView.swift in Sources */,
+				1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */,
 				1BF1A7EE2A8E509300663733 /* AccountDetailView.swift in Sources */,
 				1BF1A7E82A8E504000663733 /* AccountsView.swift in Sources */,
 				1BF1A7EA2A8E505300663733 /* AccountListItemView.swift in Sources */,

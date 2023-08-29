@@ -12,21 +12,13 @@ class AccountsViewModel: ObservableObject {
     // Test data
     @Published var testAccounts: [Account]
     
-    @Published var defaultAccount = Account(name: "", username: "", password: "", url: "")
-    
     @Published var accountToDelete: Account? = nil
     
     @Published var viewItemHeight: CGFloat = 50
     
-    @Published var showCopyPopupOverlay: Bool = false
-    
     init() {
         let testAccounts = AccountTestDataService.accounts
         self.testAccounts = testAccounts
-    }
-    
-    func copyToClipboard(text: String) {
-        UIPasteboard.general.string = text
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil) -> Bool {
@@ -96,19 +88,5 @@ class AccountsViewModel: ObservableObject {
         let unstarredAccounts: [Account] = accounts.filter({ !$0.starred })
         
         accounts = starredAccounts + unstarredAccounts
-    }
-    
-    func displayCopyPopupOverlay() {
-        DispatchQueue.main.async {
-            withAnimation(.easeInOut) {
-                self.showCopyPopupOverlay = true
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                withAnimation(.easeInOut) {
-                    self.showCopyPopupOverlay = false
-                }
-            }
-        }
     }
 }

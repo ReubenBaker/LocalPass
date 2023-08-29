@@ -11,14 +11,16 @@ struct AccountDetailView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
+    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
+    @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
-    @State private var showDeleteAlert: Bool = false
-    @State private var showPassword: Bool = false
-    @State private var urlField: Bool = false
     @State private var newUsername: String = ""
     @State private var newPassword: String = ""
     @State private var newUrl: String = ""
+    @State private var showDeleteAlert: Bool = false
+    @State private var showPassword: Bool = false
+    @State private var urlField: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
     @FocusState private var nameTextFieldFocused: Bool
     @FocusState private var usernameTextFieldFocused: Bool
@@ -34,20 +36,7 @@ struct AccountDetailView: View {
     var body: some View {
         ScrollView {
             VStack {
-                ZStack {
-                    Text(account.name)
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
-                        .padding(.horizontal)
-                    
-                    HStack {
-                        EditButton()
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                }
-                .padding(.top, accountsViewModel.showCopyPopupOverlay ? 30 : 0)
+                titleItem
 
                 if editMode?.wrappedValue != .active {
                     usernameItem
@@ -99,7 +88,7 @@ struct AccountDetailView: View {
         .onChange(of: editMode?.wrappedValue) { editMode in
             if editMode == .inactive {
                 if newUsername != "" {
-                    account.username = newUsername
+                    account.username = newUsername // Fix: is updating testAccounts directly!
                 }
                 
                 if newPassword != "" {
@@ -117,23 +106,43 @@ struct AccountDetailView: View {
     }
 }
 
+// Preview
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
+        @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @State var account = Account(name: "default", username: "default", password: "default")
         
         AccountDetailView(account: $account)
             .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
+            .environmentObject(copyPopupOverlayViewModel)
     }
 }
 
 extension AccountDetailView {
+    private var titleItem: some View {
+        ZStack {
+            Text(account.name)
+                .font(.title)
+                .fontWeight(.semibold)
+                .lineLimit(2)
+                .padding(.horizontal)
+            
+            HStack {
+                EditButton()
+                Spacer()
+            }
+            .padding(.horizontal)
+        }
+        .padding(.top, copyPopupOverlayViewModel.showCopyPopupOverlay ? 30 : 0)
+    }
+    
     private var usernameItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: account.username)
-            accountsViewModel.displayCopyPopupOverlay()
+            mainViewModel.copyToClipboard(text: account.username)
+            copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "person.circle.fill")
@@ -188,8 +197,8 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: account.password)
-            accountsViewModel.displayCopyPopupOverlay()
+            mainViewModel.copyToClipboard(text: account.password)
+            copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
@@ -307,8 +316,8 @@ extension AccountDetailView {
     
     private var urlItem: some View {
         Button {
-            accountsViewModel.copyToClipboard(text: account.url ?? "")
-            accountsViewModel.displayCopyPopupOverlay()
+            mainViewModel.copyToClipboard(text: account.url ?? "")
+            copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "link.circle.fill")
