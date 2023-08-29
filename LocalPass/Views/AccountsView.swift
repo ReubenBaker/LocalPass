@@ -32,6 +32,10 @@ struct AccountsView: View {
         .overlay(alignment: .top) {
             CopyPopupOverlayView()
         }
+        .overlay {
+            PrivacyOverlayView()
+                .hidden()
+        }
         .onChange(of: sortSelection) { _ in
             accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
             accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
@@ -42,6 +46,7 @@ struct AccountsView: View {
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        
         AccountsView()
             .environmentObject(accountsViewModel)
     }

@@ -56,6 +56,7 @@ struct AccountListItemView: View {
 struct AccountListItemView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        
         AccountListItemView(account: $accountsViewModel.testAccounts.first!)
             .environmentObject(accountsViewModel)
     }

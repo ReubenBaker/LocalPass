@@ -9,14 +9,14 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
-    @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @Binding var account: Account
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
     @State private var newUrl: String = ""
-    @FocusState private var textFieldFocused: Bool
+    @FocusState private var urlTextFieldFocused: Bool
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -33,16 +33,16 @@ struct AccountDetailView: View {
                     .lineLimit(2)
                     .padding(.horizontal)
                     .padding(.top, accountsViewModel.showCopyPopupOverlay ? 30 : 0)
-                
+
                 usernameItem
                 passwordItem
-                
+
                 if account.url != nil {
                     urlItem
                 } else {
                     noUrlItem
                 }
-                
+
                 creationDateTimeItem()
                 updatedDateTimeItem()
                 deleteItem
@@ -68,11 +68,9 @@ struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
         @State var account = Account(name: "default", username: "default", password: "default")
-        @StateObject var mainViewModel = MainViewModel()
         
         AccountDetailView(account: $account)
             .environmentObject(accountsViewModel)
-            .environmentObject(mainViewModel)
     }
 }
 
@@ -186,10 +184,10 @@ extension AccountDetailView {
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
                         .tint(.primary)
-                        .focused($textFieldFocused)
+                        .focused($urlTextFieldFocused)
                         .onAppear {
                             DispatchQueue.main.async {
-                                textFieldFocused = true
+                                urlTextFieldFocused = true
                             }
                         }
                         .onSubmit {
