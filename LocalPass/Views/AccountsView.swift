@@ -45,9 +45,11 @@ struct AccountsView: View {
 
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         
         AccountsView()
+            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
     }
 }

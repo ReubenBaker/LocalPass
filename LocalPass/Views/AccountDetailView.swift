@@ -66,10 +66,12 @@ struct AccountDetailView: View {
 
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @State var account = Account(name: "default", username: "default", password: "default")
         
         AccountDetailView(account: $account)
+            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
     }
 }

@@ -13,12 +13,13 @@ struct AddAccountView: View {
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var newName: String = ""
     @State private var newUsername: String = ""
-    @State private var newPassword: String = ""
+    @State var newPassword: String = ""
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
     @State private var newUrl: String = ""
     @State private var accountSuccess: Bool = false
     @State private var showAccountSuccessAlert: Bool = false
+    @State private var showPasswordGeneratorSheet: Bool = false
     @FocusState private var nameTextFieldFocused: Bool
     @FocusState private var usernameTextFieldFocused: Bool
     @FocusState private var passwordTextFieldFocused: Bool
@@ -30,6 +31,7 @@ struct AddAccountView: View {
                 Text(newName != "" ? newName : "New Account")
                     .font(.title)
                     .fontWeight(.semibold)
+                    .lineLimit(2)
                     .padding(.horizontal)
                 
                 nameItem
@@ -49,14 +51,20 @@ struct AddAccountView: View {
         .alert(isPresented: $showAccountSuccessAlert) {
             getAccountSuccessAlert(accountSuccess: accountSuccess)
         }
+        .sheet(isPresented: $showPasswordGeneratorSheet) {
+            PasswordGeneratorView(password: $newPassword)
+                .presentationDetents([.fraction(0.45)])
+        }
     }
 }
 
 struct AddAccountView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         
         AddAccountView()
+            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
     }
 }
@@ -156,6 +164,8 @@ extension AddAccountView {
                 .padding(.vertical, 10)
                 .foregroundColor(Color("AccentColor"))
             
+            @State var blankPassword = ""
+            
             if showPassword {
                 TextField("Enter password...", text: $newPassword)
                     .frame(maxHeight: .infinity)
@@ -183,6 +193,24 @@ extension AddAccountView {
             }
             
             Spacer()
+            
+            Button {
+                showPasswordGeneratorSheet.toggle()
+            } label: {
+                ZStack {
+                    Image(systemName: "circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.vertical, 10)
+                        .foregroundColor(Color("AccentColor"))
+                    
+                    Image(systemName: "key.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.vertical, 15)
+                        .foregroundColor(Color("GeneralColor"))
+                }
+            }
             
             Button {
                 let isFocused = passwordTextFieldFocused
