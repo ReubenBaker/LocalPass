@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 struct Account: Identifiable, Equatable {
-    let name: String
-    let username: String // Change!
-    let password: String // Change!
+    var name: String
+    var username: String
+    var password: String
     var url: String?
     let creationDateTime: Date
     var updatedDateTime: Date? = nil
@@ -19,7 +19,7 @@ struct Account: Identifiable, Equatable {
     
     // Identifiable
     var id: String {
-        name + username // Change later
+        name + String(creationDateTime.description) // Change later
     }
     
     // Equatable

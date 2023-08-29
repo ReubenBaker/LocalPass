@@ -10,12 +10,19 @@ import SwiftUI
 struct AccountDetailView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.editMode) private var editMode
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @Binding var account: Account
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
+    @State private var newUsername: String = ""
+    @State private var newPassword: String = ""
     @State private var newUrl: String = ""
+    @State private var showPasswordGeneratorSheet: Bool = false
+    @FocusState private var nameTextFieldFocused: Bool
+    @FocusState private var usernameTextFieldFocused: Bool
+    @FocusState private var passwordTextFieldFocused: Bool
     @FocusState private var urlTextFieldFocused: Bool
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
@@ -27,22 +34,41 @@ struct AccountDetailView: View {
     var body: some View {
         ScrollView {
             VStack {
-                Text(account.name)
-                    .font(.title)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
+                ZStack {
+                    Text(account.name)
+                        .font(.title)
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
+                        .padding(.horizontal)
+                    
+                    HStack {
+                        EditButton()
+                        Spacer()
+                    }
                     .padding(.horizontal)
-                    .padding(.top, accountsViewModel.showCopyPopupOverlay ? 30 : 0)
-
-                usernameItem
-                passwordItem
-
-                if account.url != nil {
-                    urlItem
-                } else {
-                    noUrlItem
                 }
+                .padding(.top, accountsViewModel.showCopyPopupOverlay ? 30 : 0)
 
+                if editMode?.wrappedValue != .active {
+                    usernameItem
+                    passwordItem
+                    
+                    if account.url != nil {
+                        urlItem
+                    } else {
+                        noUrlItem
+                    }
+                } else {
+                    editUsernameItem
+                    editPasswordItem
+                    
+                    if account.url != nil {
+                        editUrlItem
+                    } else {
+                        noUrlItem
+                    }
+                }
+                
                 creationDateTimeItem()
                 updatedDateTimeItem()
                 deleteItem
@@ -60,6 +86,33 @@ struct AccountDetailView: View {
         }
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
+        }
+        .sheet(isPresented: $showPasswordGeneratorSheet) {
+            PasswordGeneratorView(password: $newPassword)
+                .presentationDetents([.fraction(0.45)])
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                EditButton()
+            }
+        }
+        .onChange(of: editMode?.wrappedValue) { editMode in
+            if editMode == .inactive {
+                if newUsername != "" {
+                    account.username = newUsername
+                }
+                
+                if newPassword != "" {
+                    account.password = newPassword
+                }
+                
+                if newUrl != "" {
+                    account.url = newUrl
+                }
+            }
+        }
+        .onDisappear {
+            accountsViewModel.updateAccount(id: account.id, account: account)
         }
     }
 }
@@ -104,6 +157,35 @@ extension AccountDetailView {
         .padding(.horizontal)
     }
     
+    private var editUsernameItem: some View {
+        HStack {
+            Image(systemName: "person.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
+            
+            TextField("\(account.username)", text: $newUsername)
+                .frame(maxHeight: .infinity)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.leading)
+                .tint(.primary)
+                .focused($usernameTextFieldFocused)
+                .onTapGesture {
+                    DispatchQueue.main.async {
+                        usernameTextFieldFocused = true
+                    }
+                }
+        }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
+        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(maxWidth: .infinity)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
     private var passwordItem: some View {
         Button {
             accountsViewModel.copyToClipboard(text: account.password)
@@ -133,6 +215,89 @@ extension AccountDetailView {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
+        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(maxWidth: .infinity)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
+    private var editPasswordItem: some View {
+        HStack {
+            Image(systemName: "lock.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
+            
+            @State var blankPassword = ""
+            
+            if showPassword {
+                TextField("\(account.password)", text: $newPassword)
+                    .frame(maxHeight: .infinity)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.leading)
+                    .tint(.primary)
+                    .focused($passwordTextFieldFocused)
+                    .onTapGesture {
+                        DispatchQueue.main.async {
+                            passwordTextFieldFocused = true
+                        }
+                    }
+            } else {
+                SecureField("************", text: $newPassword)
+                    .frame(maxHeight: .infinity)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.leading)
+                    .tint(.primary)
+                    .focused($passwordTextFieldFocused)
+                    .onTapGesture {
+                        DispatchQueue.main.async {
+                            passwordTextFieldFocused = true
+                        }
+                    }
+            }
+            
+            Spacer()
+            
+            Button {
+                showPasswordGeneratorSheet.toggle()
+            } label: {
+                ZStack {
+                    Image(systemName: "circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.vertical, 10)
+                        .foregroundColor(Color("AccentColor"))
+                    
+                    Image(systemName: "key.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.vertical, 15)
+                        .foregroundColor(Color("GeneralColor"))
+                }
+            }
+            
+            Button {
+                let isFocused = passwordTextFieldFocused
+                
+                showPassword.toggle()
+                
+                if isFocused {
+                    DispatchQueue.main.async {
+                        passwordTextFieldFocused = true
+                    }
+                }
+            } label: {
+                Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.vertical, 10)
+                    .foregroundColor(Color("AccentColor"))
+            }
+        }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
@@ -198,7 +363,7 @@ extension AccountDetailView {
                             }
                             
                             account.updatedDateTime = Date()
-                            accountsViewModel.updateAccount(account: account)
+                            accountsViewModel.updateAccount(id: account.id, account: account)
                         }
                     
                     Button {
@@ -219,6 +384,35 @@ extension AccountDetailView {
         .padding(.horizontal)
         .frame(height: accountsViewModel.viewItemHeight)
         .frame(maxWidth: urlField ? .infinity : nil)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
+    private var editUrlItem: some View {
+        HStack {
+            Image(systemName: "link.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
+            
+            TextField("\(account.url ?? "Enter url...")", text: $newUrl)
+                .frame(maxHeight: .infinity)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.leading)
+                .tint(.primary)
+                .focused($urlTextFieldFocused)
+                .onTapGesture {
+                    DispatchQueue.main.async {
+                        urlTextFieldFocused = true
+                    }
+                }
+        }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
+        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)

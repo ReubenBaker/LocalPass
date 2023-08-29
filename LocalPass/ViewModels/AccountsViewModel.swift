@@ -48,8 +48,8 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func updateAccount(account: Account) {
-        if let index = testAccounts.firstIndex(where: { $0.id == account.id }) {
+    func updateAccount(id: String, account: Account) {
+        if let index = testAccounts.firstIndex(where: { $0.id == id }) {
             testAccounts[index] = account
         }
     }
