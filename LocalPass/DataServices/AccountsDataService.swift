@@ -80,8 +80,8 @@ class AccountsDataService {
         return parseData(blob: blob)
     }
     
-    func saveData(data: String) {
-        let blob = formatForSave(accounts: AccountTestDataService.accounts)
+    func saveData(accounts: [Account]?) {
+        let blob = formatForSave(accounts: accounts)
         try? blob?.write(to: path, atomically: true, encoding: .utf8)
     }
 }

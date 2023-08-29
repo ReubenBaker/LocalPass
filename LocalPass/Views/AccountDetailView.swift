@@ -112,12 +112,14 @@ struct AccountDetailView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
+        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         @State var account = Account(name: "default", username: "default", password: "default")
         
         AccountDetailView(account: $account)
             .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
+            .environmentObject(privacyOverlayViewModel)
     }
 }
 

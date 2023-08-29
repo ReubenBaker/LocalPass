@@ -57,9 +57,11 @@ struct AddAccountView: View {
 struct AddAccountView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AddAccountView()
             .environmentObject(accountsViewModel)
+            .environmentObject(privacyOverlayViewModel)
     }
 }
 

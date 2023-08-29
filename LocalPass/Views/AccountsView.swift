@@ -42,17 +42,21 @@ struct AccountsView: View {
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
+        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AccountsView()
             .environmentObject(accountsViewModel)
+            .environmentObject(privacyOverlayViewModel)
     }
 }
 
 // Functions
 extension AccountsView {
     private func sortAccounts(sortSelection: String) {
-        accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
-        accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+        if accountsViewModel.testAccounts != nil {
+            accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
+            accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+        }
     }
 }
 
@@ -61,34 +65,36 @@ extension AccountsView {
     private var accountList: some View {
          NavigationStack {
              List {
-                ForEach($accountsViewModel.testAccounts) { $account in
-                    AccountListItemView(account: $account)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button {
-                                accountsViewModel.accountToDelete = account
-                                showDeleteAlert.toggle()
-                            } label: {
-                                Image(systemName: "trash.fill")
-                            }
-                            .tint(.red)
-                            
-                            if let index = accountsViewModel.testAccounts.firstIndex(where: { $0.id == account.id }) {
+                 if let accounts = accountsViewModel.testAccounts {
+                     ForEach(accounts) { account in
+                         AccountListItemView(account: Binding.constant(account))
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets())
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button {
-                                    accountsViewModel.testAccounts[index].starred.toggle()
-                                    accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+                                    accountsViewModel.accountToDelete = account
+                                    showDeleteAlert.toggle()
                                 } label: {
-                                    Image(systemName: accountsViewModel.testAccounts[index].starred ? "star.fill" : "star")
+                                    Image(systemName: "trash.fill")
                                 }
-                                .tint(.yellow)
+                                .tint(.red)
+                                
+                                if let index = accountsViewModel.testAccounts!.firstIndex(where: { $0.id == account.id }) {
+                                    Button {
+                                        accountsViewModel.testAccounts![index].starred.toggle()
+                                        accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+                                    } label: {
+                                        Image(systemName: account.starred ? "star.fill" : "star")
+                                    }
+                                    .tint(.yellow)
+                                }
                             }
-                        }
-                    
-                   Spacer()
-                        .listRowSeparator(.hidden)
-                        .moveDisabled(true)
-                }
+                        
+                       Spacer()
+                            .listRowSeparator(.hidden)
+                            .moveDisabled(true)
+                     }
+                 }
             }
             .padding(.horizontal)
             .environment(\.defaultMinListRowHeight, 0)

@@ -10,10 +10,14 @@ import SwiftUI
 
 class AccountsViewModel: ObservableObject {
     // Test data
-    @Published var testAccounts: [Account]
+    @Published var testAccounts: [Account]? = nil
     
     // Actual data
-    @Published var accounts: [Account]?
+    @Published var accounts: [Account]? {
+        didSet {
+            AccountsDataService().saveData(accounts: accounts)
+        }
+    }
     
     @Published var accountToDelete: Account? = nil
     
@@ -40,7 +44,7 @@ class AccountsViewModel: ObservableObject {
             url: url
         )
         do {
-            testAccounts.append(newAccount)
+            testAccounts = (testAccounts ?? []) + [newAccount]
             return true
         } catch {
             return false
@@ -48,13 +52,13 @@ class AccountsViewModel: ObservableObject {
     }
     
     func updateAccount(id: String, account: Account) {
-        if let index = testAccounts.firstIndex(where: { $0.id == id }) {
-            testAccounts[index] = account
+        if let index = testAccounts?.firstIndex(where: { $0.id == id }) {
+            testAccounts?[index] = account
         }
     }
     
     func deleteItem(account: Account) {
-        testAccounts.removeAll(where: { $0.id == account.id })
+        testAccounts?.removeAll(where: { $0.id == account.id })
     }
     
     func getDeleteAlert() -> Alert {
@@ -76,24 +80,28 @@ class AccountsViewModel: ObservableObject {
         )
     }
     
-    func sortAccounts(accounts: inout [Account], sortOption: String) {
-        var sortedAccounts: [Account]? = nil
-        
-        if sortOption == "Date Added Ascending" {
-            sortedAccounts = accounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedAscending })
-        } else if sortOption == "Date Added Descending" {
-            sortedAccounts = accounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedDescending })
-        } else if sortOption == "Alphabetical" {
-            sortedAccounts = accounts.sorted(by: { $0.name.compare($1.name) == .orderedAscending })
+    func sortAccounts(accounts: inout [Account]?, sortOption: String) {
+        if let unsortedAccounts = accounts {
+            var sortedAccounts: [Account]? = nil
+            
+            if sortOption == "Date Added Ascending" {
+                sortedAccounts = unsortedAccounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedAscending })
+            } else if sortOption == "Date Added Descending" {
+                sortedAccounts = unsortedAccounts.sorted(by: { $0.creationDateTime.compare($1.creationDateTime) == .orderedDescending })
+            } else if sortOption == "Alphabetical" {
+                sortedAccounts = unsortedAccounts.sorted(by: { $0.name.compare($1.name) == .orderedAscending })
+            }
+            
+            accounts = sortedAccounts ?? accounts
         }
-        
-        accounts = sortedAccounts ?? accounts
     }
     
-    func sortAccountsByStar(accounts: inout [Account]) {
-        let starredAccounts: [Account] = accounts.filter({ $0.starred })
-        let unstarredAccounts: [Account] = accounts.filter({ !$0.starred })
-        
-        accounts = starredAccounts + unstarredAccounts
+    func sortAccountsByStar(accounts: inout [Account]?) {
+        if let unsortedAccounts = accounts {
+            let starredAccounts: [Account] = unsortedAccounts.filter({ $0.starred })
+            let unstarredAccounts: [Account] = unsortedAccounts.filter({ !$0.starred })
+            
+            accounts = starredAccounts + unstarredAccounts
+        }
     }
 }
