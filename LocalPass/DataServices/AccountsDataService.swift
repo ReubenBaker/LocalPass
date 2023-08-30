@@ -13,7 +13,6 @@ class AccountsDataService {
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(Bundle.main.bundleIdentifier!)
     
     init() {
-        print(getBlob())
         if getBlob() == nil || getBlob() == "" {
             do {
                 if let testData = formatForSave(accounts: AccountTestDataService.accounts) {

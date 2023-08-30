@@ -51,6 +51,15 @@ class AccountsViewModel: ObservableObject {
         accounts?.removeAll(where: { $0.id == account.id })
     }
     
+    // REMOVE!
+    func deleteAll(accountsToDelete: [Account]?) {
+        if let accounts = accountsToDelete {
+            for account in accounts {
+                self.deleteItem(account: account)
+            }
+        }
+    }
+    
     func getDeleteAlert() -> Alert {
         let title: Text = Text("Are you sure you want to delete this account?")
         let message: Text = Text("This action cannot be undone!")

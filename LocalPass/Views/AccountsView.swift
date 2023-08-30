@@ -20,7 +20,13 @@ struct AccountsView: View {
     
     var body: some View {
         ZStack {
-            accountList
+            NavigationStack {
+                if accountsViewModel.accounts?.count != 0 {
+                    accountList
+                } else {
+                    noAccountItem
+                }
+            }
         }
         .fullScreenCover(isPresented: $showAddAccountSheet, content: {
             AddAccountView()
@@ -63,68 +69,97 @@ extension AccountsView {
 // Views
 extension AccountsView {
     private var accountList: some View {
-         NavigationStack {
-             List {
-                 if let accounts = accountsViewModel.accounts {
-                     ForEach(accounts) { account in
-                         AccountListItemView(account: Binding.constant(account))
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets())
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button {
-                                    accountsViewModel.accountToDelete = account
-                                    showDeleteAlert.toggle()
-                                } label: {
-                                    Image(systemName: "trash.fill")
-                                }
-                                .tint(.red)
-                                
-                                if let index = accountsViewModel.accounts!.firstIndex(where: { $0.id == account.id }) {
-                                    Button {
-                                        accountsViewModel.accounts![index].starred.toggle()
-                                        accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
-                                    } label: {
-                                        Image(systemName: account.starred ? "star.fill" : "star")
-                                    }
-                                    .tint(.yellow)
-                                }
+         List {
+             if let accounts = accountsViewModel.accounts {
+                 ForEach(accounts) { account in
+                     AccountListItemView(account: Binding.constant(account))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button {
+                                accountsViewModel.accountToDelete = account
+                                showDeleteAlert.toggle()
+                            } label: {
+                                Image(systemName: "trash.fill")
                             }
-                        
-                       Spacer()
-                            .listRowSeparator(.hidden)
-                            .moveDisabled(true)
-                     }
-                 }  else {
-                     Text("No Accounts!")
-                 }
-            }
-            .padding(.horizontal)
-            .environment(\.defaultMinListRowHeight, 0)
-            .listStyle(PlainListStyle())
-            .scrollContentBackground(.hidden)
-            .scrollIndicators(.hidden)
-            .navigationTitle("Accounts")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Picker("Sort", selection: $sortSelection) {
-                            ForEach(sortOptions, id: \.self) {
-                                Text($0)
+                            .tint(.red)
+                            
+                            if let index = accountsViewModel.accounts!.firstIndex(where: { $0.id == account.id }) {
+                                Button {
+                                    accountsViewModel.accounts![index].starred.toggle()
+                                    accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
+                                } label: {
+                                    Image(systemName: account.starred ? "star.fill" : "star")
+                                }
+                                .tint(.yellow)
                             }
                         }
-                    } label: {
-                        Text("Sort")
+                    
+                   Spacer()
+                        .listRowSeparator(.hidden)
+                        .moveDisabled(true)
+                 }
+             }
+        }
+        .padding(.horizontal)
+        .environment(\.defaultMinListRowHeight, 0)
+        .listStyle(PlainListStyle())
+        .scrollContentBackground(.hidden)
+        .scrollIndicators(.hidden)
+        .navigationTitle("Accounts")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Menu {
+                    Picker("Sort", selection: $sortSelection) {
+                        ForEach(sortOptions, id: \.self) {
+                            Text($0)
+                        }
                     }
+                } label: {
+                    Text("Sort")
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showAddAccountSheet.toggle()
-                    } label: {
-                        Image(systemName: "plus")
-                    }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showAddAccountSheet.toggle()
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarLeading) { // REMOVE!
+                Button {
+                    accountsViewModel.deleteAll(accountsToDelete: accountsViewModel.accounts)
+                } label: {
+                    Text("Delete ALL!")
                 }
             }
         }
+    }
+    
+    private var noAccountItem: some View {
+        VStack {
+            Text("You have no accounts setup yet, time to add your first one! 🤩")
+                .font(.title2)
+                .padding()
+            
+            Button {
+                showAddAccountSheet.toggle()
+            } label: {
+                Text("Add Your First Account")
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.primary)
+                    .background(Color("AccentColor"))
+                    .cornerRadius(10)
+                    .shadow(radius: 4)
+                    .padding()
+            }
+
+            Spacer()
+        }
+        .navigationTitle("No Accounts!")
     }
 }
