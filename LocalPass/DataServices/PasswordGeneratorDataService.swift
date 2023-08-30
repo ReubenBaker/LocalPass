@@ -1,13 +1,13 @@
 //
-//  PasswordGeneratorViewModel.swift
+//  PasswordGeneratorDataService.swift
 //  LocalPass
 //
-//  Created by Reuben on 29/08/2023.
+//  Created by Reuben on 30/08/2023.
 //
 
 import Foundation
 
-class PasswordGeneratorViewModel: ObservableObject {
+class PasswordGeneratorDataService {
     func generatePassword(characterCount: Int, numericalCount: Int, specialCount: Int) -> String {
         let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let numbers = "0123456789"

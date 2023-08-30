@@ -11,7 +11,6 @@ struct PasswordGeneratorView: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
-    @StateObject private var passwordGeneratorViewModel = PasswordGeneratorViewModel()
     @Binding var password: String
     @State var characterCount: Int = 16
     @State var numericalCount: Int = 4
@@ -34,7 +33,7 @@ struct PasswordGeneratorView: View {
                 
                 Button {
                     withAnimation {
-                        password = passwordGeneratorViewModel.generatePassword(
+                        password = PasswordGeneratorDataService().generatePassword(
                             characterCount: characterCount,
                             numericalCount: numericalCount,
                             specialCount: specialCount
