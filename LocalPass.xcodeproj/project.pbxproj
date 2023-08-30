@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1B42D4232A9E767300763016 /* AccountsDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4222A9E767300763016 /* AccountsDataService.swift */; };
 		1B42D4252A9E78A200763016 /* FileManagerTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4242A9E78A200763016 /* FileManagerTestView.swift */; };
+		1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */; };
 		1B5543432A99252300F0B703 /* PrivacyOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5543422A99252300F0B703 /* PrivacyOverlayView.swift */; };
 		1B590E912A95888300FFFEE6 /* AddAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B590E902A95888300FFFEE6 /* AddAccountView.swift */; };
 		1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		1B42D4222A9E767300763016 /* AccountsDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsDataService.swift; sourceTree = "<group>"; };
 		1B42D4242A9E78A200763016 /* FileManagerTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerTestView.swift; sourceTree = "<group>"; };
+		1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPGeneratorDataService.swift; sourceTree = "<group>"; };
 		1B5543422A99252300F0B703 /* PrivacyOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyOverlayView.swift; sourceTree = "<group>"; };
 		1B590E902A95888300FFFEE6 /* AddAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountView.swift; sourceTree = "<group>"; };
 		1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayView.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			children = (
 				1BF1A7F32A8E511600663733 /* AccountTestDataService.swift */,
 				1B42D4222A9E767300763016 /* AccountsDataService.swift */,
+				1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */,
 			);
 			path = DataServices;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 				1BF1A7F62A8E514700663733 /* AccountsViewModel.swift in Sources */,
 				1BEC56BB2A9D7636009FE9FA /* PasswordGeneratorViewModel.swift in Sources */,
 				1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */,
+				1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */,
 				1BEC56B72A9D63E3009FE9FA /* MainViewModel.swift in Sources */,
 				1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */,
 				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,
