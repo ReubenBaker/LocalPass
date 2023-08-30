@@ -20,8 +20,8 @@ class AccountsViewModel: ObservableObject {
     @Published var viewItemHeight: CGFloat = 50
     
     init() {
-        let accountsDataService = AccountsDataService()
-        let accounts = accountsDataService.getAccountData()
+        let accountsDataService = AccountsDataService() // Remove later + remove init of test accounts
+        let accounts = AccountsDataService().getAccountData()
         self.accounts = accounts
     }
     

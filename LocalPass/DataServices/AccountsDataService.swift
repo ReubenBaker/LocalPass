@@ -13,7 +13,8 @@ class AccountsDataService {
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(Bundle.main.bundleIdentifier!)
     
     init() {
-        if getBlob() == nil {
+        print(getBlob())
+        if getBlob() == nil || getBlob() == "" {
             do {
                 if let testData = formatForSave(accounts: AccountTestDataService.accounts) {
                     try testData.write(to: path, atomically: true, encoding: .utf8)
