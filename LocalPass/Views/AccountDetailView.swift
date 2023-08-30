@@ -88,7 +88,7 @@ struct AccountDetailView: View {
         .onChange(of: editMode?.wrappedValue) { editMode in
             if editMode == .inactive {
                 if newUsername != "" {
-                    account.username = newUsername // Fix: is updating testAccounts directly!
+                    account.username = newUsername // Fix: is updating accounts directly!
                 }
                 
                 if newPassword != "" {

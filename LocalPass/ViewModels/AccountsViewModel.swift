@@ -9,10 +9,6 @@ import Foundation
 import SwiftUI
 
 class AccountsViewModel: ObservableObject {
-    // Test data
-    @Published var testAccounts: [Account]? = nil
-    
-    // Actual data
     @Published var accounts: [Account]? {
         didSet {
             AccountsDataService().saveData(accounts: accounts)
@@ -24,9 +20,6 @@ class AccountsViewModel: ObservableObject {
     @Published var viewItemHeight: CGFloat = 50
     
     init() {
-        let testAccounts = AccountTestDataService.accounts
-        self.testAccounts = testAccounts
-        
         let accountsDataService = AccountsDataService()
         let accounts = accountsDataService.getAccountData()
         self.accounts = accounts
@@ -43,22 +36,19 @@ class AccountsViewModel: ObservableObject {
             password: password,
             url: url
         )
-        do {
-            testAccounts = (testAccounts ?? []) + [newAccount]
-            return true
-        } catch {
-            return false
-        }
+        
+        accounts = (accounts ?? []) + [newAccount]
+        return true
     }
     
     func updateAccount(id: String, account: Account) {
-        if let index = testAccounts?.firstIndex(where: { $0.id == id }) {
-            testAccounts?[index] = account
+        if let index = accounts?.firstIndex(where: { $0.id == id }) {
+            accounts?[index] = account
         }
     }
     
     func deleteItem(account: Account) {
-        testAccounts?.removeAll(where: { $0.id == account.id })
+        accounts?.removeAll(where: { $0.id == account.id })
     }
     
     func getDeleteAlert() -> Alert {

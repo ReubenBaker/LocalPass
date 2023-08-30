@@ -10,12 +10,17 @@ import SwiftUI
 
 class AccountsDataService {
     let fileManager = FileManager()
-    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(Bundle.main.bundleIdentifier!)/blob.txt")
+    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(Bundle.main.bundleIdentifier!)
     
     init() {
         if getBlob() == nil {
-            let testData = formatForSave(accounts: AccountTestDataService.accounts)
-            try? testData?.write(to: path, atomically: true, encoding: .utf8)
+            do {
+                if let testData = formatForSave(accounts: AccountTestDataService.accounts) {
+                    try testData.write(to: path, atomically: true, encoding: .utf8)
+                }
+            } catch {
+                print("Error writing data: \(error)")
+            }
         }
     }
     
@@ -81,7 +86,12 @@ class AccountsDataService {
     }
     
     func saveData(accounts: [Account]?) {
-        let blob = formatForSave(accounts: accounts)
-        try? blob?.write(to: path, atomically: true, encoding: .utf8)
+        do {
+            if let blob = formatForSave(accounts: accounts) {
+                try blob.write(to: path, atomically: true, encoding: .utf8)
+            }
+        } catch {
+            print("Error writing data: \(error)")
+        }
     }
 }

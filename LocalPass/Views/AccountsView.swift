@@ -53,9 +53,9 @@ struct AccountsView_Previews: PreviewProvider {
 // Functions
 extension AccountsView {
     private func sortAccounts(sortSelection: String) {
-        if accountsViewModel.testAccounts != nil {
-            accountsViewModel.sortAccounts(accounts: &accountsViewModel.testAccounts, sortOption: sortSelection)
-            accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+        if accountsViewModel.accounts != nil {
+            accountsViewModel.sortAccounts(accounts: &accountsViewModel.accounts, sortOption: sortSelection)
+            accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
         }
     }
 }
@@ -65,7 +65,7 @@ extension AccountsView {
     private var accountList: some View {
          NavigationStack {
              List {
-                 if let accounts = accountsViewModel.testAccounts {
+                 if let accounts = accountsViewModel.accounts {
                      ForEach(accounts) { account in
                          AccountListItemView(account: Binding.constant(account))
                             .listRowSeparator(.hidden)
@@ -79,10 +79,10 @@ extension AccountsView {
                                 }
                                 .tint(.red)
                                 
-                                if let index = accountsViewModel.testAccounts!.firstIndex(where: { $0.id == account.id }) {
+                                if let index = accountsViewModel.accounts!.firstIndex(where: { $0.id == account.id }) {
                                     Button {
-                                        accountsViewModel.testAccounts![index].starred.toggle()
-                                        accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.testAccounts)
+                                        accountsViewModel.accounts![index].starred.toggle()
+                                        accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
                                     } label: {
                                         Image(systemName: account.starred ? "star.fill" : "star")
                                     }
@@ -94,6 +94,8 @@ extension AccountsView {
                             .listRowSeparator(.hidden)
                             .moveDisabled(true)
                      }
+                 }  else {
+                     Text("No Accounts!")
                  }
             }
             .padding(.horizontal)
