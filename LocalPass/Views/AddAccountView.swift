@@ -97,7 +97,7 @@ extension AddAccountView {
             .font(.title)
             .fontWeight(.semibold)
             .lineLimit(2)
-            .padding(.horizontal)
+            .padding(.horizontal, 70)
     }
     
     private var nameItem: some View {

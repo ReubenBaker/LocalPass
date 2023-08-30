@@ -43,7 +43,7 @@ class AccountsViewModel: ObservableObject {
     
     func updateAccount(id: String, account: Account) {
         if let index = accounts?.firstIndex(where: { $0.id == id }) {
-            accounts?[index] = account
+            accounts![index] = account
         }
     }
     

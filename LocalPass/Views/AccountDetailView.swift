@@ -50,12 +50,7 @@ struct AccountDetailView: View {
                 } else {
                     editUsernameItem
                     editPasswordItem
-                    
-                    if account.url != nil {
-                        editUrlItem
-                    } else {
-                        noUrlItem
-                    }
+                    editUrlItem
                 }
                 
                 creationDateTimeItem()
@@ -88,15 +83,21 @@ struct AccountDetailView: View {
         .onChange(of: editMode?.wrappedValue) { editMode in
             if editMode == .inactive {
                 if newUsername != "" {
-                    account.username = newUsername // Fix: is updating accounts directly!
+                    let updatedAccount = Account(name: account.name, username: newUsername, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                    
+                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
                 
                 if newPassword != "" {
-                    account.password = newPassword
+                    let updatedAccount = Account(name: account.name, username: account.username, password: newPassword, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                    
+                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
                 
                 if newUrl != "" {
-                    account.url = newUrl
+                    let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                    
+                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
             }
         }
@@ -130,7 +131,7 @@ extension AccountDetailView {
                 .font(.title)
                 .fontWeight(.semibold)
                 .lineLimit(2)
-                .padding(.horizontal)
+                .padding(.horizontal, 70)
             
             HStack {
                 EditButton()
@@ -369,12 +370,9 @@ extension AccountDetailView {
                             }
                         }
                         .onSubmit {
-                            withAnimation() {
-                                account.url = newUrl
-                            }
+                            let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
                             
-                            account.updatedDateTime = Date()
-                            accountsViewModel.updateAccount(id: account.id, account: account)
+                            accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                         }
                     
                     Button {
