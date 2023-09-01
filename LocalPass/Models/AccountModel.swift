@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 struct Account: Identifiable, Equatable {
     var name: String

@@ -72,7 +72,7 @@ extension AccountListItemView {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)

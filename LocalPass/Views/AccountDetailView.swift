@@ -198,7 +198,7 @@ extension AccountDetailView {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -227,7 +227,7 @@ extension AccountDetailView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -263,7 +263,7 @@ extension AccountDetailView {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -344,7 +344,7 @@ extension AccountDetailView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -371,7 +371,7 @@ extension AccountDetailView {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -425,7 +425,7 @@ extension AccountDetailView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(minWidth: 130, maxWidth: urlField ? .infinity : nil)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -454,7 +454,7 @@ extension AccountDetailView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -491,7 +491,7 @@ extension AccountDetailView {
             .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -545,7 +545,7 @@ extension AccountDetailView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(minWidth: 130, maxWidth: otpSecretField ? .infinity : nil)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -574,7 +574,7 @@ extension AccountDetailView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
