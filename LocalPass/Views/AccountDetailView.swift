@@ -463,7 +463,7 @@ extension AccountDetailView {
     
     private var otpItem: some View {
         Button {
-            mainViewModel.copyToClipboard(text: "")
+            mainViewModel.copyToClipboard(text: otpValue)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
