@@ -128,7 +128,7 @@ struct AccountDetailView_Previews: PreviewProvider {
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
-        @State var account = Account(name: "default", username: "default", password: "default", otpSecret: "TESTKEY")
+        @State var account = Account(name: "default", username: "default", password: "default")
         
         AccountDetailView(account: $account)
             .environmentObject(mainViewModel)
@@ -278,8 +278,6 @@ extension AccountDetailView {
                 .padding(.vertical, 10)
                 .foregroundColor(Color("AccentColor"))
             
-            @State var blankPassword = ""
-            
             if showPassword {
                 TextField("\(account.password)", text: $newPassword)
                     .frame(maxHeight: .infinity)
@@ -428,7 +426,7 @@ extension AccountDetailView {
         .foregroundColor(.primary)
         .padding(.horizontal)
         .frame(height: accountsViewModel.viewItemHeight)
-        .frame(maxWidth: urlField ? .infinity : nil)
+        .frame(minWidth: 130, maxWidth: urlField ? .infinity : nil)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
@@ -501,11 +499,86 @@ extension AccountDetailView {
     }
     
     private var noOtpItem: some View {
-        Text("Test")
+        Button {
+            withAnimation() {
+                otpSecretField = true
+            }
+        } label: {
+            if otpSecretField {
+                HStack() {
+                    Image(systemName: "repeat.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.vertical, 10)
+                        .foregroundColor(Color("AccentColor"))
+                    
+                    TextField("Enter TOTP key...", text: $newOtpSecret)
+                        .frame(maxHeight: .infinity)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.leading)
+                        .tint(.primary)
+                        .focused($otpSecretTextFieldFocused)
+                        .onAppear {
+                            DispatchQueue.main.async {
+                                otpSecretTextFieldFocused = true
+                            }
+                        }
+                        .onSubmit {
+                            let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: newOtpSecret)
+                            
+                            accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                        }
+                    
+                    Button {
+                        withAnimation() {
+                            otpSecretField = false
+                            newOtpSecret = ""
+                        }
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundColor(Color("AccentColor"))
+                    }
+                }
+            } else {
+                Text("Setup TOTP")
+            }
+        }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
+        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(minWidth: 130, maxWidth: otpSecretField ? .infinity : nil)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
     }
     
     private var editOtpItem: some View {
-        Text("Test")
+        HStack {
+            Image(systemName: "repeat.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical, 10)
+                .foregroundColor(Color("AccentColor"))
+            
+            TextField("\(account.otpSecret ?? "Enter TOTP key...")", text: $newOtpSecret)
+                .frame(maxHeight: .infinity)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.leading)
+                .tint(.primary)
+                .focused($otpSecretTextFieldFocused)
+                .onTapGesture {
+                    DispatchQueue.main.async {
+                        otpSecretTextFieldFocused = true
+                    }
+                }
+        }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
+        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(maxWidth: .infinity)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
     }
     
     private func creationDateTimeItem() -> some View {
