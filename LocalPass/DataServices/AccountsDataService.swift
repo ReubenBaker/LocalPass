@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import SwiftUI
 
 class AccountsDataService {
     let fileManager = FileManager()
-    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpass.txt")
+    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
     
     func getBlob() -> String? {
         do {
@@ -49,10 +48,10 @@ class AccountsDataService {
                 return nil
             }
             
-            let blobEntries = blob!.split(separator: "~")
+            let blobEntries = blob?.split(separator: "~")
             var accounts: [Account]? = nil
             
-            for blobEntry in blobEntries {
+            for blobEntry in blobEntries ?? [] {
                 let blobEntryData = blobEntry.split(separator: ";")
                 accounts = (accounts ?? []) + [
                     Account(
@@ -84,7 +83,7 @@ class AccountsDataService {
             let blob = formatForSave(accounts: accounts)
             try blob.write(to: path, atomically: true, encoding: .utf8)
         } catch {
-            print("Error writing data: \(error)")
+            print("Error writing accounts data: \(error)")
         }
     }
 }
