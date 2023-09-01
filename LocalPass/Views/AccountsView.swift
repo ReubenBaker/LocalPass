@@ -127,16 +127,6 @@ extension AccountsView {
                     Image(systemName: "plus")
                 }
             }
-            
-            ToolbarItem(placement: .navigationBarLeading) { // REMOVE!
-                Button {
-                    DispatchQueue.main.async {
-                        accountsViewModel.accounts = nil
-                    }
-                } label: {
-                    Text("Delete ALL!")
-                }
-            }
         }
     }
     
