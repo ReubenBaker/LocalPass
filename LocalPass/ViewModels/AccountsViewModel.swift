@@ -20,9 +20,12 @@ class AccountsViewModel: ObservableObject {
     @Published var viewItemHeight: CGFloat = 50
     
     init() {
-        let accountsDataService = AccountsDataService() // Remove later + remove init of test accounts
         let accounts = AccountsDataService().getAccountData()
         self.accounts = accounts
+        
+        if accounts == nil { // Remove later!!
+            self.accounts = AccountTestDataService.accounts
+        }
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil) -> Bool {
@@ -48,14 +51,11 @@ class AccountsViewModel: ObservableObject {
     }
     
     func deleteItem(account: Account) {
-        accounts?.removeAll(where: { $0.id == account.id })
-    }
-    
-    // REMOVE!
-    func deleteAll(accountsToDelete: [Account]?) {
-        if let accounts = accountsToDelete {
-            for account in accounts {
-                self.deleteItem(account: account)
+        DispatchQueue.main.async {
+            if self.accounts?.count == 1 {
+                self.accounts = nil
+            } else {
+                self.accounts?.removeAll(where: { $0.id == account.id })
             }
         }
     }

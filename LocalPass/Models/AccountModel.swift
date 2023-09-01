@@ -16,6 +16,7 @@ struct Account: Identifiable, Equatable {
     let creationDateTime: Date
     var updatedDateTime: Date? = nil
     var starred: Bool
+    var otpSecret: String?
     
     // Identifiable
     var id: String {
@@ -27,16 +28,17 @@ struct Account: Identifiable, Equatable {
         lhs.id == rhs.id
     }
     
-    init(name: String, username: String, password: String, url: String? = nil) {
+    init(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) {
         self.name = name
         self.username = username
         self.password = password
         self.url = url
         self.creationDateTime = Date()
         self.starred = false
+        self.otpSecret = otpSecret
     }
     
-    init(name: String, username: String, password: String, url: String?, creationDateTime: Date, updatedDateTime: Date?, starred: Bool) {
+    init(name: String, username: String, password: String, url: String?, creationDateTime: Date, updatedDateTime: Date?, starred: Bool, otpSecret: String?) {
         self.name = name
         self.username = username
         self.password = password
@@ -44,5 +46,6 @@ struct Account: Identifiable, Equatable {
         self.creationDateTime = creationDateTime
         self.updatedDateTime = updatedDateTime
         self.starred = starred
+        self.otpSecret = otpSecret
     }
 }

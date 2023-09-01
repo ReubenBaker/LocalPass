@@ -18,14 +18,19 @@ struct AccountDetailView: View {
     @State private var newUsername: String = ""
     @State private var newPassword: String = ""
     @State private var newUrl: String = ""
+    @State private var newOtpSecret: String = ""
+    @State private var otpValue: String = ""
+    @State private var otpTimeLeft: Int = 0
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
+    @State private var otpSecretField: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
     @FocusState private var nameTextFieldFocused: Bool
     @FocusState private var usernameTextFieldFocused: Bool
     @FocusState private var passwordTextFieldFocused: Bool
     @FocusState private var urlTextFieldFocused: Bool
+    @FocusState private var otpSecretTextFieldFocused: Bool
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -42,15 +47,24 @@ struct AccountDetailView: View {
                     usernameItem
                     passwordItem
                     
-                    if account.url != nil {
+                    if account.url != nil && account.otpSecret != nil {
                         urlItem
+                        otpItem
+                    } else if account.url != nil && account.otpSecret == nil {
+                        urlItem
+                        noOtpItem
+                    } else if account.url == nil && account.otpSecret != nil {
+                        otpItem
+                        noUrlItem
                     } else {
                         noUrlItem
+                        noOtpItem
                     }
                 } else {
                     editUsernameItem
                     editPasswordItem
                     editUrlItem
+                    editOtpItem
                 }
                 
                 creationDateTimeItem()
@@ -83,19 +97,19 @@ struct AccountDetailView: View {
         .onChange(of: editMode?.wrappedValue) { editMode in
             if editMode == .inactive {
                 if newUsername != "" {
-                    let updatedAccount = Account(name: account.name, username: newUsername, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                    let updatedAccount = Account(name: account.name, username: newUsername, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
                 
                 if newPassword != "" {
-                    let updatedAccount = Account(name: account.name, username: account.username, password: newPassword, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                    let updatedAccount = Account(name: account.name, username: account.username, password: newPassword, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
                 
                 if newUrl != "" {
-                    let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                    let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
@@ -114,7 +128,7 @@ struct AccountDetailView_Previews: PreviewProvider {
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
-        @State var account = Account(name: "default", username: "default", password: "default")
+        @State var account = Account(name: "default", username: "default", password: "default", otpSecret: "TESTKEY")
         
         AccountDetailView(account: $account)
             .environmentObject(mainViewModel)
@@ -124,6 +138,28 @@ struct AccountDetailView_Previews: PreviewProvider {
     }
 }
 
+// Functions
+extension AccountDetailView {
+    private func updateTimeLeft() {
+        let timeSince1970 = Int(Date().timeIntervalSince1970)
+        let nextInterval = (timeSince1970 / 30) * 30
+        otpTimeLeft = 30 - abs(nextInterval - timeSince1970)
+    }
+    
+    private func startTOTPTimer() {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            updateTimeLeft()
+            
+            if otpTimeLeft == 30 {
+                if let secret = account.otpSecret {
+                    otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
+                }
+            }
+        }
+    }
+}
+
+// Views
 extension AccountDetailView {
     private var titleItem: some View {
         ZStack {
@@ -370,7 +406,7 @@ extension AccountDetailView {
                             }
                         }
                         .onSubmit {
-                            let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred)
+                            let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                             
                             accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                         }
@@ -425,6 +461,51 @@ extension AccountDetailView {
         .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
+    }
+    
+    private var otpItem: some View {
+        Button {
+            mainViewModel.copyToClipboard(text: "")
+            copyPopupOverlayViewModel.displayCopyPopupOverlay()
+        } label: {
+            HStack {
+                Image(systemName: "repeat.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(Color("AccentColor"))
+                
+                Text(otpValue)
+                    .fontWeight(.semibold)
+                    .onAppear {
+                        updateTimeLeft()
+                        startTOTPTimer()
+                        
+                        if let secret = account.otpSecret {
+                            otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
+                        }
+                    }
+                
+                Text("\(otpTimeLeft)")
+                
+                Spacer()
+            }
+            .foregroundColor(.primary)
+            .padding(.horizontal)
+            .padding(.vertical, 10)
+        }
+        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(maxWidth: .infinity)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
+    private var noOtpItem: some View {
+        Text("Test")
+    }
+    
+    private var editOtpItem: some View {
+        Text("Test")
     }
     
     private func creationDateTimeItem() -> some View {

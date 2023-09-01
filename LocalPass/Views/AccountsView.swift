@@ -21,10 +21,10 @@ struct AccountsView: View {
     var body: some View {
         ZStack {
             NavigationStack {
-                if accountsViewModel.accounts?.count != 0 {
-                    accountList
-                } else {
+                if accountsViewModel.accounts == nil {
                     noAccountItem
+                } else {
+                    accountList
                 }
             }
         }
@@ -130,7 +130,9 @@ extension AccountsView {
             
             ToolbarItem(placement: .navigationBarLeading) { // REMOVE!
                 Button {
-                    accountsViewModel.deleteAll(accountsToDelete: accountsViewModel.accounts)
+                    DispatchQueue.main.async {
+                        accountsViewModel.accounts = nil
+                    }
                 } label: {
                     Text("Delete ALL!")
                 }

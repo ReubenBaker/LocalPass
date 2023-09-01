@@ -10,19 +10,7 @@ import SwiftUI
 
 class AccountsDataService {
     let fileManager = FileManager()
-    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(Bundle.main.bundleIdentifier!)
-    
-    init() {
-        if getBlob() == nil || getBlob() == "" {
-            do {
-                if let testData = formatForSave(accounts: AccountTestDataService.accounts) {
-                    try testData.write(to: path, atomically: true, encoding: .utf8)
-                }
-            } catch {
-                print("Error writing data: \(error)")
-            }
-        }
-    }
+    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpass.txt")
     
     func getBlob() -> String? {
         do {
@@ -33,7 +21,7 @@ class AccountsDataService {
         }
     }
     
-    func formatForSave(accounts: [Account]?) -> String? {
+    func formatForSave(accounts: [Account]?) -> String {
         if accounts != nil {
             var formattedString: String = ""
             
@@ -45,17 +33,22 @@ class AccountsDataService {
                 formattedString += "\(String(describing: account.creationDateTime));"
                 formattedString += "\(account.updatedDateTime != nil ? String(describing: account.updatedDateTime!) : String(describing: account.updatedDateTime));"
                 formattedString += "\(account.starred);"
+                formattedString += "\(account.otpSecret != nil ? account.otpSecret! : String(describing: account.otpSecret));"
                 formattedString += "~"
             }
             
             return formattedString
         }
         
-        return nil
+        return "empty"
     }
     
     func parseData(blob: String?) -> [Account]? {
         if blob != nil {
+            if blob == "empty" {
+                return nil
+            }
+            
             let blobEntries = blob!.split(separator: "~")
             var accounts: [Account]? = nil
             
@@ -69,7 +62,8 @@ class AccountsDataService {
                         url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
                         creationDateTime: DateFormatter().date(from: String(blobEntryData[4])) ?? Date(),
                         updatedDateTime: blobEntryData[5] != "nil" ? DateFormatter().date(from: String(blobEntryData[5])) ?? Date() : nil,
-                        starred: blobEntryData[6] == "true" ? true : false
+                        starred: blobEntryData[6] == "true" ? true : false,
+                        otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil
                     )
                 ]
             }
@@ -87,9 +81,8 @@ class AccountsDataService {
     
     func saveData(accounts: [Account]?) {
         do {
-            if let blob = formatForSave(accounts: accounts) {
-                try blob.write(to: path, atomically: true, encoding: .utf8)
-            }
+            let blob = formatForSave(accounts: accounts)
+            try blob.write(to: path, atomically: true, encoding: .utf8)
         } catch {
             print("Error writing data: \(error)")
         }
