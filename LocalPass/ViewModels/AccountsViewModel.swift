@@ -45,11 +45,11 @@ class AccountsViewModel: ObservableObject {
     
     func updateAccount(id: String, account: Account) {
         if let index = accounts?.firstIndex(where: { $0.id == id }) {
-            accounts![index] = account
+            accounts?[index] = account
         }
     }
     
-    func deleteItem(account: Account) {
+    func deleteAccount(account: Account) {
         DispatchQueue.main.async {
             if self.accounts?.count == 1 {
                 self.accounts = nil
@@ -64,7 +64,7 @@ class AccountsViewModel: ObservableObject {
         let message: Text = Text("This action cannot be undone!")
         let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
             if self.accountToDelete != nil {
-                self.deleteItem(account: self.accountToDelete!)
+                self.deleteAccount(account: self.accountToDelete!)
                 self.accountToDelete = nil
             }
         })
