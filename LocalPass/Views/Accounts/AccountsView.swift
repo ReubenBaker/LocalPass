@@ -47,11 +47,15 @@ struct AccountsView: View {
 // Preview
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
+        @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AccountsView()
+            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
+            .environmentObject(copyPopupOverlayViewModel)
             .environmentObject(privacyOverlayViewModel)
     }
 }
@@ -84,9 +88,9 @@ extension AccountsView {
                             }
                             .tint(.red)
                             
-                            if let index = accountsViewModel.accounts!.firstIndex(where: { $0.id == account.id }) {
+                            if let index = accountsViewModel.accounts?.firstIndex(where: { $0.id == account.id }) {
                                 Button {
-                                    accountsViewModel.accounts![index].starred.toggle()
+                                    accountsViewModel.accounts?[index].starred.toggle()
                                     accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
                                 } label: {
                                     Image(systemName: account.starred ? "star.fill" : "star")

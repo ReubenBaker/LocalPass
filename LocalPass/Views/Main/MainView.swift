@@ -14,6 +14,7 @@ struct MainView: View {
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @EnvironmentObject private var privacyOverlayViewModel: PrivacyOverlayViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
+    @StateObject private var notesViewModel = NotesViewModel()
     @State private var selectedTab: Int = 0
     
     var body: some View {
@@ -63,11 +64,18 @@ extension MainView {
                 .tag(0)
                 .environmentObject(accountsViewModel)
             
+            NotesView()
+                .tabItem {
+                    Label("Notes", systemImage: "sparkles.rectangle.stack.fill")
+                }
+                .tag(1)
+                .environmentObject(NotesViewModel())
+            
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }
-                .tag(1)
+                .tag(2)
         }
     }
 }
