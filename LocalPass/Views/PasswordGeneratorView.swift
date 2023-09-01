@@ -24,6 +24,7 @@ struct PasswordGeneratorView: View {
                 Text(password == "" ? "Password" : password)
                     .font(.title)
                     .lineLimit(1)
+                    .padding(.bottom)
                 
                 Stepper("Character Count: \(characterCount)", value: $characterCount, in: 8...32)
                 
@@ -44,11 +45,13 @@ struct PasswordGeneratorView: View {
                         .font(.headline)
                         .padding()
                         .foregroundColor(.primary)
+                        .frame(minWidth: 150)
                         .background(.green)
                         .cornerRadius(10)
                         .shadow(radius: 4)
                         .padding()
                 }
+                .padding(.vertical)
 
             }
             .padding()

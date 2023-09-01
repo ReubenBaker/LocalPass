@@ -26,7 +26,7 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func addAccount(name: String, username: String, password: String, url: String? = nil) -> Bool {
+    func addAccount(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) -> Bool {
         if name == "" || username == "" || password == "" {
             return false
         }
@@ -35,7 +35,8 @@ class AccountsViewModel: ObservableObject {
             name: name,
             username: username,
             password: password,
-            url: url
+            url: url,
+            otpSecret: otpSecret
         )
         
         accounts = (accounts ?? []) + [newAccount]

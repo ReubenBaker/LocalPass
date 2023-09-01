@@ -10,13 +10,16 @@ import SwiftUI
 struct AddAccountView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var newName: String = ""
     @State private var newUsername: String = ""
     @State var newPassword: String = ""
     @State private var newUrl: String = ""
+    @State private var newOtpSecret: String = ""
     @State private var showPassword: Bool = false
     @State private var urlField: Bool = false
+    @State private var otpSecretField: Bool = false
     @State private var accountSuccess: Bool = false
     @State private var showAccountSuccessAlert: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
@@ -24,6 +27,7 @@ struct AddAccountView: View {
     @FocusState private var usernameTextFieldFocused: Bool
     @FocusState private var passwordTextFieldFocused: Bool
     @FocusState private var urlTextFieldFocused: Bool
+    @FocusState private var otpSecretTextFieldFocused: Bool
     
     var body: some View {
         ScrollView {
@@ -33,6 +37,7 @@ struct AddAccountView: View {
                 usernameItem
                 passwordItem
                 urlItem
+                otpItem
                 addItem
             }
             .frame(maxWidth: .infinity)
@@ -48,7 +53,7 @@ struct AddAccountView: View {
         }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: $newPassword)
-                .presentationDetents([.fraction(0.45)])
+                .presentationDetents([.fraction(0.53)])
         }
     }
 }
@@ -56,10 +61,12 @@ struct AddAccountView: View {
 // Preview
 struct AddAccountView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AddAccountView()
+            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(privacyOverlayViewModel)
     }
@@ -122,7 +129,7 @@ extension AddAccountView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -151,7 +158,7 @@ extension AddAccountView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -234,7 +241,7 @@ extension AddAccountView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
+        .frame(height: mainViewModel.viewItemHeight)
         .frame(maxWidth: .infinity)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
@@ -283,8 +290,57 @@ extension AddAccountView {
         }
         .foregroundColor(.primary)
         .padding(.horizontal)
-        .frame(height: accountsViewModel.viewItemHeight)
-        .frame(maxWidth: urlField ? .infinity : nil)
+        .frame(height: mainViewModel.viewItemHeight)
+        .frame(minWidth: 150, maxWidth: urlField ? .infinity : nil)
+        .background(Color("GeneralColor"))
+        .cornerRadius(10)
+        .padding(.horizontal)
+    }
+    
+    private var otpItem: some View {
+        Button {
+            withAnimation() {
+                otpSecretField = true
+            }
+        } label: {
+            if otpSecretField {
+                HStack() {
+                    Image(systemName: "repeat.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.vertical, 10)
+                        .foregroundColor(Color("AccentColor"))
+                    
+                    TextField("Enter TOTP key...", text: $newOtpSecret)
+                        .frame(maxHeight: .infinity)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.leading)
+                        .tint(.primary)
+                        .focused($otpSecretTextFieldFocused)
+                        .onAppear {
+                            DispatchQueue.main.async {
+                                otpSecretTextFieldFocused = true
+                            }
+                        }
+                    
+                    Button {
+                        withAnimation() {
+                            otpSecretField = false
+                            newOtpSecret = ""
+                        }
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundColor(Color("AccentColor"))
+                    }
+                }
+            } else {
+                Text("Setup TOTP")
+            }
+        }
+        .foregroundColor(.primary)
+        .padding(.horizontal)
+        .frame(height: mainViewModel.viewItemHeight)
+        .frame(minWidth: 150, maxWidth: otpSecretField ? .infinity : nil)
         .background(Color("GeneralColor"))
         .cornerRadius(10)
         .padding(.horizontal)
@@ -296,7 +352,8 @@ extension AddAccountView {
                 name: newName,
                 username: newUsername,
                 password: newPassword,
-                url: newUrl != "" ? newUrl : nil
+                url: newUrl != "" ? newUrl : nil,
+                otpSecret: newOtpSecret != "" ? newOtpSecret : nil
             )
             
             showAccountSuccessAlert.toggle()
@@ -305,6 +362,7 @@ extension AddAccountView {
                .font(.headline)
                .padding()
                .foregroundColor(.primary)
+               .frame(minWidth: 150)
                .background(.cyan)
                .cornerRadius(10)
                .shadow(radius: 4)
