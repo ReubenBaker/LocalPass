@@ -11,6 +11,16 @@ class NotesDataService {
     let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
     
+    init() {
+        if !fileManager.fileExists(atPath: path.description) {
+            do {
+                try "empty".write(to: path, atomically: true, encoding: .utf8)
+            } catch {
+                print("Error initialising file: \(error)")
+            }
+        }
+    }
+    
     func getBlob() -> String? {
         do {
             let blob = try String(contentsOf: path)

@@ -89,29 +89,30 @@ struct AccountDetailView: View {
             PasswordGeneratorView(password: $newPassword)
                 .presentationDetents([.fraction(0.45)])
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                EditButton()
-            }
-        }
         .onChange(of: editMode?.wrappedValue) { editMode in
             if editMode == .inactive {
                 if newUsername != "" {
                     let updatedAccount = Account(name: account.name, username: newUsername, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                    
+                    newUsername = ""
                 }
                 
                 if newPassword != "" {
                     let updatedAccount = Account(name: account.name, username: account.username, password: newPassword, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                    
+                    newPassword = ""
                 }
                 
                 if newUrl != "" {
                     let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                    
+                    newUrl = ""
                 }
             }
         }

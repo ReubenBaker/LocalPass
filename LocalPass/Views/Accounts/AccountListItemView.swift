@@ -17,9 +17,9 @@ struct AccountListItemView: View {
     
     var body: some View {
         accountListItem
-        .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
-            AccountDetailView(account: $account)
-        }
+            .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
+                AccountDetailView(account: $account)
+            }
     }
 }
 

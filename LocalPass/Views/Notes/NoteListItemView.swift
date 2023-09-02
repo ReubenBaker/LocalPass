@@ -16,7 +16,10 @@ struct NoteListItemView: View {
     @State private var showNoteDetailViewSheet: Bool = false
     
     var body: some View {
-        Text("Hello, World!")
+        noteListItem
+            .fullScreenCover(isPresented: $showNoteDetailViewSheet) {
+                NoteDetailView(note: $note)
+            }
     }
 }
 
