@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppIconImage" translatesAutoresizingMaskIntoConstraints="NO" id="0DG-ll-v8B">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppIconImageRoundedCorners" translatesAutoresizingMaskIntoConstraints="NO" id="0DG-ll-v8B">
                                 <rect key="frame" x="121.66666666666669" y="351" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="6r9-FE-gPn"/>
@@ -49,9 +49,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="AppIconImage" width="1024" height="1024"/>
+        <image name="AppIconImageRoundedCorners" width="1024" height="1024"/>
         <namedColor name="AppThemeColor">
-            <color red="0.32369780539999998" green="0.1063579395" blue="0.574860394" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.32400000095367432" green="0.10599999874830246" blue="0.57499998807907104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
