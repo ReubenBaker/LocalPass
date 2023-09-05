@@ -33,6 +33,7 @@ class AccountsDataService {
                 formattedString += "\(account.updatedDateTime != nil ? String(describing: account.updatedDateTime!) : String(describing: account.updatedDateTime));"
                 formattedString += "\(account.starred);"
                 formattedString += "\(account.otpSecret != nil ? account.otpSecret! : String(describing: account.otpSecret));"
+                formattedString += "\(account.id);"
                 formattedString += "~"
             }
             
@@ -62,7 +63,8 @@ class AccountsDataService {
                         creationDateTime: DateFormatter().date(from: String(blobEntryData[4])) ?? Date(),
                         updatedDateTime: blobEntryData[5] != "nil" ? DateFormatter().date(from: String(blobEntryData[5])) ?? Date() : nil,
                         starred: blobEntryData[6] == "true" ? true : false,
-                        otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil
+                        otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
+                        id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()
                     )
                 ]
             }

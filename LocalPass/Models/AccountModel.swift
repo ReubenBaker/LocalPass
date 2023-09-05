@@ -18,9 +18,7 @@ struct Account: Identifiable, Equatable {
     var otpSecret: String?
     
     // Identifiable
-    var id: String {
-        name + String(creationDateTime.description) // Change later
-    }
+    var id = UUID()
     
     // Equatable
     static func == (lhs: Account, rhs: Account) -> Bool {
@@ -37,7 +35,7 @@ struct Account: Identifiable, Equatable {
         self.otpSecret = otpSecret
     }
     
-    init(name: String, username: String, password: String, url: String?, creationDateTime: Date, updatedDateTime: Date?, starred: Bool, otpSecret: String?) {
+    init(name: String, username: String, password: String, url: String?, creationDateTime: Date, updatedDateTime: Date?, starred: Bool, otpSecret: String?, id: UUID) {
         self.name = name
         self.username = username
         self.password = password
@@ -46,5 +44,6 @@ struct Account: Identifiable, Equatable {
         self.updatedDateTime = updatedDateTime
         self.starred = starred
         self.otpSecret = otpSecret
+        self.id = id
     }
 }

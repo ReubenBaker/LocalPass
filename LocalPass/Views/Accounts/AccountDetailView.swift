@@ -91,36 +91,22 @@ struct AccountDetailView: View {
         }
         .onChange(of: editMode?.wrappedValue) { mode in
             if mode != .active {
-                if newUsername != "" {
-                    let updatedAccount = Account(name: account.name, username: newUsername, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
+                if newUsername != "" || newPassword != "" || newUrl != "" || newOtpSecret != "" {
+                    let updatedAccount = Account(
+                        name: account.name,
+                        username: newUsername != "" ? newUsername : account.username,
+                        password: newPassword != "" ? newPassword : account.password,
+                        url: newUrl != "" ? newUrl : account.url,
+                        creationDateTime: account.creationDateTime,
+                        updatedDateTime: Date(),
+                        starred: account.starred,
+                        otpSecret: newOtpSecret != "" ? newOtpSecret : account.otpSecret,
+                        id: account.id
+                    )
                     
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                     
-                    newUsername = ""
-                }
-                
-                if newPassword != "" {
-                    let updatedAccount = Account(name: account.name, username: account.username, password: newPassword, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
-                    
-                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
-                    
-                    newPassword = ""
-                }
-                
-                if newUrl != "" {
-                    let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
-                    
-                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
-                    
-                    newUrl = ""
-                }
-                
-                if newOtpSecret != "" {
-                    let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: newOtpSecret)
-                    
-                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
-                    
-                    newOtpSecret = ""
+                    (newUsername, newPassword, newUrl, newOtpSecret) = ("", "", "", "")
                 }
             }
         }
@@ -413,9 +399,21 @@ extension AccountDetailView {
                             }
                         }
                         .onSubmit {
-                            let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: newUrl, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
+                            let updatedAccount = Account(
+                                name: account.name,
+                                username: account.username,
+                                password: account.password,
+                                url: newUrl,
+                                creationDateTime: account.creationDateTime,
+                                updatedDateTime: Date(),
+                                starred: account.starred,
+                                otpSecret: account.otpSecret,
+                                id: account.id
+                            )
                             
                             accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                            
+                            newUrl = ""
                         }
                     
                     Button {
@@ -536,9 +534,21 @@ extension AccountDetailView {
                             }
                         }
                         .onSubmit {
-                            let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: newOtpSecret)
+                            let updatedAccount = Account(
+                                name: account.name,
+                                username: account.username,
+                                password: account.password,
+                                url: account.url,
+                                creationDateTime: account.creationDateTime,
+                                updatedDateTime: Date(),
+                                starred: account.starred,
+                                otpSecret: newOtpSecret,
+                                id: account.id
+                            )
                             
                             accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                            
+                            newOtpSecret = ""
                         }
                     
                     Button {
