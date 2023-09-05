@@ -27,6 +27,10 @@ class NotesDataService {
             for note in notes! {
                 formattedString += "\(note.title);"
                 formattedString += "\(note.body);"
+                formattedString += "\(String(describing: note.creationDateTime));"
+                formattedString += "\(note.updatedDateTime != nil ? String(describing: note.updatedDateTime!) : String(describing: note.updatedDateTime));"
+                formattedString += "\(note.starred);"
+                formattedString += "\(note.id);"
                 formattedString += "~"
             }
             
@@ -50,7 +54,11 @@ class NotesDataService {
                 notes = (notes ?? []) + [
                     Note(
                         title: String(blobEntryData[0]),
-                        body: String(blobEntryData[1])
+                        body: String(blobEntryData[1]),
+                        creationDateTime: DateFormatter().date(from: String(blobEntryData[2])) ?? Date(),
+                        updatedDateTime: blobEntryData[3] != "nil" ? DateFormatter().date(from: String(blobEntryData[3])) ?? Date() : nil,
+                        starred: blobEntryData[4] == "true" ? true : false,
+                        id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
                     )
                 ]
             }
