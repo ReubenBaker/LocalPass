@@ -49,10 +49,8 @@ struct PasswordGeneratorView: View {
                         .background(.green)
                         .cornerRadius(10)
                         .shadow(radius: 4)
-                        .padding()
+                        .padding(.top)
                 }
-                .padding(.vertical)
-
             }
             .padding()
         }
