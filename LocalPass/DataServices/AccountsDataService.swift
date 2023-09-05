@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
 class AccountsDataService {
+    @StateObject private var settings = Settings()
     let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
     var iCloudPath: URL? = nil
@@ -31,7 +33,7 @@ class AccountsDataService {
             let blob = try String(contentsOf: path)
             var iCloudBlob: String? = nil
             
-            if Settings.shared.iCloudSync && iCloudPath != nil {
+            if settings.iCloudSync && iCloudPath != nil {
                 iCloudBlob = try String(contentsOf: path)
                 
                 return iCloudBlob
@@ -108,7 +110,7 @@ class AccountsDataService {
             let blob = formatForSave(accounts: accounts)
             try blob.write(to: path, atomically: true, encoding: .utf8)
             
-            if Settings.shared.iCloudSync && iCloudPath != nil {
+            if settings.iCloudSync && iCloudPath != nil {
                 try blob.write(to: iCloudPath!, atomically: true, encoding: .utf8)
             }
         } catch {

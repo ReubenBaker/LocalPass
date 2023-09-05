@@ -9,11 +9,13 @@ import Foundation
 import SwiftUI
 
 class Settings: ObservableObject {
-    static let shared = Settings()
-    
-    @AppStorage("iCloudSync") var iCloudSync: Bool = false {
+    @Published var iCloudSync: Bool = false {
         didSet {
-            objectWillChange.send()
+            UserDefaults.standard.set(iCloudSync, forKey: "iCloudSync")
         }
+    }
+    
+    init() {
+        self.iCloudSync = UserDefaults.standard.bool(forKey: "iCloudSync")
     }
 }

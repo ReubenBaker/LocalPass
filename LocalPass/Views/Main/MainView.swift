@@ -69,7 +69,7 @@ extension MainView {
                     Label("Notes", systemImage: "sparkles.rectangle.stack.fill")
                 }
                 .tag(1)
-                .environmentObject(NotesViewModel())
+                .environmentObject(notesViewModel)
             
             SettingsView()
                 .tabItem {

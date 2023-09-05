@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
+    @StateObject private var settings = Settings()
+    
     var body: some View {
         NavigationStack {
             List {
@@ -18,7 +21,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("iCloud", isOn: Settings.shared.$iCloudSync)
+                    Toggle("iCloud", isOn: $settings.iCloudSync)
                 }
             }
         }
@@ -30,6 +33,9 @@ struct SettingsView: View {
 // Preview
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
+        @StateObject var settings = Settings()
+        
         SettingsView()
+            .environmentObject(settings)
     }
 }
