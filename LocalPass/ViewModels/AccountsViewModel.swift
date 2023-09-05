@@ -18,12 +18,9 @@ class AccountsViewModel: ObservableObject {
     @Published var accountToDelete: Account? = nil
     
     init() {
+//        let accounts = AccountTestDataService.accounts // REMOVE LATER!
         let accounts = AccountsDataService().getAccountData()
         self.accounts = accounts
-        
-        if accounts == nil { // Remove later!!
-            self.accounts = AccountTestDataService.accounts
-        }
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) -> Bool {

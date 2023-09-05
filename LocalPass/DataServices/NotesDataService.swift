@@ -10,6 +10,11 @@ import Foundation
 class NotesDataService {
     let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
+    var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
+        return dateFormatter
+    }
     
     func getBlob() -> String? {
         do {
@@ -55,8 +60,8 @@ class NotesDataService {
                     Note(
                         title: String(blobEntryData[0]),
                         body: String(blobEntryData[1]),
-                        creationDateTime: DateFormatter().date(from: String(blobEntryData[2])) ?? Date(),
-                        updatedDateTime: blobEntryData[3] != "nil" ? DateFormatter().date(from: String(blobEntryData[3])) ?? Date() : nil,
+                        creationDateTime: dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
+                        updatedDateTime: blobEntryData[3] != "nil" ? dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
                         starred: blobEntryData[4] == "true" ? true : false,
                         id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
                     )

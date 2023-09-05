@@ -10,6 +10,11 @@ import Foundation
 class AccountsDataService {
     let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
+    var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
+        return dateFormatter
+    }
     
     func getBlob() -> String? {
         do {
@@ -60,8 +65,8 @@ class AccountsDataService {
                         username: String(blobEntryData[1]),
                         password: String(blobEntryData[2]),
                         url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
-                        creationDateTime: DateFormatter().date(from: String(blobEntryData[4])) ?? Date(),
-                        updatedDateTime: blobEntryData[5] != "nil" ? DateFormatter().date(from: String(blobEntryData[5])) ?? Date() : nil,
+                        creationDateTime: dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
+                        updatedDateTime: blobEntryData[5] != "nil" ? dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
                         starred: blobEntryData[6] == "true" ? true : false,
                         otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
                         id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()

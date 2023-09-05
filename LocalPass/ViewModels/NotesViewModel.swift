@@ -18,12 +18,9 @@ class NotesViewModel: ObservableObject {
     @Published var noteToDelete: Note? = nil
     
     init() {
+//        let notes = NoteTestDataService.notes // REMOVE LATER!
         let notes = NotesDataService().getNoteData()
         self.notes = notes
-        
-        if notes == nil { // Remove later!!
-            self.notes = NoteTestDataService.notes
-        }
     }
     
     func addNote(title: String, body: String) -> Bool {
