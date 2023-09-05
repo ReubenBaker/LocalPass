@@ -67,8 +67,8 @@ struct AccountDetailView: View {
                     editOtpItem
                 }
                 
-                creationDateTimeItem()
-                updatedDateTimeItem()
+                creationDateTimeItem
+                updatedDateTimeItem
                 deleteItem
             }
             .frame(maxWidth: .infinity)
@@ -89,8 +89,8 @@ struct AccountDetailView: View {
             PasswordGeneratorView(password: $newPassword)
                 .presentationDetents([.fraction(0.45)])
         }
-        .onChange(of: editMode?.wrappedValue) { editMode in
-            if editMode == .inactive {
+        .onChange(of: editMode?.wrappedValue) { mode in
+            if mode != .active {
                 if newUsername != "" {
                     let updatedAccount = Account(name: account.name, username: newUsername, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: account.otpSecret)
                     
@@ -113,6 +113,14 @@ struct AccountDetailView: View {
                     accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                     
                     newUrl = ""
+                }
+                
+                if newOtpSecret != "" {
+                    let updatedAccount = Account(name: account.name, username: account.username, password: account.password, url: account.url, creationDateTime: account.creationDateTime, updatedDateTime: Date(), starred: account.starred, otpSecret: newOtpSecret)
+                    
+                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                    
+                    newOtpSecret = ""
                 }
             }
         }
@@ -483,6 +491,9 @@ extension AccountDetailView {
                             otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
                         }
                     }
+                    .onChange(of: account.otpSecret ?? "") { newSecret in
+                        otpValue = TOTPGeneratorDataService().TOTP(secret: newSecret)
+                    }
                 
                 Text("\(otpTimeLeft)")
                 
@@ -582,20 +593,24 @@ extension AccountDetailView {
         .padding(.horizontal)
     }
     
-    private func creationDateTimeItem() -> some View {
-        let createdText = Text("\(dateFormatter.string(from: account.creationDateTime))")
-        
-        return Text("Time Created: \(createdText)")
+    private var creationDateTimeItem: some View {
+        ZStack {
+            let createdText = Text("\(dateFormatter.string(from: account.creationDateTime))")
+            
+            return Text("Time Created: \(createdText)")
+        }
     }
     
-    private func updatedDateTimeItem() -> some View {
-        var lastUpdatedText = Text("Never")
+    private var updatedDateTimeItem: some View {
+        ZStack {
+            var lastUpdatedText = Text("Never")
 
-        if let lastUpdated = account.updatedDateTime {
-            lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
+            if let lastUpdated = account.updatedDateTime {
+                lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
+            }
+            
+            return Text("Last Updated: \(lastUpdatedText)")
         }
-        
-        return Text("Last Updated: \(lastUpdatedText)")
     }
     
     private var deleteItem: some View {

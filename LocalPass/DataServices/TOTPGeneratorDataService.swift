@@ -10,17 +10,20 @@ import CryptoKit
 
 class TOTPGeneratorDataService {
     func TOTP(secret: String, period: TimeInterval = TimeInterval(30), digits: Int = 6) -> String {
-        let counter = UInt64(Date().timeIntervalSince1970 / period)
-        let counterBytes = (0..<8).reversed().map { UInt8(counter >> (8 * $0) & 0xff) }
-        let hash = HMAC<Insecure.SHA1>.authenticationCode(for: counterBytes, using: SymmetricKey(data: base32Decode(secret)!))
-        let offset = Int(hash.suffix(1)[0] & 0x0f)
-        let hash32 = hash
-            .dropFirst(offset)
-            .prefix(4)
-            .reduce(0, { ($0 << 8) | UInt32($1) })
-        let hash31 = hash32 & 0x7FFF_FFFF
-        let pad = String(repeating: "0", count: digits)
-        return String((pad + String(hash31)).suffix(digits))
+        if let data = base32Decode(secret) {
+            let counter = UInt64(Date().timeIntervalSince1970 / period)
+            let counterBytes = (0..<8).reversed().map { UInt8(counter >> (8 * $0) & 0xff) }
+            let hash = HMAC<Insecure.SHA1>.authenticationCode(for: counterBytes, using: SymmetricKey(data: data))
+            let offset = Int(hash.suffix(1)[0] & 0x0f)
+            let hash32 = hash
+                .dropFirst(offset)
+                .prefix(4)
+                .reduce(0, { ($0 << 8) | UInt32($1) })
+            let hash31 = hash32 & 0x7FFF_FFFF
+            let pad = String(repeating: "0", count: digits)
+            return String((pad + String(hash31)).suffix(digits))
+        }
+        return "Invalid Key!"
     }
     
     func base32Decode(_ encodedString: String) -> Data? {
