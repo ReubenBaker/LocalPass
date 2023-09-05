@@ -15,9 +15,7 @@ struct Note: Identifiable, Equatable {
     var starred: Bool
     
     // Identifiable
-    var id: String {
-        title + String(creationDateTime.description) // Change later
-    }
+    var id: UUID = UUID()
     
     // Equatable
     static func == (lhs: Note, rhs: Note) -> Bool {
@@ -31,11 +29,12 @@ struct Note: Identifiable, Equatable {
         self.starred = false
     }
     
-    init(title: String, body: String, creationDateTime: Date, updatedDateTime: Date?, starred: Bool) {
+    init(title: String, body: String, creationDateTime: Date, updatedDateTime: Date?, starred: Bool, id: UUID) {
         self.title = title
         self.body = body
         self.creationDateTime = creationDateTime
         self.updatedDateTime = updatedDateTime
         self.starred = starred
+        self.id = id
     }
 }

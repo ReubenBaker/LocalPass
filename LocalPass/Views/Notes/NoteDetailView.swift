@@ -20,6 +20,12 @@ struct NoteDetailView: View {
     @State private var showDeleteAlert: Bool = false
     @FocusState private var titleTextFieldFocused: Bool
     @FocusState private var bodyTextFieldFocused: Bool
+    private var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter
+    }
     
     var body: some View {
         ScrollView {
@@ -31,6 +37,10 @@ struct NoteDetailView: View {
                     editTitleItem
                     editBodyItem
                 }
+                
+                creationDateTimeItem
+                updatedDateTimeItem
+                deleteItem
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical)
@@ -42,26 +52,25 @@ struct NoteDetailView: View {
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
         }
-        .onChange(of: editMode?.wrappedValue) { editMode in
-            if editMode == .inactive {
-                if newTitle != "" {
-                    let updatedNote = Note(title: newTitle, body: note.body, creationDateTime: note.creationDateTime, updatedDateTime: Date(), starred: note.starred)
+        .onChange(of: editMode?.wrappedValue) { mode in
+            if mode != .active {           
+                if newTitle != "" || newBody != "" {
+                    let updatedNote = Note(
+                        title: newTitle != "" ? newTitle : note.title,
+                        body: newBody != "" ? newBody : note.body,
+                        creationDateTime: note.creationDateTime,
+                        updatedDateTime: Date(),
+                        starred: note.starred,
+                        id: note.id
+                    )
                     
                     notesViewModel.updateNote(id: note.id, note: updatedNote)
                     
-                    newTitle = ""
-                }
-                
-                if newBody != "" {
-                    let updatedNote = Note(title: note.title, body: newBody, creationDateTime: note.creationDateTime, updatedDateTime: Date(), starred: note.starred)
-                    
-                    notesViewModel.updateNote(id: note.id, note: updatedNote)
-                    
-                    newBody = ""
+                    (newTitle, newBody) = ("", "")
                 }
             }
         }
-        .onDisappear { // TEST!
+        .onDisappear {
             notesViewModel.updateNote(id: note.id, note: note)
         }
     }
@@ -91,7 +100,7 @@ extension NoteDetailView {
             Text(note.title)
                 .font(.title)
                 .fontWeight(.semibold)
-                .lineLimit(2)
+                .lineLimit(1)
                 .padding(.horizontal, 70)
             
             HStack {
@@ -108,14 +117,18 @@ extension NoteDetailView {
             TextField("\(note.title)", text: $newTitle)
                 .font(.title)
                 .fontWeight(.semibold)
-                .lineLimit(2)
+                .lineLimit(1)
                 .padding(.horizontal, 70)
                 .tint(.primary)
+                .multilineTextAlignment(.center)
                 .focused($titleTextFieldFocused)
                 .onTapGesture {
                     DispatchQueue.main.async {
                         titleTextFieldFocused = true
                     }
+                }
+                .onAppear {
+                    newTitle = note.title
                 }
             
             HStack {
@@ -130,20 +143,64 @@ extension NoteDetailView {
         Text(note.body)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)
+            .lineLimit(20...20)
             .padding()
     }
     
     private var editBodyItem: some View {
-        TextEditor(text: $newBody)
+        TextField("", text: $newBody, axis: .vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)
             .padding()
+            .padding(.top, 4)
             .tint(.primary)
+            .lineLimit(20...20)
+            .scrollContentBackground(.hidden)
             .focused($bodyTextFieldFocused)
             .onTapGesture {
                 DispatchQueue.main.async {
                     bodyTextFieldFocused = true
                 }
             }
+            .onAppear {
+                newBody = note.body
+            }
+    }
+    
+    private var creationDateTimeItem: some View {
+        ZStack {
+            let createdText = Text("\(dateFormatter.string(from: note.creationDateTime))")
+            
+            return Text("Time Created: \(createdText)")
+        }
+    }
+    
+    private var updatedDateTimeItem: some View {
+        ZStack {
+            var lastUpdatedText = Text("Never")
+
+            if let lastUpdated = note.updatedDateTime {
+                lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
+            }
+            
+            return Text("Last Updated: \(lastUpdatedText)")
+        }
+    }
+    
+    private var deleteItem: some View {
+        Button {
+            notesViewModel.noteToDelete = note
+            showDeleteAlert.toggle()
+       } label: {
+           Text("Delete")
+               .font(.headline)
+               .padding()
+               .foregroundColor(.primary)
+               .background(.red)
+               .cornerRadius(10)
+               .shadow(radius: 4)
+               .padding()
+       }
     }
     
     private var closeButton: some View {
