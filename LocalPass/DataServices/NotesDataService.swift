@@ -6,19 +6,40 @@
 //
 
 import Foundation
+import SwiftUI
 
 class NotesDataService {
+    @StateObject private var settings = Settings()
     let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
+    var iCloudPath: URL? = nil
     var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
         return dateFormatter
     }
     
+    init() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
+                self.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt")
+            }
+        }
+    }
+    
     func getBlob() -> String? {
         do {
             let blob = try String(contentsOf: path)
+            var iCloudBlob: String? = nil
+            
+            if settings.iCloudSync && iCloudPath != nil {
+                iCloudBlob = try String(contentsOf: path)
+                
+                if iCloudBlob != nil {
+                    return iCloudBlob
+                }
+            }
+            
             return blob
         } catch {
             return nil
@@ -83,8 +104,22 @@ class NotesDataService {
         do {
             let blob = formatForSave(notes: notes)
             try blob.write(to: path, atomically: true, encoding: .utf8)
+            
+            if settings.iCloudSync && iCloudPath != nil {
+                try blob.write(to: iCloudPath!, atomically: true, encoding: .utf8)
+            }
         } catch {
-            print("Error writing notes data: \(error)")
+            print("Error writing accounts data: \(error)")
+        }
+    }
+    
+    func removeiCloudData() {
+        if iCloudPath != nil {
+            do {
+                try fileManager.removeItem(at: iCloudPath!)
+            } catch {
+                print("Error removing iCloud data: \(error)")
+            }
         }
     }
 }

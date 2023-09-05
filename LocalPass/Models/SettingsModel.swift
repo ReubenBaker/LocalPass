@@ -12,6 +12,11 @@ class Settings: ObservableObject {
     @Published var iCloudSync: Bool = false {
         didSet {
             UserDefaults.standard.set(iCloudSync, forKey: "iCloudSync")
+            
+            if iCloudSync == false {
+                AccountsDataService().removeiCloudData()
+                NotesDataService().removeiCloudData()
+            }
         }
     }
     
