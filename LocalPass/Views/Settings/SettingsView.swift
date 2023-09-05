@@ -8,18 +8,22 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
-    @State var testText: String = ""
-    
     var body: some View {
-        VStack {
-            Text("Settings View")
-            TextField("Test", text: $testText)
-                .padding()
-            NavigationStack {
+        NavigationStack {
+            List {
+                Section(header: Text("About")) {
+                    NavigationLink("About") {
+                        AboutView()
+                    }
+                }
                 
+                Section(header: Text("Settings")) {
+                    Toggle("iCloud", isOn: Settings.shared.$iCloudSync)
+                }
             }
         }
+        .navigationTitle("Settings")
+        .listStyle(InsetGroupedListStyle())
     }
 }
 

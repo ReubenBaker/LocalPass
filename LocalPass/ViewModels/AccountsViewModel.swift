@@ -18,8 +18,8 @@ class AccountsViewModel: ObservableObject {
     @Published var accountToDelete: Account? = nil
     
     init() {
-//        let accounts = AccountTestDataService.accounts // REMOVE LATER!
-        let accounts = AccountsDataService().getAccountData()
+        let accounts = AccountTestDataService.accounts // REMOVE LATER!
+//        let accounts = AccountsDataService().getAccountData()
         self.accounts = accounts
     }
     

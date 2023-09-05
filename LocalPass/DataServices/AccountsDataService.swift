@@ -10,6 +10,16 @@ import Foundation
 class AccountsDataService {
     let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
+    var iCloudPath: URL? = nil
+        
+    init() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
+                self.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassaccounts.txt")
+            }
+        }
+    }
+  
     var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
@@ -19,6 +29,14 @@ class AccountsDataService {
     func getBlob() -> String? {
         do {
             let blob = try String(contentsOf: path)
+            var iCloudBlob: String? = nil
+            
+            if Settings.shared.iCloudSync && iCloudPath != nil {
+                iCloudBlob = try String(contentsOf: path)
+                
+                return iCloudBlob
+            }
+            
             return blob
         } catch {
             return nil
@@ -89,6 +107,10 @@ class AccountsDataService {
         do {
             let blob = formatForSave(accounts: accounts)
             try blob.write(to: path, atomically: true, encoding: .utf8)
+            
+            if Settings.shared.iCloudSync && iCloudPath != nil {
+                try blob.write(to: iCloudPath!, atomically: true, encoding: .utf8)
+            }
         } catch {
             print("Error writing accounts data: \(error)")
         }
