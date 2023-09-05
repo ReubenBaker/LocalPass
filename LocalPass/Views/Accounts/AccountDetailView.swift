@@ -19,6 +19,7 @@ struct AccountDetailView: View {
     @State private var newPassword: String = ""
     @State private var newUrl: String = ""
     @State private var newOtpSecret: String = ""
+    @State private var currentOtpSecret: String? = nil
     @State private var otpValue: String = ""
     @State private var otpTimeLeft: Int = 0
     @State private var showDeleteAlert: Bool = false
@@ -146,10 +147,14 @@ extension AccountDetailView {
             updateTimeLeft()
             
             if otpTimeLeft == 30 {
-                if let secret = account.otpSecret {
-                    otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
-                }
+                generateTOTP()
             }
+        }
+    }
+    
+    private func generateTOTP() {
+        if let secret = currentOtpSecret {
+            otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
         }
     }
 }
@@ -486,11 +491,13 @@ extension AccountDetailView {
                         startTOTPTimer()
                         
                         if let secret = account.otpSecret {
-                            otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
+                            currentOtpSecret = secret
+                            generateTOTP()
                         }
                     }
                     .onChange(of: account.otpSecret ?? "") { newSecret in
-                        otpValue = TOTPGeneratorDataService().TOTP(secret: newSecret)
+                        currentOtpSecret = newSecret
+                        generateTOTP()
                     }
                 
                 Text("\(otpTimeLeft)")
