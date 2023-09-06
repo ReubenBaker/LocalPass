@@ -50,6 +50,16 @@ class PasswordHashingDataService {
         }
     }
     
+    func calculateChecksum(data: Data) -> Data {
+        var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+        
+        data.withUnsafeBytes { dataBytes in
+            _ = CC_SHA256(dataBytes.baseAddress, CC_LONG(data.count), &digest)
+        }
+        
+        return Data(digest)
+    }
+    
     func encryptBlob(blob: String, password: String) -> Data? {
         guard let salt = generateRandomSalt(),
             let key = deriveKey(password: password, salt: salt),
@@ -57,12 +67,19 @@ class PasswordHashingDataService {
           return nil
         }
         
-        if let sealedBox = try? AES.GCM.seal(data, using: key) {
+        let combined = salt + data
+        let checksum = calculateChecksum(data: combined)
+        
+        if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
             setSessionKey(key: key)
-            return salt + sealedBox.combined!
+            if let combined = sealedBox.combined {
+                return salt + combined
+            }
         } else {
             return nil
         }
+        
+        return nil
     }
     
     func decryptBlob(blob: Data, password: String) -> String? {
@@ -78,24 +95,43 @@ class PasswordHashingDataService {
         do {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: key)
-            return String(data: decryptedData, encoding: .utf8)
+            let appendedChecksum = decryptedData.suffix(Int(CC_SHA256_DIGEST_LENGTH))
+            print("AppendedChecksum: \(appendedChecksum.base64EncodedString())")
+            let expectedChecksum = calculateChecksum(data: salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
+            print("ExpectedChecksum: \(expectedChecksum.base64EncodedString())")
+            
+            if appendedChecksum.base64EncodedData() == expectedChecksum.base64EncodedData() {
+                return String(data: decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)), encoding: .utf8)
+            }
         } catch {
             return nil
         }
+        
+        return nil
     }
     
     func decryptBlob(blob: Data, key: SymmetricKey) -> String? {
         let saltSize = 16
+        let salt = blob.prefix(saltSize)
         
         let encryptedData = blob.dropFirst(saltSize)
         
         do {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: key)
-            return String(data: decryptedData, encoding: .utf8)
+            let appendedChecksum = decryptedData.suffix(Int(CC_SHA256_DIGEST_LENGTH))
+            print("AppendedChecksum: \(appendedChecksum.base64EncodedString())")
+            let expectedChecksum = calculateChecksum(data: salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
+            print("ExpectedChecksum: \(expectedChecksum.base64EncodedString())")
+            
+            if appendedChecksum.base64EncodedData() == expectedChecksum.base64EncodedData() {
+                return String(data: decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)), encoding: .utf8)
+            }
         } catch {
             return nil
         }
+        
+        return nil
     }
     
     func setSessionKey(key: SymmetricKey) {
