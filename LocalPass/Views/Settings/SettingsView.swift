@@ -21,7 +21,16 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("iCloud", isOn: $settings.iCloudSync)
+                    Toggle("iCloud Sync", isOn: $settings.iCloudSync)
+                        .onChange(of: settings.iCloudSync) { setting in
+                            if setting == true {
+                                AccountsDataService().saveData(accounts: AccountsDataService().getAccountData())
+                                NotesDataService().saveData(notes: NotesDataService().getNoteData())
+                            } else {
+                                AccountsDataService().removeiCloudData()
+                                NotesDataService().removeiCloudData()
+                            }
+                        }
                 }
             }
         }

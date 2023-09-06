@@ -10,9 +10,9 @@ import SwiftUI
 
 class NotesDataService {
     @StateObject private var settings = Settings()
-    let fileManager = FileManager()
     let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
     var iCloudPath: URL? = nil
+    let initializationGroup = DispatchGroup()
     var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
@@ -20,10 +20,14 @@ class NotesDataService {
     }
     
     init() {
+        initializationGroup.enter()
+        
         DispatchQueue.global(qos: .userInitiated).async {
             if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
                 self.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt")
             }
+            
+            self.initializationGroup.leave()
         }
     }
     
@@ -31,6 +35,8 @@ class NotesDataService {
         do {
             let blob = try String(contentsOf: path)
             var iCloudBlob: String? = nil
+            
+            initializationGroup.wait()
             
             if settings.iCloudSync && iCloudPath != nil {
                 iCloudBlob = try String(contentsOf: path)
@@ -105,6 +111,8 @@ class NotesDataService {
             let blob = formatForSave(notes: notes)
             try blob.write(to: path, atomically: true, encoding: .utf8)
             
+            initializationGroup.wait()
+            
             if settings.iCloudSync && iCloudPath != nil {
                 try blob.write(to: iCloudPath!, atomically: true, encoding: .utf8)
             }
@@ -114,11 +122,13 @@ class NotesDataService {
     }
     
     func removeiCloudData() {
-        if iCloudPath != nil {
+        initializationGroup.wait()
+        
+        if let iCloudPath = self.iCloudPath {
             do {
-                try fileManager.removeItem(at: iCloudPath!)
+                try FileManager.default.removeItem(at: iCloudPath)
             } catch {
-                print("Error removing iCloud data: \(error)")
+                print("Error removing iCloud file: \(error)")
             }
         }
     }
