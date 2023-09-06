@@ -302,7 +302,6 @@ class PasswordHashingDataService {
     }
 }
 
-
 extension Data {
     /**
      Converts `Data` to a hexadecimal encoded `String`.
