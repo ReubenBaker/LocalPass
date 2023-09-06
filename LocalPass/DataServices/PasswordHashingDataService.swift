@@ -9,6 +9,67 @@ import Foundation
 import CryptoKit
 import CommonCrypto
 
+/**
+ A utility class for secure encryption and decryption of data using a password-based and session-based key approach with data integrity checks.
+ 
+ # Overview:
+ 
+ The `PasswordHashingDataService` class provides methods for securely encrypting and decrypting data, ensuring data integrity through checksums. It uses the following steps:
+ 
+ 1. **Salt Generation**: A random salt is generated for each derived key.
+ 
+ 2. **Key Derivation**: The random salt, along with the users password is used to derive a unique encryption key using PBKDF2 with HMAC-SHA256.
+ 
+ 3. **Encryption**:
+    - Data is prepared by converting it into binary form (UTF-8 encoding) and prepending the salt.
+    - A checksum of the combined binary data (salt + data) is calculated using SHA-256.
+    - AES-GCM encryption is applied to the combined binary data, producing an encrypted data blob.
+ 
+ 4. **Decryption**:
+    - The salt is extracted from the beginning of the data blob.
+    - If using a password, the encryption key is derived from the salt + password.
+    - If using the session key, the session key is used for the decryption.
+    - The encrypted data is then decrypted using the given key.
+    - A checksum is calculated based on the extracted salt + decrypted data to verify it matches the checksum from the end of the decrypted data blob.
+ 
+ 5. **Session Key Handling**: The class also provides methods for managing a session key.
+ 
+ # Usage:
+ 
+ 1. Initialize an instance of `PasswordHashingDataService`.
+ 
+ 2. Encrypt sensitive data using the `encryptBlob` method, providing the data and the password.
+ 
+ 3. Store the encrypted data.
+ 
+ 4. When data access is needed, decrypt it using the `decryptBlob` method with the session key, or on app startup using the password.
+ 
+ 5. After decryption has taken place on app startup, generate a new session key and re-encrypt the data to make sure the key is refreshed each session.
+ 
+ This process ensures that data remains confidential and tamper-resistant during storage or transmission. If the password is incorrect or if the data has been tampered with, the decryption will fail, providing an additional layer of security.
+ 
+ # Example:
+ ```swift
+ let blob = "Data to be encrypted"
+ let password = "Password123"
+ let service = PasswordHashingDataService()
+ 
+ if let encryptedBlob = service.encryptBlob(blob: blob, password: password) {
+    // Store or transmit the encryptedBlob
+ 
+    // To decrypt:
+    if let key = service.getSessionKey() {
+        if let decryptedBlob = service.decryptBlob(blob: encryptedBlob, key: key) {
+            // Handle the decrypted data
+        }
+    }
+ }
+ ```
+ 
+ - Version: 1.0
+ - Date: September 6, 2023
+ */
+
 class PasswordHashingDataService {
     private var sessionKey: SymmetricKey?
     
@@ -71,8 +132,8 @@ class PasswordHashingDataService {
         let checksum = calculateChecksum(data: combined)
         
         if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
-            setSessionKey(key: key)
             if let combined = sealedBox.combined {
+                setSessionKey(key: key)
                 return salt + combined
             }
         } else {
@@ -147,14 +208,10 @@ class PasswordHashingDataService {
     }
     
     func clearSessionKey() {
-        guard let sessionKey = self.sessionKey else {
-            return
-        }
+        guard var sessionKeyData = self.sessionKey?.withUnsafeBytes({ Data($0) }) else { return }
         
-        let randomPassword = Data((0..<sessionKey.bitCount/8).map { _ in UInt8.random(in: 0...255) })
-        
-        if let salt = generateRandomSalt() {
-            self.sessionKey = deriveKey(password: randomPassword.base64EncodedString(), salt: salt)
+        _ = sessionKeyData.withUnsafeMutableBytes { mutableSessionKeyBytes in
+            memset(mutableSessionKeyBytes.baseAddress, 0, mutableSessionKeyBytes.count)
         }
         
         self.sessionKey = nil
