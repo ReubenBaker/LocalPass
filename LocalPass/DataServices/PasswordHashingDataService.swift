@@ -32,7 +32,7 @@ import CommonCrypto
     - The encrypted data is then decrypted using the given key.
     - A checksum is calculated based on the extracted salt + decrypted data to verify it matches the checksum from the end of the decrypted data blob.
  
- 5. **Session Key Handling**: The class also provides methods for managing a session key.
+ 5. **Session Key Handling**: The class also provides methods for managing a session key. Although this will updated in a later version to either use the secure enclave or Apple's Keychain Services.
  
  # Usage:
  
@@ -69,10 +69,16 @@ import CommonCrypto
  - Version: 1.0
  - Date: September 6, 2023
  */
-
 class PasswordHashingDataService {
     private var sessionKey: SymmetricKey?
+    private let saltSize: Int = 16
+    private let hashingIterations: UInt32 = 10000
     
+    /**
+     Generates a random salt for key derivation.
+     
+     - Returns: A random salt as `Data` or `nil` if the salt generation fails.
+     */
     func generateRandomSalt() -> Data? {
         var salt = [UInt8](repeating: 0, count: 16)
         let status = SecRandomCopyBytes(kSecRandomDefault, salt.count, &salt)
@@ -84,6 +90,15 @@ class PasswordHashingDataService {
         }
     }
     
+    /**
+     Derives an encryption key using PBKDF2 with HMAC-SHA256 from a password and a salt.
+     
+     - Parameters:
+        - password: The user's password.
+        - salt: A random salt.
+     
+     - Returns: A derived encryption key as `SymmetricKey` or `nil` if key derivation fails.
+     */
     func deriveKey(password: String, salt: Data) -> SymmetricKey? {
         let passwordData = Data(password.utf8)
         var derivedKey = [UInt8](repeating: 0, count: 32)
@@ -95,9 +110,9 @@ class PasswordHashingDataService {
                     passwordBytes.baseAddress?.assumingMemoryBound(to: Int8.self),
                     passwordData.count,
                     saltBytes.baseAddress?.assumingMemoryBound(to: UInt8.self),
-                    salt.count,
+                    saltSize,
                     CCPseudoRandomAlgorithm(kCCPRFHmacAlgSHA256),
-                    10000,
+                    hashingIterations,
                     &derivedKey,
                     derivedKey.count
                 )
@@ -111,6 +126,14 @@ class PasswordHashingDataService {
         }
     }
     
+    /**
+     Calculates a checksum (SHA-256 hash) for data integrity verification.
+     
+     - Parameters:
+        - Data: The `Data` to calculate the checksum for.
+     
+     - Returns: The calculated checksum as `Data`.
+     */
     func calculateChecksum(data: Data) -> Data {
         var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         
@@ -121,6 +144,15 @@ class PasswordHashingDataService {
         return Data(digest)
     }
     
+    /**
+     Encrypts a `String` with a password.
+     
+     - Parameters:
+        - blob: The `String` to encrypt.
+        - password: The users password.
+     
+     - Returns: The encrypted blob as `Data` or `nil` if encryption fails.
+     */
     func encryptBlob(blob: String, password: String) -> Data? {
         guard let salt = generateRandomSalt(),
             let key = deriveKey(password: password, salt: salt),
@@ -143,8 +175,16 @@ class PasswordHashingDataService {
         return nil
     }
     
+    /**
+     Decrypts encrypted `Data` using a password.
+     
+     - Parameters:
+        - blob: The encrypted blob.
+        - password: The user's password.
+     
+     - Returns: The decrypted blob as `String` or `nil` if decryption fails.
+     */
     func decryptBlob(blob: Data, password: String) -> String? {
-        let saltSize = 16
         let salt = blob.prefix(saltSize)
         
         guard let key = deriveKey(password: password, salt: salt) else {
@@ -171,8 +211,16 @@ class PasswordHashingDataService {
         return nil
     }
     
+    /**
+     Decrypts encrypted `Data` using a session key.
+     
+     - Parameters:
+        - blob: The encrypted blob.
+        - key: The session key.
+     
+     - Returns: The decrypted blob as `String` or `nil` if decryption fails.
+     */
     func decryptBlob(blob: Data, key: SymmetricKey) -> String? {
-        let saltSize = 16
         let salt = blob.prefix(saltSize)
         
         let encryptedData = blob.dropFirst(saltSize)
@@ -195,6 +243,12 @@ class PasswordHashingDataService {
         return nil
     }
     
+    /**
+     Sets the session key for decryption and clears the previous key from memory.
+     
+     - Parameters:
+        - key: The session key to set.
+     */
     func setSessionKey(key: SymmetricKey) {
         clearSessionKey()
         
@@ -203,10 +257,18 @@ class PasswordHashingDataService {
         }
     }
     
+    /**
+     Gets the currently set session key.
+     
+     - Returns: The current session key as `SymmetricKey` or `nil` if it is not currently set.
+     */
     func getSessionKey() -> SymmetricKey? {
         return self.sessionKey
     }
     
+    /**
+     Clears the currently set session key by zeroing out the key and then setting to `nil`.
+     */
     func clearSessionKey() {
         guard var sessionKeyData = self.sessionKey?.withUnsafeBytes({ Data($0) }) else { return }
         
@@ -217,6 +279,9 @@ class PasswordHashingDataService {
         self.sessionKey = nil
     }
     
+    /**
+     Test function.
+     */
     func test() {
         let blob = "Data to be encrypted"
         let password = "Password123"
@@ -237,7 +302,13 @@ class PasswordHashingDataService {
     }
 }
 
+
 extension Data {
+    /**
+     Converts `Data` to a hexadecimal encoded `String`.
+     
+     - Returns: The hexadecimal encoded representation of the `Data` as `String`.
+     */
     func hexEncodedString() -> String {
         return map { String(format: "%02hhx", $0) }.joined()
     }
