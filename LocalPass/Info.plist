@@ -14,5 +14,7 @@
                 <string>Any</string>
             </dict>
         </dict>
+    <key>NSFaceIDUsageDescription</key>
+    <string>Explanation of why your app needs Face ID access.</string>
 </dict>
 </plist>
