@@ -36,9 +36,9 @@ struct MainView: View {
                 }
             }
         }
-        .onAppear {
-            PasswordHashingDataService().test()
-        }
+//        .onAppear {
+//            PasswordHashingDataService().test()
+//        }
     }
 }
 

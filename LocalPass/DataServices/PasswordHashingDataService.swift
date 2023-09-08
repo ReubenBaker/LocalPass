@@ -120,6 +120,7 @@ class PasswordHashingDataService {
         }
         
         if result == kCCSuccess {
+//            print("\(SymmetricKey(data: Data(derivedKey)).withUnsafeBytes { Data(Array($0)).base64EncodedString() })") // Useful
             return SymmetricKey(data: Data(derivedKey))
         } else {
             return nil
@@ -176,6 +177,36 @@ class PasswordHashingDataService {
     }
     
     /**
+     Encrypts a `String` with a session key.
+     
+     - Parameters:
+        - blob: The `String` to encrypt.
+        - key: The session key.
+        - salt: The random salt associated with the session key.
+     
+     - Returns: The encrypted blob as `Data` or `nil` if encryption fails.
+     */
+    func encryptBlob(blob: String, key: SymmetricKey, salt: Data) -> Data? {
+        guard let data = blob.data(using: .utf8) else {
+          return nil
+        }
+        
+        let combined = salt + data
+        let checksum = calculateChecksum(data: combined)
+        
+        if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
+            if let combined = sealedBox.combined {
+                setSessionKey(key: key)
+                return salt + combined
+            }
+        } else {
+            return nil
+        }
+        
+        return nil
+    }
+    
+    /**
      Decrypts encrypted `Data` using a password.
      
      - Parameters:
@@ -197,9 +228,7 @@ class PasswordHashingDataService {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: key)
             let appendedChecksum = decryptedData.suffix(Int(CC_SHA256_DIGEST_LENGTH))
-            print("AppendedChecksum: \(appendedChecksum.base64EncodedString())")
             let expectedChecksum = calculateChecksum(data: salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
-            print("ExpectedChecksum: \(expectedChecksum.base64EncodedString())")
             
             if appendedChecksum.base64EncodedData() == expectedChecksum.base64EncodedData() {
                 return String(data: decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)), encoding: .utf8)
@@ -229,9 +258,7 @@ class PasswordHashingDataService {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: key)
             let appendedChecksum = decryptedData.suffix(Int(CC_SHA256_DIGEST_LENGTH))
-            print("AppendedChecksum: \(appendedChecksum.base64EncodedString())")
             let expectedChecksum = calculateChecksum(data: salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
-            print("ExpectedChecksum: \(expectedChecksum.base64EncodedString())")
             
             if appendedChecksum.base64EncodedData() == expectedChecksum.base64EncodedData() {
                 return String(data: decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)), encoding: .utf8)

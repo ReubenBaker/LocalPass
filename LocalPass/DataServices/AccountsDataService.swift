@@ -9,11 +9,11 @@ import Foundation
 import SwiftUI
 
 class AccountsDataService {
-    @StateObject private var settings = Settings()
-    let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
-    var iCloudPath: URL? = nil
-    let initializationGroup = DispatchGroup()
-    var dateFormatter: DateFormatter {
+    private var settings = Settings()
+    private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
+    private var iCloudPath: URL? = nil
+    private let initializationGroup = DispatchGroup()
+    private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
         return dateFormatter

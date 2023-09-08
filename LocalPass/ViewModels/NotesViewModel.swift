@@ -9,18 +9,27 @@ import Foundation
 import SwiftUI
 
 class NotesViewModel: ObservableObject {
+    private var notesDataService = NotesDataService()
+    
     @Published var notes: [Note]? {
         didSet {
-            NotesDataService().saveData(notes: notes)
+            do {
+                try notesDataService.saveData(notes: notes)
+            } catch {
+                print("Error writing accounts data: \(error)")
+            }
         }
     }
     
     @Published var noteToDelete: Note? = nil
     
     init() {
-        let notes = NoteTestDataService.notes // REMOVE LATER!
-//        let notes = NotesDataService().getNoteData()
+        let notes = notesDataService.getNoteData()
         self.notes = notes
+        
+        if notes == nil {
+            self.notes = NoteTestDataService.notes // REMOVE!
+        }
     }
     
     func addNote(title: String, body: String) -> Bool {
