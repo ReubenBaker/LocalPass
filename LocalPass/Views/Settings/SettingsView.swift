@@ -28,7 +28,7 @@ struct SettingsView: View {
                                 do {
                                     try NotesDataService().saveData(notes: NotesDataService().getNoteData())
                                 } catch {
-                                    print("Error writing accounts data: \(error)")
+                                    print("Error writing notes data: \(error)")
                                 }
                             } else {
                                 AccountsDataService().removeiCloudData()

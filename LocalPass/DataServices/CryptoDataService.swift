@@ -1,5 +1,5 @@
 //
-//  PasswordHashingDataService.swift
+//  CryptoDataService.swift
 //  LocalPass
 //
 //  Created by Reuben on 06/09/2023.
@@ -14,7 +14,7 @@ import CommonCrypto
  
  # Overview:
  
- The `PasswordHashingDataService` class provides methods for securely encrypting and decrypting data, ensuring data integrity through checksums. It uses the following steps:
+ The `CryptoDataService` class provides methods for securely encrypting and decrypting data, ensuring data integrity through checksums. It uses the following steps:
  
  1. **Salt Generation**: A random salt is generated for each derived key.
  
@@ -36,7 +36,7 @@ import CommonCrypto
  
  # Usage:
  
- 1. Initialize an instance of `PasswordHashingDataService`.
+ 1. Initialize an instance of `CryptoDataService`.
  
  2. Encrypt sensitive data using the `encryptBlob` method, providing the data and the password.
  
@@ -52,7 +52,7 @@ import CommonCrypto
  ```swift
  let blob = "Data to be encrypted"
  let password = "Password123"
- let service = PasswordHashingDataService()
+ let service = CryptoDataService()
  
  if let encryptedBlob = service.encryptBlob(blob: blob, password: password) {
     // Store or transmit the encryptedBlob
@@ -69,7 +69,7 @@ import CommonCrypto
  - Version: 1.0
  - Date: September 6, 2023
  */
-class PasswordHashingDataService {
+class CryptoDataService {
     private var sessionKey: SymmetricKey?
     private let saltSize: Int = 16
     private let hashingIterations: UInt32 = 10000

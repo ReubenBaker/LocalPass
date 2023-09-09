@@ -14,7 +14,7 @@ class NotesDataService {
     private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
     private var iCloudPath: URL? = nil
     private let initializationGroup = DispatchGroup()
-    private let passwordHashingDataService = PasswordHashingDataService()
+    private let cryptoDataService = CryptoDataService()
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
@@ -85,8 +85,8 @@ class NotesDataService {
     
     func parseData(blob: Data?) -> [Note]? {
         if let blob = blob {
-            if let key = passwordHashingDataService.getSessionKey() {
-                if let decryptedBlob = passwordHashingDataService.decryptBlob(blob: blob, key: key) {
+            if let key = cryptoDataService.getSessionKey() {
+                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
                     if decryptedBlob == "empty" {
                         return nil
                     }
@@ -111,7 +111,7 @@ class NotesDataService {
                     return notes
                 }
             } else if let password = testPassword {
-                if let decryptedBlob = passwordHashingDataService.decryptBlob(blob: blob, password: password) {
+                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, password: password) {
                     if decryptedBlob == "empty" {
                         return nil
                     }
@@ -152,11 +152,11 @@ class NotesDataService {
         do {
             let blob = formatForSave(notes: notes)
             
-            if let key = passwordHashingDataService.getSessionKey() {
+            if let key = cryptoDataService.getSessionKey() {
                 if let originalData = getBlob() {
                     let salt = originalData.prefix(16)
                     
-                    if let encryptedBlob = passwordHashingDataService.encryptBlob(blob: blob, key: key, salt: salt) {
+                    if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
                         try encryptedBlob.write(to: path, options: .atomic)
                         
                         initializationGroup.wait()
@@ -169,7 +169,7 @@ class NotesDataService {
                     }
                 }
             } else if let password = testPassword {
-                if let encryptedBlob = passwordHashingDataService.encryptBlob(blob: blob, password: password) {
+                if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, password: password) {
                     try encryptedBlob.write(to: path, options: .atomic)
                     
                     initializationGroup.wait()
