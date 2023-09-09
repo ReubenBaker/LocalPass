@@ -16,7 +16,7 @@ class NotesViewModel: ObservableObject {
             do {
                 try notesDataService.saveData(notes: notes)
             } catch {
-                print("Error writing accounts data: \(error)")
+                print("Error writing notes data: \(error)")
             }
         }
     }

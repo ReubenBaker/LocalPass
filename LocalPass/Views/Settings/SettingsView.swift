@@ -24,7 +24,12 @@ struct SettingsView: View {
                     Toggle("iCloud Sync", isOn: $settings.iCloudSync)
                         .onChange(of: settings.iCloudSync) { setting in
                             if setting == true {
-                                AccountsDataService().saveData(accounts: AccountsDataService().getAccountData())
+                                do {
+                                    try AccountsDataService().saveData(accounts: AccountsDataService().getAccountData())
+                                } catch {
+                                    print("Error writing accounts data: \(error)")
+                                }
+                                
                                 do {
                                     try NotesDataService().saveData(notes: NotesDataService().getNoteData())
                                 } catch {

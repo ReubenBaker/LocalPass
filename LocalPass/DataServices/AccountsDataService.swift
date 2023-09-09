@@ -9,14 +9,19 @@ import Foundation
 import SwiftUI
 
 class AccountsDataService {
+    private var testPassword: String? = "password" // REMOVE!
     private var settings = Settings()
     private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
     private var iCloudPath: URL? = nil
     private let initializationGroup = DispatchGroup()
+    private let cryptoDataService = CryptoDataService()
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
         return dateFormatter
+    }
+    private enum SaveError: Error {
+        case defaultError
     }
     
     init() {
@@ -31,18 +36,24 @@ class AccountsDataService {
         }
     }
     
-    func getBlob() -> String? {
+    func getBlob() -> Data? {
         do {
-            let blob = try String(contentsOf: path)
-            var iCloudBlob: String? = nil
+            let blob = try Data(contentsOf: path)
+            var iCloudBlob: Data? = nil
             
             initializationGroup.wait()
             
-            if settings.iCloudSync && iCloudPath != nil {
-                iCloudBlob = try String(contentsOf: path)
-                
-                if iCloudBlob != nil {
-                    return iCloudBlob
+            if let path = iCloudPath {
+                if settings.iCloudSync {
+                    do {
+                        iCloudBlob = try Data(contentsOf: path)
+                    } catch {
+                        print("Couldn't retreive iCloud blob: \(error)")
+                    }
+                    
+                    if iCloudBlob != nil {
+                        return iCloudBlob
+                    }
                 }
             }
             
@@ -75,33 +86,67 @@ class AccountsDataService {
         return "empty"
     }
     
-    func parseData(blob: String?) -> [Account]? {
-        if blob != nil {
-            if blob == "empty" {
+    func parseData(blob: Data?) -> [Account]? {
+        if let blob = blob {
+            if let key = cryptoDataService.getSessionKey() {
+                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
+                    if decryptedBlob == "empty" {
+                        return nil
+                    }
+                    
+                    let blobEntries = decryptedBlob.split(separator: "~")
+                    var accounts: [Account]? = nil
+                    
+                    for blobEntry in blobEntries {
+                        let blobEntryData = blobEntry.split(separator: ";")
+                        accounts = (accounts ?? []) + [
+                            Account(
+                                name: String(blobEntryData[0]),
+                                username: String(blobEntryData[1]),
+                                password: String(blobEntryData[2]),
+                                url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
+                                creationDateTime: dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
+                                updatedDateTime: blobEntryData[5] != "nil" ? dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
+                                starred: blobEntryData[6] == "true" ? true : false,
+                                otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
+                                id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()
+                            )
+                        ]
+                    }
+                    
+                    return accounts
+                }
+            } else if let password = testPassword {
+                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, password: password) {
+                    if decryptedBlob == "empty" {
+                        return nil
+                    }
+                    
+                    let blobEntries = decryptedBlob.split(separator: "~")
+                    var accounts: [Account]? = nil
+                    
+                    for blobEntry in blobEntries {
+                        let blobEntryData = blobEntry.split(separator: ";")
+                        accounts = (accounts ?? []) + [
+                            Account(
+                                name: String(blobEntryData[0]),
+                                username: String(blobEntryData[1]),
+                                password: String(blobEntryData[2]),
+                                url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
+                                creationDateTime: dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
+                                updatedDateTime: blobEntryData[5] != "nil" ? dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
+                                starred: blobEntryData[6] == "true" ? true : false,
+                                otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
+                                id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()
+                            )
+                        ]
+                    }
+
+                    return accounts
+                }
+            } else {
                 return nil
             }
-            
-            let blobEntries = blob?.split(separator: "~")
-            var accounts: [Account]? = nil
-            
-            for blobEntry in blobEntries ?? [] {
-                let blobEntryData = blobEntry.split(separator: ";")
-                accounts = (accounts ?? []) + [
-                    Account(
-                        name: String(blobEntryData[0]),
-                        username: String(blobEntryData[1]),
-                        password: String(blobEntryData[2]),
-                        url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
-                        creationDateTime: dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
-                        updatedDateTime: blobEntryData[5] != "nil" ? dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
-                        starred: blobEntryData[6] == "true" ? true : false,
-                        otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
-                        id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()
-                    )
-                ]
-            }
-            
-            return accounts
         }
         
         return nil
@@ -112,15 +157,40 @@ class AccountsDataService {
         return parseData(blob: blob)
     }
     
-    func saveData(accounts: [Account]?) {
+    func saveData(accounts: [Account]?) throws {
         do {
             let blob = formatForSave(accounts: accounts)
-            try blob.write(to: path, atomically: true, encoding: .utf8)
             
-            initializationGroup.wait()
-            
-            if settings.iCloudSync && iCloudPath != nil {
-                try blob.write(to: iCloudPath!, atomically: true, encoding: .utf8)
+            if let key = cryptoDataService.getSessionKey() {
+                if let originalData = getBlob() {
+                    let salt = originalData.prefix(16)
+                    
+                    if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
+                        try encryptedBlob.write(to: path, options: .atomic)
+                        
+                        initializationGroup.wait()
+                        
+                        if settings.iCloudSync {
+                            if let path = iCloudPath {
+                                try encryptedBlob.write(to: path, options: .atomic)
+                            }
+                        }
+                    }
+                }
+            } else if let password = testPassword {
+                if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, password: password) {
+                    try encryptedBlob.write(to: path, options: .atomic)
+                    
+                    initializationGroup.wait()
+                    
+                    if settings.iCloudSync {
+                        if let path = iCloudPath {
+                            try encryptedBlob.write(to: path, options: .atomic)
+                        }
+                    }
+                }
+            } else {
+                throw SaveError.defaultError
             }
         } catch {
             print("Error writing accounts data: \(error)")

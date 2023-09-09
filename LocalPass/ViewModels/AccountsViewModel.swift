@@ -9,18 +9,27 @@ import Foundation
 import SwiftUI
 
 class AccountsViewModel: ObservableObject {
+    private var accountsDataService = AccountsDataService()
+    
     @Published var accounts: [Account]? {
         didSet {
-            AccountsDataService().saveData(accounts: accounts)
+            do {
+                try accountsDataService.saveData(accounts: accounts)
+            } catch {
+                print("Error writing accounts data: \(error)")
+            }
         }
     }
     
     @Published var accountToDelete: Account? = nil
     
     init() {
-        let accounts = AccountTestDataService.accounts // REMOVE LATER!
-//        let accounts = AccountsDataService().getAccountData()
+        let accounts = accountsDataService.getAccountData()
         self.accounts = accounts
+        
+        if accounts == nil {
+            self.accounts = AccountTestDataService.accounts // REMOVE!
+        }
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) -> Bool {
