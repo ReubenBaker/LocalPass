@@ -40,6 +40,8 @@ struct SettingsView: View {
                                 NotesDataService().removeiCloudData()
                             }
                         }
+                    
+                    Toggle("Signed Up: \(settings.signedUp.description)", isOn: $settings.signedUp)
                 }
             }
         }

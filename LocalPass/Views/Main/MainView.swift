@@ -15,30 +15,41 @@ struct MainView: View {
     @EnvironmentObject private var privacyOverlayViewModel: PrivacyOverlayViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notesViewModel = NotesViewModel()
+    @StateObject private var authenticationViewModel = AuthenticationViewModel()
     @State private var selectedTab: Int = 0
+    @State private var authenticationStatus: Bool = false
     
     var body: some View {
-        mainTabView
-        .overlay(alignment: .top) {
-            CopyPopupOverlayView()
-        }
-        .overlay {
-            PrivacyOverlayView()
-        }
-        .onChange(of: scenePhase) { newPhase in
-            if newPhase == .inactive || newPhase == .background {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    privacyOverlayViewModel.showPrivacyOverlay = true
-                }
+        ZStack {
+            if authenticationStatus {
+                mainTabView
+                    .overlay(alignment: .top) {
+                        CopyPopupOverlayView()
+                    }
+                    .overlay {
+                        PrivacyOverlayView()
+                    }
+                    .onChange(of: scenePhase) { newPhase in
+                        if newPhase == .inactive || newPhase == .background {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                privacyOverlayViewModel.showPrivacyOverlay = true
+                            }
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                privacyOverlayViewModel.showPrivacyOverlay = false
+                            }
+                        }
+                    }
             } else {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    privacyOverlayViewModel.showPrivacyOverlay = false
-                }
+                AuthenticationView()
+                    .environmentObject(authenticationViewModel)
+                    .environmentObject(accountsViewModel)
+                    .onChange(of: authenticationViewModel.authenticated) { authenticatedStatus in
+                        authenticationStatus = authenticatedStatus
+                    }
             }
         }
-//        .onAppear {
-//            PasswordHashingDataService().test()
-//        }
+        .animation(.easeInOut, value: authenticationStatus)
     }
 }
 

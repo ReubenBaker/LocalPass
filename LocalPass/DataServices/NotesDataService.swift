@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 
 class NotesDataService {
-    private var testPassword: String? = "password" // REMOVE!
     private var settings = Settings()
     private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
     private var iCloudPath: URL? = nil
     private let initializationGroup = DispatchGroup()
     private let cryptoDataService = CryptoDataService()
+    private var authentication = AuthenticationViewModel()
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
@@ -110,7 +110,7 @@ class NotesDataService {
                     
                     return notes
                 }
-            } else if let password = testPassword {
+            } else if let password = authentication.password {
                 if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, password: password) {
                     if decryptedBlob == "empty" {
                         return nil
@@ -168,7 +168,7 @@ class NotesDataService {
                         }
                     }
                 }
-            } else if let password = testPassword {
+            } else if let password = authentication.password {
                 if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, password: password) {
                     try encryptedBlob.write(to: path, options: .atomic)
                     
