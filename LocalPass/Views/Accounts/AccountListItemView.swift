@@ -30,7 +30,7 @@ struct AccountListItemView_Previews: PreviewProvider {
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
-        @State var account = Account(name: "default", username: "default", password: "default")
+        @State var account = Account(name: "default", username: "default", password: "default", url: "www.google.com")
         
         AccountListItemView(account: $account)
             .environmentObject(mainViewModel)
@@ -47,10 +47,14 @@ extension AccountListItemView {
             showAccountDetailViewSheet.toggle()
         } label: {
             HStack {
-                Image(systemName: account.starred ? "star.fill" : "person.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color("AccentColor"))
+                if let url = account.url {
+                    FaviconImageView(url: url)
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(Color("AccentColor"))
+                }
                 
                 Text(account.name)
                     .font(.title3)
