@@ -30,7 +30,7 @@ struct AccountListItemView_Previews: PreviewProvider {
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
-        @State var account = Account(name: "default", username: "default", password: "default", url: "www.google.com")
+        @State var account = Account(name: "default", username: "default", password: "default", url: "apple.com")
         
         AccountListItemView(account: $account)
             .environmentObject(mainViewModel)
