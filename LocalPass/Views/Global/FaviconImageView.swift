@@ -30,10 +30,8 @@ struct FaviconImageView: View {
             let url = addHTTPSPrefixIfNeeded(url)
             
             if let cachedImage = getCachedImage(for: url) {
-                print("cached")
                 image = cachedImage
             } else {
-                print("not cached")
                 isLoading = true
                 
                 Favicon(url).faviconURL(.xxl) { result in
