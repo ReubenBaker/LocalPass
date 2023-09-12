@@ -22,6 +22,7 @@ struct LocalPassApp: App {
                     .environmentObject(mainViewModel)
                     .environmentObject(copyPopupOverlayViewModel)
                     .environmentObject(privacyOverlayViewModel)
+                    .environmentObject(settings)
             } else {
                 VStack {
                     SignUpRootView()

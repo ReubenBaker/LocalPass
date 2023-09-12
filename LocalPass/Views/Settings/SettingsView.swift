@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @StateObject private var settings = Settings()
+    @EnvironmentObject private var settings: Settings
     
     var body: some View {
         NavigationStack {
@@ -42,6 +42,8 @@ struct SettingsView: View {
                         }
                     
                     Toggle("Signed Up: \(settings.signedUp.description)", isOn: $settings.signedUp)
+                    
+                    Toggle("Show URL Icons", isOn: $settings.showFavicons)
                 }
             }
         }

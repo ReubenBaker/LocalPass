@@ -59,11 +59,13 @@ struct MainView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
+        @StateObject var settings = Settings()
         
         MainView()
             .environmentObject(mainViewModel)
             .environmentObject(copyPopupOverlayViewModel)
             .environmentObject(privacyOverlayViewModel)
+            .environmentObject(settings)
     }
 }
 
