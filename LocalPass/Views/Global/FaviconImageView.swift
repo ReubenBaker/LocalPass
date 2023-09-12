@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct FaviconImageView: View {
-    let url: String
-    
+
+    @StateObject private var faviconImageViewModel = FaviconImageViewModel()
     @State private var image: UIImage?
     @State private var isLoading: Bool = false
+    let url: String
     
     var body: some View {
         Group {
@@ -27,9 +28,9 @@ struct FaviconImageView: View {
             }
         }
         .onAppear {
-            let url = addHTTPSPrefixIfNeeded(url)
+            let url = faviconImageViewModel.addHTTPSPrefixIfNeeded(url)
             
-            if let cachedImage = getCachedImage(for: url) {
+            if let cachedImage = faviconImageViewModel.getCachedImage(for: url) {
                 image = cachedImage
             } else {
                 isLoading = true
@@ -39,10 +40,10 @@ struct FaviconImageView: View {
                         if let imageUrl = URL(string: urlString) {
                             URLSession.shared.dataTask(with: imageUrl) { data, response, error in
                                 if let data = data, let fetchedImage = UIImage(data: data) {
-                                    if isDefaultFavicon(fetchedImage) {
+                                    if faviconImageViewModel.isDefaultFavicon(fetchedImage) {
                                         image = nil
                                     } else {
-                                        cacheImage(fetchedImage, for: url)
+                                        faviconImageViewModel.cacheImage(fetchedImage, for: url)
                                         
                                         DispatchQueue.main.async {
                                             image = fetchedImage
@@ -65,50 +66,6 @@ struct FaviconImageView: View {
 struct FaviconImageView_Previews: PreviewProvider {
     static var previews: some View {
         FaviconImageView(url: "apple.com")
-    }
-}
-
-// Functions
-extension FaviconImageView {
-    private func addHTTPSPrefixIfNeeded(_ urlString: String) -> String {
-        if urlString.lowercased().hasPrefix("http://") || urlString.lowercased().hasPrefix("https://") {
-            return urlString
-        } else {
-            return "https://" + urlString
-        }
-    }
-    
-    private func isDefaultFavicon(_ image: UIImage) -> Bool {
-        let defaultFaviconSize = CGSize(width: 16, height: 16)
-        
-        return image.size == defaultFaviconSize
-    }
-    
-    private func getCachedImage(for key: String) -> UIImage? {
-        if let cacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-            let fileURL = cacheDirectory.appendingPathComponent(key.replacingOccurrences(of: "/", with: "_"))
-            
-            if let data = try? Data(contentsOf: fileURL),
-               let cachedImage = UIImage(data: data) {
-                return cachedImage
-            }
-        }
-        
-        return nil
-    }
-    
-    private func cacheImage(_ image: UIImage, for key: String) {
-        if let cacheDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-            let fileURL = cacheDirectory.appendingPathComponent(key.replacingOccurrences(of: "/", with: "_"))
-
-            if let data = image.pngData() {
-                do {
-                    try data.write(to: fileURL)
-                } catch {
-                    print("Error writing to cache: \(error)")
-                }
-            }
-        }
     }
 }
 
