@@ -45,7 +45,7 @@ class AccountsViewModel: ObservableObject {
             otpSecret: otpSecret
         )
         
-        accounts = (accounts ?? []) + [newAccount]
+        accounts = (accounts != nil) ? accounts! + [newAccount] : [newAccount]
         return true
     }
     

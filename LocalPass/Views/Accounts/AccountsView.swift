@@ -28,9 +28,9 @@ struct AccountsView: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $showAddAccountSheet, content: {
+        .fullScreenCover(isPresented: $showAddAccountSheet) {
             AddAccountView()
-        })
+        }
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
         }
@@ -51,12 +51,14 @@ struct AccountsView_Previews: PreviewProvider {
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
+        @StateObject var settings = Settings()
         
         AccountsView()
             .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
             .environmentObject(privacyOverlayViewModel)
+            .environmentObject(settings)
     }
 }
 

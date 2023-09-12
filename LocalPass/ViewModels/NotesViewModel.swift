@@ -42,7 +42,7 @@ class NotesViewModel: ObservableObject {
             body: body
         )
         
-        notes = (notes ?? [] + [newNote])
+        notes = (notes != nil) ? notes! + [newNote] : [newNote]
         return true
     }
     
