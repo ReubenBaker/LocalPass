@@ -66,8 +66,17 @@ import CommonCrypto
  }
  ```
  
+ # Biometrics Support:
+ 
+ The class has been extended to support key storage and retreival for use with biometrics. It includes the following functions:
+ 
+ - `generateRandomKey()`: Generates a random `SymmetricKey`.
+ - `writeKeyToSecureEnclave(key:tag:)`: Writes a `SymmetricKey` to the secure enclave with a specified tag.
+ - `readKeyFromSecureEnclave(tag:)`: Reads a `SymmetricKey` from the secure enclave using a specified tag.
+ - `deleteKeyFromSecureEnclave(tag:)`: Deletes a `SymmetricKey` from the secure enclave using a specified tag.
+ 
  - Version: 1.0
- - Date: September 6, 2023
+ - Date: September 13, 2023
  */
 class CryptoDataService {
     private var sessionKey: SymmetricKey?
@@ -305,7 +314,126 @@ class CryptoDataService {
         
         self.sessionKey = nil
     }
+}
+
+// Biometrics
+extension CryptoDataService {
+    /**
+     Generates a random `SymmetricKey`.
+     
+     - Returns: A randomly generated `SymmetricKey`.
+     */
+    func generateRandomKey() -> SymmetricKey {
+        return SymmetricKey(size: .bits256)
+    }
     
+    /**
+     Writes a `SymmetricKey` to the secure enclave with a specified tag.
+     
+     - Parameters:
+        - key: The `SymmetricKey` to be stored securely.
+        - tag: A unique identifier for the stored key in the secure enclave.
+     
+     - Returns: `true` if the key is successfully written to the secure enclave, `false` otherwise.
+     */
+    func writeKeyToSecureEnclave(key: SymmetricKey, tag: String) -> Bool {
+        let keyData = key.withUnsafeBytes { Data(Array($0)) }
+        
+        return writeDataToSecureEnclave(data: keyData, tag: tag)
+    }
+    
+    /**
+     Reads a `SymmetricKey` from the secure enclave using a specified tag.
+     
+     - Parameters:
+        - tag: A unique identifier for the key stored in the secure enclave.
+     
+     - Returns: The stored `SymmetricKey` if it exists, `nil` otherwise.
+     */
+    func readKeyFromSecureEnclave(tag: String) -> SymmetricKey? {
+        if let keyData = readDataFromSecureEnclave(tag: tag) {
+            return SymmetricKey(data: keyData)
+        } else {
+            return nil
+        }
+    }
+    
+    /**
+     Deletes a `SymmetricKey` from the secure enclave using a specified tag.
+     
+     - Parameters:
+        - tag: A unique identifier for the key stored in the secure enclave.
+     
+     - Returns: `true` if the key is successfully deleted from the secure enclave or if it doesn't exist, `false` otherwise.
+     */
+    func deleteKeyFromSecureEnclave(tag: String) -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassKey,
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeyClass as String: kSecAttrKeyClassSymmetric,
+            kSecAttrApplicationTag as String: tag
+        ]
+        
+        let status = SecItemDelete(query as CFDictionary)
+        
+        return status == errSecSuccess || status == errSecItemNotFound
+    }
+    
+    /**
+     Writes data to the secure enclave with a specified tag.
+     
+     - Parameters:
+        - data: The `Data` to be stored securely.
+        - tag: A unique identifier for the stored `Data` in the secure enclave.
+     
+     - Returns: `true` if the `Data` is successfully written to the secure enclave, `false` otherwise.
+     */
+    func writeDataToSecureEnclave(data: Data, tag: String) -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassKey,
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeyClass as String: kSecAttrKeyClassSymmetric,
+            kSecAttrApplicationTag as String: tag,
+            kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
+        ]
+        
+        let status = SecItemAdd(query as CFDictionary, nil)
+        
+        return status == errSecSuccess
+    }
+    
+    /**
+     Reads `Data` from the secure enclave using a specified tag.
+     
+     - Parameters:
+        - tag: A unique identifier for the `Data` stored in the secure enclave.
+     
+     - Returns: The stored `Data` if it exists, `nil` otherwise.
+     */
+    func readDataFromSecureEnclave(tag: String) -> Data? {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassKey,
+            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+            kSecAttrKeyClass as String: kSecAttrKeyClassSymmetric,
+            kSecAttrApplicationTag as String: tag,
+            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecReturnData as String: true
+        ]
+        
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        
+        if status == errSecSuccess, let data = result as? Data {
+            return data
+        } else {
+            return nil
+        }
+    }
+}
+
+// Test Functions
+extension CryptoDataService {
     /**
      Test function.
      */

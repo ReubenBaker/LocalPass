@@ -15,6 +15,6 @@
             </dict>
         </dict>
     <key>NSFaceIDUsageDescription</key>
-    <string>Explanation of why your app needs Face ID access.</string>
+    <string>For signing into LocalPass.</string>
 </dict>
 </plist>
