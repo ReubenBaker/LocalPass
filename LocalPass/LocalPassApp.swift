@@ -14,6 +14,7 @@ struct LocalPassApp: App {
     @StateObject private var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
     @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     @StateObject private var settings = Settings()
+    @Environment(\.scenePhase) private var scenePhase
     
     var body: some Scene {
         WindowGroup {
@@ -26,6 +27,17 @@ struct LocalPassApp: App {
             } else {
                 VStack {
                     SignUpRootView()
+                }
+            }
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active {
+                withAnimation(.easeInOut) {
+                    privacyOverlayViewModel.showPrivacyOverlay = true
+                }
+            } else {
+                withAnimation(.easeInOut) {
+                    privacyOverlayViewModel.showPrivacyOverlay = false
                 }
             }
         }

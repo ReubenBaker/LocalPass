@@ -48,7 +48,6 @@ struct NoteDetailView: View {
         .background(.ultraThinMaterial)
         .overlay(closeButton, alignment: .bottom)
         .overlay(CopyPopupOverlayView(), alignment: .top)
-        .overlay(PrivacyOverlayView())
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
         }
@@ -82,14 +81,12 @@ struct NoteDetailView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         @State var note = Note(title: "default", body: "default")
         
         NoteDetailView(note: $note)
             .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
             .environmentObject(copyPopupOverlayViewModel)
-            .environmentObject(privacyOverlayViewModel)
     }
 }
 

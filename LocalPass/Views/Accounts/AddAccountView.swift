@@ -45,9 +45,6 @@ struct AddAccountView: View {
         }
         .background(.ultraThinMaterial)
         .overlay(closeButton, alignment: .bottom)
-        .overlay{
-            PrivacyOverlayView()
-        }
         .alert(isPresented: $showAccountSuccessAlert) {
             getAccountSuccessAlert(accountSuccess: accountSuccess)
         }
@@ -63,12 +60,10 @@ struct AddAccountView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AddAccountView()
             .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
-            .environmentObject(privacyOverlayViewModel)
     }
 }
 

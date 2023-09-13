@@ -20,6 +20,7 @@ struct AccountListItemView: View {
         accountListItem
             .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
                 AccountDetailView(account: $account)
+                    .overlay(PrivacyOverlayView())
             }
     }
 }

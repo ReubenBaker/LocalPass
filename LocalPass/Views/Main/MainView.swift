@@ -12,7 +12,6 @@ struct MainView: View {
     @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
-    @EnvironmentObject private var privacyOverlayViewModel: PrivacyOverlayViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notesViewModel = NotesViewModel()
     @StateObject private var authenticationViewModel = AuthenticationViewModel()
@@ -26,20 +25,6 @@ struct MainView: View {
                     .overlay(alignment: .top) {
                         CopyPopupOverlayView()
                     }
-                    .overlay {
-                        PrivacyOverlayView()
-                    }
-                    .onChange(of: scenePhase) { newPhase in
-                        if newPhase == .inactive || newPhase == .background {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                privacyOverlayViewModel.showPrivacyOverlay = true
-                            }
-                        } else {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                privacyOverlayViewModel.showPrivacyOverlay = false
-                            }
-                        }
-                    }
             } else {
                 AuthenticationView()
                     .environmentObject(authenticationViewModel)
@@ -50,6 +35,7 @@ struct MainView: View {
             }
         }
         .animation(.easeInOut, value: authenticationStatus)
+        .overlay(PrivacyOverlayView())
     }
 }
 
@@ -58,13 +44,11 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         @StateObject var settings = Settings()
         
         MainView()
             .environmentObject(mainViewModel)
             .environmentObject(copyPopupOverlayViewModel)
-            .environmentObject(privacyOverlayViewModel)
             .environmentObject(settings)
     }
 }

@@ -12,13 +12,11 @@ struct PrivacyOverlayView: View {
     @EnvironmentObject private var privacyOverlayViewModel: PrivacyOverlayViewModel
     
     var body: some View {
-        VStack {
-            Spacer()
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - privacyOverlayViewModel.privacyOverlaySize)
-
-            RoundedRectangle(cornerRadius: 20)
-                .frame(width: UIScreen.main.bounds.width, height: privacyOverlayViewModel.privacyOverlaySize)
-                .background(.ultraThinMaterial).ignoresSafeArea()
+        ZStack {
+            if privacyOverlayViewModel.showPrivacyOverlay {
+                RoundedRectangle(cornerRadius: 20)
+                    .foregroundStyle(.ultraThinMaterial).ignoresSafeArea()
+            }
         }
     }
 }

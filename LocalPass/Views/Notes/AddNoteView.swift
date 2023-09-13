@@ -31,9 +31,6 @@ struct AddNoteView: View {
         }
         .background(.ultraThinMaterial)
         .overlay(closeButton, alignment: .bottom)
-        .overlay {
-            PrivacyOverlayView()
-        }
         .alert(isPresented: $showNoteSuccessAlert) {
             getNoteSuccessAlert(noteSuccess: noteSuccess)
         }
@@ -44,12 +41,10 @@ struct AddNoteView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AddNoteView()
             .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
-            .environmentObject(privacyOverlayViewModel)
     }
 }
 
@@ -103,7 +98,7 @@ extension AddNoteView {
             .padding()
             .padding(.top, 4)
             .tint(.primary)
-            .lineLimit(22...22)
+            .lineLimit(23...23)
             .scrollContentBackground(.hidden)
             .focused($bodyTextFieldFocused)
             .onTapGesture {

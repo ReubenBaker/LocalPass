@@ -19,6 +19,7 @@ struct NoteListItemView: View {
         noteListItem
             .fullScreenCover(isPresented: $showNoteDetailViewSheet) {
                 NoteDetailView(note: $note)
+                    .overlay(PrivacyOverlayView())
             }
     }
 }
@@ -29,14 +30,12 @@ struct NoteListItemView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         @State var note = Note(title: "Test Title", body: "Test Body")
         
         NoteListItemView(note: $note)
             .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
             .environmentObject(copyPopupOverlayViewModel)
-            .environmentObject(privacyOverlayViewModel)
     }
 }
 

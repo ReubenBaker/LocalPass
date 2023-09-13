@@ -30,13 +30,10 @@ struct NotesView: View {
         }
         .fullScreenCover(isPresented: $showAddNoteSheet) {
             AddNoteView()
+                .overlay(PrivacyOverlayView())
         }
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
-        }
-        .overlay {
-            PrivacyOverlayView()
-                .hidden() // Fix: Prevents strange behaviour of overlay in noteDetailView
         }
         .onChange(of: sortSelection) { _ in
             sortNotes(sortSelection: sortSelection)
@@ -50,13 +47,11 @@ struct NotesView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         NotesView()
             .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
             .environmentObject(copyPopupOverlayViewModel)
-            .environmentObject(privacyOverlayViewModel)
     }
 }
 
@@ -77,6 +72,7 @@ extension NotesView {
             if let notes = notesViewModel.notes {
                 ForEach(notes) { note in
                     NoteListItemView(note: Binding.constant(note))
+                        .overlay(PrivacyOverlayView())
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets())
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {

@@ -30,13 +30,10 @@ struct AccountsView: View {
         }
         .fullScreenCover(isPresented: $showAddAccountSheet) {
             AddAccountView()
+                .overlay(PrivacyOverlayView())
         }
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
-        }
-        .overlay {
-            PrivacyOverlayView()
-                .hidden() // Fix: Prevents strange behaviour of overlay in accountDetailView
         }
         .onChange(of: sortSelection) { _ in
             sortAccounts(sortSelection: sortSelection)
@@ -50,14 +47,12 @@ struct AccountsView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         @StateObject var settings = Settings()
         
         AccountsView()
             .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
-            .environmentObject(privacyOverlayViewModel)
             .environmentObject(settings)
     }
 }
@@ -79,6 +74,7 @@ extension AccountsView {
              if let accounts = accountsViewModel.accounts {
                  ForEach(accounts) { account in
                      AccountListItemView(account: Binding.constant(account))
+                        .overlay(PrivacyOverlayView())
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets())
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
