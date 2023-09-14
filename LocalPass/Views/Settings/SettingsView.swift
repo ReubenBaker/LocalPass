@@ -11,6 +11,9 @@ import LocalAuthentication
 struct SettingsView: View {
     
     @EnvironmentObject private var settings: Settings
+    private var accountsDataService = AccountsDataService()
+    private var notesDataService = NotesDataService()
+    private var cryptoDataService = CryptoDataService()
     
     var body: some View {
         NavigationStack {
@@ -26,19 +29,19 @@ struct SettingsView: View {
                         .onChange(of: settings.iCloudSync) { setting in
                             if setting == true {
                                 do {
-                                    try AccountsDataService().saveData(accounts: AccountsDataService().getAccountData())
+                                    try accountsDataService.saveData(accounts: accountsDataService.getAccountData())
                                 } catch {
                                     print("Error writing accounts data: \(error)")
                                 }
                                 
                                 do {
-                                    try NotesDataService().saveData(notes: NotesDataService().getNoteData())
+                                    try notesDataService.saveData(notes: notesDataService.getNoteData())
                                 } catch {
                                     print("Error writing notes data: \(error)")
                                 }
                             } else {
-                                AccountsDataService().removeiCloudData()
-                                NotesDataService().removeiCloudData()
+                                accountsDataService.removeiCloudData()
+                                notesDataService.removeiCloudData()
                             }
                         }
                     
@@ -50,7 +53,7 @@ struct SettingsView: View {
                     
                     Toggle("Use Biometrics", isOn: $settings.useBiometrics)
                         .onChange(of: settings.useBiometrics) { setting in
-                            if setting == true {
+                            if setting {
                                 let context = LAContext()
                                 var error: NSError?
                                 
@@ -58,9 +61,19 @@ struct SettingsView: View {
                                     context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Enable biometric authentication") { success, authenticationError in
                                         DispatchQueue.main.async {
                                             if success {
-                                                settings.useBiometrics = true
+                                                if let key = cryptoDataService.getSessionKey() {
+                                                    if let tag = Bundle.main.bundleIdentifier {
+                                                        if cryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
+                                                            settings.useBiometrics = true
+                                                        }
+                                                    }
+                                                }
                                             } else {
                                                 settings.useBiometrics = false
+                                                
+                                                if let tag = Bundle.main.bundleIdentifier {
+                                                    _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
+                                                }
                                             }
                                         }
                                     }
@@ -71,6 +84,20 @@ struct SettingsView: View {
                         }
                         .disabled(!biometricsEnrolled)
                         .foregroundColor(biometricsEnrolled ? .primary : .primary.opacity(0.5))
+                }
+                
+                Section(header: Text("Tests")) {
+                    Button {
+                        CryptoDataService().test()
+                    } label: {
+                        Text("Test Crypto")
+                    }
+                    
+                    Button {
+                        CryptoDataService().testBiometrics()
+                    } label: {
+                        Text("Test Crypto - Biometrics")
+                    }
                 }
             }
         }

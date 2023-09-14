@@ -55,7 +55,6 @@ struct AuthenticationView: View {
                         .frame(maxWidth: UIScreen.main.bounds.width / 6)
                         .padding()
                 }
-                .padding()
                 
                 Button {
                     

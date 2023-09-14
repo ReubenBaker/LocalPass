@@ -8,6 +8,7 @@
 import Foundation
 import CryptoKit
 import CommonCrypto
+import LocalAuthentication
 
 /**
  A utility class for secure encryption and decryption of data using a password-based and session-based key approach with data integrity checks.
@@ -70,18 +71,19 @@ import CommonCrypto
  
  The class has been extended to support key storage and retreival for use with biometrics. It includes the following functions:
  
- - `generateRandomKey()`: Generates a random `SymmetricKey`.
  - `writeKeyToSecureEnclave(key:tag:)`: Writes a `SymmetricKey` to the secure enclave with a specified tag.
  - `readKeyFromSecureEnclave(tag:)`: Reads a `SymmetricKey` from the secure enclave using a specified tag.
  - `deleteKeyFromSecureEnclave(tag:)`: Deletes a `SymmetricKey` from the secure enclave using a specified tag.
+ - `authenticateWithBiometrics(completion:)`: Prompts the user for biometric verification, and calls a completion handler with the result (`true` if successful, `false` otherwise).
  
  - Version: 1.0
- - Date: September 13, 2023
+ - Date: September 15, 2023
  */
 class CryptoDataService {
     private var sessionKey: SymmetricKey?
     private let saltSize: Int = 16
     private let hashingIterations: UInt32 = 10000
+    private var settings = Settings()
     
     /**
      Generates a random salt for key derivation.
@@ -129,7 +131,6 @@ class CryptoDataService {
         }
         
         if result == kCCSuccess {
-//            print("\(SymmetricKey(data: Data(derivedKey)).withUnsafeBytes { Data(Array($0)).base64EncodedString() })") // Useful
             return SymmetricKey(data: Data(derivedKey))
         } else {
             return nil
@@ -291,6 +292,16 @@ class CryptoDataService {
         key.withUnsafeBytes { keyBytes in
             self.sessionKey = SymmetricKey(data: Data(keyBytes))
         }
+        
+        if settings.useBiometrics {
+            if let tag = Bundle.main.bundleIdentifier {
+                if !writeKeyToSecureEnclave(key: key, tag: tag) {
+                    settings.biometricsAllowed = false
+                }
+            } else {
+                settings.biometricsAllowed = false
+            }
+        }
     }
     
     /**
@@ -313,20 +324,21 @@ class CryptoDataService {
         }
         
         self.sessionKey = nil
+        
+        if settings.biometricsAllowed {
+            if let tag = Bundle.main.bundleIdentifier {
+                if !deleteKeyFromSecureEnclave(tag: tag) {
+                    settings.biometricsAllowed = false
+                }
+            } else {
+                settings.biometricsAllowed = false
+            }
+        }
     }
 }
 
 // Biometrics
 extension CryptoDataService {
-    /**
-     Generates a random `SymmetricKey`.
-     
-     - Returns: A randomly generated `SymmetricKey`.
-     */
-    func generateRandomKey() -> SymmetricKey {
-        return SymmetricKey(size: .bits256)
-    }
-    
     /**
      Writes a `SymmetricKey` to the secure enclave with a specified tag.
      
@@ -430,6 +442,35 @@ extension CryptoDataService {
             return nil
         }
     }
+    
+    /**
+     Function to authenticate with biometrics.
+     
+     This function checks if the device supports biometric authentication, such as TouchID or FaceID, and prompts the user for biometric verification.
+     
+     - Parameters:
+        - completion: A closure that receives the result of the biometric authentication. It is called with `true` if the authentication is successful, `false` otherwise.
+     */
+    func authenticateWithBiometrics(completion: @escaping (Bool) -> Void) {
+        let context = LAContext()
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "For signing into LocalPass."
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, error in
+                DispatchQueue.main.async {
+                    if success {
+                        completion(true)
+                    } else {
+                        print("Authentication failed: \(String(describing: error))")
+                    }
+                }
+            }
+        }
+        
+        return completion(false)
+    }
 }
 
 // Test Functions
@@ -445,11 +486,40 @@ extension CryptoDataService {
             if let encryptedBlob = encryptBlob(blob: blob, password: password) {
                 print("Blob: \(blob)")
                 print("Session Key: \(String(describing: getSessionKey()?.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
-                print("Encrypted String: \(encryptedBlob.base64EncodedString())")
+                print("Encrypted Blob: \(encryptedBlob.base64EncodedString())")
                 
                 if let key = getSessionKey() {
                     if let decryptedBlob = decryptBlob(blob: encryptedBlob, key: key) {
-                        print("Decrypted String: \(decryptedBlob)")
+                        print("Decrypted Blob: \(decryptedBlob)")
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     Biometric test function.
+     */
+    func testBiometrics() {
+        if settings.biometricsAllowed {
+            let blob = "Data to be encrypted with biometrics"
+            
+            if let tag = Bundle.main.bundleIdentifier {
+                if let key = readKeyFromSecureEnclave(tag: tag) {
+                    if let salt = AccountsDataService().getBlob()?.prefix(16) {
+                        if let encryptedBlob = encryptBlob(blob: blob, key: key, salt: salt) {
+                            print("Blob: \(blob)")
+                            print("Session Key: \(String(describing: getSessionKey()?.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
+                            print("Encrypted Blob: \(encryptedBlob.base64EncodedString())")
+                            
+                            authenticateWithBiometrics { success in
+                                if success {
+                                    if let decryptedBlob = self.decryptBlob(blob: encryptedBlob, key: key) {
+                                        print("Decrypted Blob: \(decryptedBlob)")
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
