@@ -289,18 +289,22 @@ class CryptoDataService {
     func setSessionKey(key: SymmetricKey) {
         clearSessionKey()
         
-        key.withUnsafeBytes { keyBytes in
-            self.sessionKey = SymmetricKey(data: Data(keyBytes))
-        }
-        
         if settings.useBiometrics {
             if let tag = Bundle.main.bundleIdentifier {
-                if !writeKeyToSecureEnclave(key: key, tag: tag) {
+                if deleteKeyFromSecureEnclave(tag: tag) {
+                    if !writeKeyToSecureEnclave(key: key, tag: tag) {
+                        settings.biometricsAllowed = false
+                    }
+                } else {
                     settings.biometricsAllowed = false
                 }
             } else {
                 settings.biometricsAllowed = false
             }
+        }
+        
+        key.withUnsafeBytes { keyBytes in
+            self.sessionKey = SymmetricKey(data: Data(keyBytes))
         }
     }
     

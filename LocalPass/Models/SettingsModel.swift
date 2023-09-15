@@ -31,7 +31,7 @@ class Settings: ObservableObject {
         didSet {
             UserDefaults.standard.set(useBiometrics, forKey: "useBiometrics")
             
-            if useBiometrics {
+            if useBiometrics == true {
                 biometricsAllowed = true
             } else {
                 biometricsAllowed = false

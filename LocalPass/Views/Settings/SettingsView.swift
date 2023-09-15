@@ -53,7 +53,7 @@ struct SettingsView: View {
                     
                     Toggle("Use Biometrics", isOn: $settings.useBiometrics)
                         .onChange(of: settings.useBiometrics) { setting in
-                            if setting {
+                            if setting == true {
                                 let context = LAContext()
                                 var error: NSError?
                                 
@@ -79,6 +79,16 @@ struct SettingsView: View {
                                     }
                                 } else {
                                     settings.useBiometrics = false
+                                    
+                                    if let tag = Bundle.main.bundleIdentifier {
+                                        _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
+                                    }
+                                }
+                            } else {
+                                settings.useBiometrics = false
+                                
+                                if let tag = Bundle.main.bundleIdentifier {
+                                    _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
                                 }
                             }
                         }
