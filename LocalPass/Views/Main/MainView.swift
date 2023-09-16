@@ -20,21 +20,11 @@ struct MainView: View {
     
     var body: some View {
         ZStack {
-            if authenticationStatus {
-                mainTabView
-                    .overlay(alignment: .top) {
-                        CopyPopupOverlayView()
-                    }
-            } else {
-                AuthenticationView()
-                    .environmentObject(authenticationViewModel)
-                    .environmentObject(accountsViewModel)
-                    .onChange(of: authenticationViewModel.authenticated) { authenticatedStatus in
-                        authenticationStatus = authenticatedStatus
-                    }
-            }
+            mainTabView
+                .overlay(alignment: .top) {
+                    CopyPopupOverlayView()
+                }
         }
-        .animation(.easeInOut, value: authenticationStatus)
         .overlay(PrivacyOverlayView())
     }
 }
