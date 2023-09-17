@@ -61,35 +61,15 @@ struct SettingsView: View {
                                     context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Enable biometric authentication") { success, authenticationError in
                                         DispatchQueue.main.async {
                                             if success {
-                                                if let key = cryptoDataService.getSessionKey() {
-                                                    if let tag = Bundle.main.bundleIdentifier {
-                                                        if cryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
-                                                            settings.useBiometrics = true
-                                                        }
-                                                    }
-                                                }
+                                                settings.useBiometrics = true
                                             } else {
                                                 settings.useBiometrics = false
-                                                
-                                                if let tag = Bundle.main.bundleIdentifier {
-                                                    _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
-                                                }
                                             }
                                         }
-                                    }
-                                } else {
-                                    settings.useBiometrics = false
-                                    
-                                    if let tag = Bundle.main.bundleIdentifier {
-                                        _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
                                     }
                                 }
                             } else {
                                 settings.useBiometrics = false
-                                
-                                if let tag = Bundle.main.bundleIdentifier {
-                                    _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
-                                }
                             }
                         }
                         .disabled(!biometricsEnrolled)
@@ -98,13 +78,13 @@ struct SettingsView: View {
                 
                 Section(header: Text("Tests")) {
                     Button {
-                        CryptoDataService().test()
+//                        CryptoDataService().test()
                     } label: {
                         Text("Test Crypto")
                     }
                     
                     Button {
-                        CryptoDataService().testBiometrics()
+//                        CryptoDataService().testBiometrics()
                     } label: {
                         Text("Test Crypto - Biometrics")
                     }

@@ -20,25 +20,29 @@ struct LocalPassApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if settings.signedUp {
-                ZStack {
-                    if authenticationStatus {
-                        MainView()
-                            .environmentObject(mainViewModel)
-                            .environmentObject(copyPopupOverlayViewModel)
-                            .environmentObject(privacyOverlayViewModel)
-                            .environmentObject(settings)
-                    } else {
-                        AuthenticationView()
-                            .environmentObject(authenticationViewModel)
+            ZStack {
+                if settings.signedUp {
+                    ZStack {
+                        if authenticationStatus {
+                            MainView()
+                                .environmentObject(mainViewModel)
+                                .environmentObject(copyPopupOverlayViewModel)
+                                .environmentObject(privacyOverlayViewModel)
+                                .environmentObject(authenticationViewModel)
+                                .environmentObject(settings)
+                        } else {
+                            AuthenticationView()
+                                .environmentObject(authenticationViewModel)
+                        }
                     }
-                }
-                .animation(.easeInOut, value: authenticationStatus)
-            } else {
-                VStack {
-                    SignUpRootView()
+                    .animation(.easeInOut, value: authenticationStatus)
+                } else {
+                    SignUpView()
+                        .environmentObject(authenticationViewModel)
+                        .environmentObject(settings)
                 }
             }
+            .animation(.easeInOut, value: settings.signedUp)
         }
         .onChange(of: authenticationViewModel.authenticated) { authenticatedStatus in
             authenticationStatus = authenticatedStatus

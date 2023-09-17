@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class AuthenticationViewModel: ObservableObject {
-    @Published var password: String? = "password123"
+    @Published var password: String? = nil
     @Published var authenticated: Bool = false
     
     func getIncorrectPasswordAlert() -> Alert {

@@ -14,9 +14,7 @@ struct MainView: View {
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notesViewModel = NotesViewModel()
-    @StateObject private var authenticationViewModel = AuthenticationViewModel()
     @State private var selectedTab: Int = 0
-    @State private var authenticationStatus: Bool = false
     
     var body: some View {
         ZStack {

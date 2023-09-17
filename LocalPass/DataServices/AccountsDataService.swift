@@ -9,22 +9,18 @@ import Foundation
 import SwiftUI
 
 class AccountsDataService {
-    private var settings = Settings()
     private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
     private var iCloudPath: URL? = nil
     private let initializationGroup = DispatchGroup()
     private let cryptoDataService = CryptoDataService()
-    private var authentication = AuthenticationViewModel()
+    private var settings = Settings()
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
         return dateFormatter
     }
-    private enum SaveError: Error {
-        case defaultError
-    }
     
-    init() {
+    init() {        
         initializationGroup.enter()
         
         DispatchQueue.global(qos: .userInitiated).async {
@@ -88,37 +84,9 @@ class AccountsDataService {
     
     func parseData(blob: Data?) -> [Account]? {
         if let blob = blob {
-            if let key = cryptoDataService.getSessionKey() {
-                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
-                    if decryptedBlob == "empty" {
-                        return nil
-                    }
-                    
-                    let blobEntries = decryptedBlob.split(separator: "~")
-                    var accounts: [Account]? = nil
-                    
-                    for blobEntry in blobEntries {
-                        let blobEntryData = blobEntry.split(separator: ";")
-                        accounts = (accounts ?? []) + [
-                            Account(
-                                name: String(blobEntryData[0]),
-                                username: String(blobEntryData[1]),
-                                password: String(blobEntryData[2]),
-                                url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
-                                creationDateTime: dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
-                                updatedDateTime: blobEntryData[5] != "nil" ? dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
-                                starred: blobEntryData[6] == "true" ? true : false,
-                                otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
-                                id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()
-                            )
-                        ]
-                    }
-                    
-                    return accounts
-                }
-            } else {
-                if let password = authentication.password {
-                    if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, password: password) {
+            if let tag = Bundle.main.bundleIdentifier {
+                if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                    if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
                         if decryptedBlob == "empty" {
                             return nil
                         }
@@ -144,8 +112,6 @@ class AccountsDataService {
                         }
                         
                         return accounts
-                    } else {
-                        return nil
                     }
                 }
             }
@@ -163,42 +129,29 @@ class AccountsDataService {
         do {
             let blob = formatForSave(accounts: accounts)
             
-            if let key = cryptoDataService.getSessionKey() {
-                if let originalData = getBlob() {
-                    let salt = originalData.prefix(16)
-                    
-                    if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
-                        try encryptedBlob.write(to: path, options: .atomic)
+            if let tag = Bundle.main.bundleIdentifier {
+                if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                    if let originalData = getBlob() {
+                        let salt = originalData.prefix(16)
                         
-                        initializationGroup.wait()
-                        
-                        if settings.iCloudSync {
-                            if let path = iCloudPath {
-                                try encryptedBlob.write(to: path, options: .atomic)
+                        if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
+                            try encryptedBlob.write(to: path, options: .atomic)
+                            
+                            initializationGroup.wait()
+                            
+                            if settings.iCloudSync {
+                                if let path = iCloudPath {
+                                    try encryptedBlob.write(to: path, options: .atomic)
+                                }
                             }
                         }
-                    }
-                }
-            } else {
-                if let password = authentication.password {
-                    if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, password: password) {
-                        try encryptedBlob.write(to: path, options: .atomic)
-                        
-                        initializationGroup.wait()
-                        
-                        if settings.iCloudSync {
-                            if let path = iCloudPath {
-                                try encryptedBlob.write(to: path, options: .atomic)
-                            }
-                        }
-                    } else {
-                        throw SaveError.defaultError
                     }
                 }
             }
         } catch {
             print("Error writing accounts data: \(error)")
         }
+            
     }
     
     func removeiCloudData() {

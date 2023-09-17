@@ -11,7 +11,7 @@ import CommonCrypto
 import LocalAuthentication
 
 /**
- A utility class for secure encryption and decryption of data using a password-based and session-based key approach with data integrity checks.
+ A utility class for secure encryption and decryption of data using a password-based and key-based approach with data integrity checks.
  
  # Overview:
  
@@ -24,7 +24,8 @@ import LocalAuthentication
  3. **Encryption**:
     - Data is prepared by converting it into binary form (UTF-8 encoding) and prepending the salt.
     - A checksum of the combined binary data (salt + data) is calculated using SHA-256.
-    - AES-GCM encryption is applied to the combined binary data, producing an encrypted data blob.
+    - AES-GCM encryption is applied to the combined binary data with the checksum appended and without the salt, producing an encrypted data blob.
+    - The salt is prepended to the encrypted data blob.
  
  4. **Decryption**:
     - The salt is extracted from the beginning of the data blob.
@@ -32,8 +33,6 @@ import LocalAuthentication
     - If using the session key, the session key is used for the decryption.
     - The encrypted data is then decrypted using the given key.
     - A checksum is calculated based on the extracted salt + decrypted data to verify it matches the checksum from the end of the decrypted data blob.
- 
- 5. **Session Key Handling**: The class also provides methods for managing a session key. Although this will updated in a later version to either use the secure enclave or Apple's Keychain Services.
  
  # Usage:
  
@@ -43,9 +42,9 @@ import LocalAuthentication
  
  3. Store the encrypted data.
  
- 4. When data access is needed, decrypt it using the `decryptBlob` method with the session key, or on app startup using the password.
+ 4. When data access is needed, decrypt it using the `decryptBlob` method with either the given key, or on app startup using the password.
  
- 5. After decryption has taken place on app startup, generate a new session key and re-encrypt the data to make sure the key is refreshed each session.
+ 5. After decryption has taken place on app startup, generate a new key and re-encrypt the data to make sure the key is refreshed each session.
  
  This process ensures that data remains confidential and tamper-resistant during storage or transmission. If the password is incorrect or if the data has been tampered with, the decryption will fail, providing an additional layer of security.
  
@@ -59,28 +58,35 @@ import LocalAuthentication
     // Store or transmit the encryptedBlob
  
     // To decrypt:
-    if let key = service.getSessionKey() {
-        if let decryptedBlob = service.decryptBlob(blob: encryptedBlob, key: key) {
-            // Handle the decrypted data
+    if let tag = Bundle.main.bundleIdentifier {
+        if let key = service.readKeyFromSecureEnclave(tag: tag) {
+            if let decryptedBlob = service.decryptBlob(blob: encryptedBlob, key: key) {
+                // Handle the decrypted data
+            }
         }
     }
  }
  ```
  
- # Biometrics Support:
+ # Key Handling:
  
- The class has been extended to support key storage and retreival for use with biometrics. It includes the following functions:
+ The class has been extended to support key storage and retreival. It includes the following functions:
  
  - `writeKeyToSecureEnclave(key:tag:)`: Writes a `SymmetricKey` to the secure enclave with a specified tag.
  - `readKeyFromSecureEnclave(tag:)`: Reads a `SymmetricKey` from the secure enclave using a specified tag.
  - `deleteKeyFromSecureEnclave(tag:)`: Deletes a `SymmetricKey` from the secure enclave using a specified tag.
+ 
+ # Biometrics:
+ 
+ The class has been further extended to support biometric authentication. It includes the following function:
+ 
  - `authenticateWithBiometrics(completion:)`: Prompts the user for biometric verification, and calls a completion handler with the result (`true` if successful, `false` otherwise).
  
  - Version: 1.0
- - Date: September 15, 2023
+ - Date: September 17, 2023
  */
 class CryptoDataService {
-    private var sessionKey: SymmetricKey?
+//    private var sessionKey: SymmetricKey?
     private let saltSize: Int = 16
     private let hashingIterations: UInt32 = 10000
     private var settings = Settings()
@@ -131,10 +137,16 @@ class CryptoDataService {
         }
         
         if result == kCCSuccess {
-            return SymmetricKey(data: Data(derivedKey))
-        } else {
-            return nil
+            if let tag = Bundle.main.bundleIdentifier {
+                let key = SymmetricKey(data: Data(derivedKey))
+                _ = deleteKeyFromSecureEnclave(tag: tag)
+                _ = writeKeyToSecureEnclave(key: key, tag: tag)
+                
+                return key
+            }
         }
+        
+        return nil
     }
     
     /**
@@ -176,7 +188,6 @@ class CryptoDataService {
         
         if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
             if let combined = sealedBox.combined {
-                setSessionKey(key: key)
                 return salt + combined
             }
         } else {
@@ -206,7 +217,6 @@ class CryptoDataService {
         
         if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
             if let combined = sealedBox.combined {
-                setSessionKey(key: key)
                 return salt + combined
             }
         } else {
@@ -279,69 +289,9 @@ class CryptoDataService {
         
         return nil
     }
-    
-    /**
-     Sets the session key for decryption and clears the previous key from memory.
-     
-     - Parameters:
-        - key: The session key to set.
-     */
-    func setSessionKey(key: SymmetricKey) {
-        clearSessionKey()
-        
-        if settings.useBiometrics {
-            if let tag = Bundle.main.bundleIdentifier {
-                if deleteKeyFromSecureEnclave(tag: tag) {
-                    if !writeKeyToSecureEnclave(key: key, tag: tag) {
-                        settings.biometricsAllowed = false
-                    }
-                } else {
-                    settings.biometricsAllowed = false
-                }
-            } else {
-                settings.biometricsAllowed = false
-            }
-        }
-        
-        key.withUnsafeBytes { keyBytes in
-            self.sessionKey = SymmetricKey(data: Data(keyBytes))
-        }
-    }
-    
-    /**
-     Gets the currently set session key.
-     
-     - Returns: The current session key as `SymmetricKey` or `nil` if it is not currently set.
-     */
-    func getSessionKey() -> SymmetricKey? {
-        return self.sessionKey
-    }
-    
-    /**
-     Clears the currently set session key by zeroing out the key and then setting to `nil`.
-     */
-    func clearSessionKey() {
-        guard var sessionKeyData = self.sessionKey?.withUnsafeBytes({ Data($0) }) else { return }
-        
-        _ = sessionKeyData.withUnsafeMutableBytes { mutableSessionKeyBytes in
-            memset(mutableSessionKeyBytes.baseAddress, 0, mutableSessionKeyBytes.count)
-        }
-        
-        self.sessionKey = nil
-        
-        if settings.biometricsAllowed {
-            if let tag = Bundle.main.bundleIdentifier {
-                if !deleteKeyFromSecureEnclave(tag: tag) {
-                    settings.biometricsAllowed = false
-                }
-            } else {
-                settings.biometricsAllowed = false
-            }
-        }
-    }
 }
 
-// Biometrics
+// Key Handling
 extension CryptoDataService {
     /**
      Writes a `SymmetricKey` to the secure enclave with a specified tag.
@@ -355,6 +305,7 @@ extension CryptoDataService {
     func writeKeyToSecureEnclave(key: SymmetricKey, tag: String) -> Bool {
         let keyData = key.withUnsafeBytes { Data(Array($0)) }
         
+        print("Key Set: \(String(describing: key.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
         return writeDataToSecureEnclave(data: keyData, tag: tag)
     }
     
@@ -368,6 +319,7 @@ extension CryptoDataService {
      */
     func readKeyFromSecureEnclave(tag: String) -> SymmetricKey? {
         if let keyData = readDataFromSecureEnclave(tag: tag) {
+            print("Key Get: \(String(describing: keyData.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
             return SymmetricKey(data: keyData)
         } else {
             return nil
@@ -392,6 +344,7 @@ extension CryptoDataService {
         
         let status = SecItemDelete(query as CFDictionary)
         
+        print("Key Delete")
         return status == errSecSuccess || status == errSecItemNotFound
     }
     
@@ -446,7 +399,10 @@ extension CryptoDataService {
             return nil
         }
     }
-    
+}
+
+// Biometrics
+extension CryptoDataService {
     /**
      Function to authenticate with biometrics.
      
@@ -474,60 +430,6 @@ extension CryptoDataService {
         }
         
         return completion(false)
-    }
-}
-
-// Test Functions
-extension CryptoDataService {
-    /**
-     Test function.
-     */
-    func test() {
-        let blob = "Data to be encrypted"
-        let password = "Password123"
-        
-        for _ in 0...2 {
-            if let encryptedBlob = encryptBlob(blob: blob, password: password) {
-                print("Blob: \(blob)")
-                print("Session Key: \(String(describing: getSessionKey()?.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
-                print("Encrypted Blob: \(encryptedBlob.base64EncodedString())")
-                
-                if let key = getSessionKey() {
-                    if let decryptedBlob = decryptBlob(blob: encryptedBlob, key: key) {
-                        print("Decrypted Blob: \(decryptedBlob)")
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
-     Biometric test function.
-     */
-    func testBiometrics() {
-        if settings.biometricsAllowed {
-            let blob = "Data to be encrypted with biometrics"
-            
-            if let tag = Bundle.main.bundleIdentifier {
-                if let key = readKeyFromSecureEnclave(tag: tag) {
-                    if let salt = AccountsDataService().getBlob()?.prefix(16) {
-                        if let encryptedBlob = encryptBlob(blob: blob, key: key, salt: salt) {
-                            print("Blob: \(blob)")
-                            print("Session Key: \(String(describing: getSessionKey()?.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
-                            print("Encrypted Blob: \(encryptedBlob.base64EncodedString())")
-                            
-                            authenticateWithBiometrics { success in
-                                if success {
-                                    if let decryptedBlob = self.decryptBlob(blob: encryptedBlob, key: key) {
-                                        print("Decrypted Blob: \(decryptedBlob)")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 

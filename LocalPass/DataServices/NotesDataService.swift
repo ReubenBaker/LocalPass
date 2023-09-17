@@ -9,19 +9,15 @@ import Foundation
 import SwiftUI
 
 class NotesDataService {
-    private var settings = Settings()
     private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
     private var iCloudPath: URL? = nil
     private let initializationGroup = DispatchGroup()
     private let cryptoDataService = CryptoDataService()
-    private var authentication = AuthenticationViewModel()
+    private var settings = Settings()
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
         return dateFormatter
-    }
-    private enum SaveError: Error {
-        case defaultError
     }
     
     init() {
@@ -85,58 +81,33 @@ class NotesDataService {
     
     func parseData(blob: Data?) -> [Note]? {
         if let blob = blob {
-            if let key = cryptoDataService.getSessionKey() {
-                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
-                    if decryptedBlob == "empty" {
-                        return nil
+            if let tag = Bundle.main.bundleIdentifier {
+                if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                    if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
+                        if decryptedBlob == "empty" {
+                            return nil
+                        }
+                        
+                        let blobEntries = decryptedBlob.split(separator: "~")
+                        var notes: [Note]? = nil
+                        
+                        for blobEntry in blobEntries {
+                            let blobEntryData = blobEntry.split(separator: ";")
+                            notes = (notes ?? []) + [
+                                Note(
+                                    title: String(blobEntryData[0]),
+                                    body: String(blobEntryData[1]),
+                                    creationDateTime: dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
+                                    updatedDateTime: blobEntryData[3] != "nil" ? dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
+                                    starred: blobEntryData[4] == "true" ? true : false,
+                                    id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
+                                )
+                            ]
+                        }
+                        
+                        return notes
                     }
-                    
-                    let blobEntries = decryptedBlob.split(separator: "~")
-                    var notes: [Note]? = nil
-                    
-                    for blobEntry in blobEntries {
-                        let blobEntryData = blobEntry.split(separator: ";")
-                        notes = (notes ?? []) + [
-                            Note(
-                                title: String(blobEntryData[0]),
-                                body: String(blobEntryData[1]),
-                                creationDateTime: dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
-                                updatedDateTime: blobEntryData[3] != "nil" ? dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
-                                starred: blobEntryData[4] == "true" ? true : false,
-                                id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
-                            )
-                        ]
-                    }
-                    
-                    return notes
                 }
-            } else if let password = authentication.password {
-                if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, password: password) {
-                    if decryptedBlob == "empty" {
-                        return nil
-                    }
-                    
-                    let blobEntries = decryptedBlob.split(separator: "~")
-                    var notes: [Note]? = nil
-                    
-                    for blobEntry in blobEntries {
-                        let blobEntryData = blobEntry.split(separator: ";")
-                        notes = (notes ?? []) + [
-                            Note(
-                                title: String(blobEntryData[0]),
-                                body: String(blobEntryData[1]),
-                                creationDateTime: dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
-                                updatedDateTime: blobEntryData[3] != "nil" ? dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
-                                starred: blobEntryData[4] == "true" ? true : false,
-                                id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
-                            )
-                        ]
-                    }
-
-                    return notes
-                }
-            } else {
-                return nil
             }
         }
         
@@ -152,36 +123,24 @@ class NotesDataService {
         do {
             let blob = formatForSave(notes: notes)
             
-            if let key = cryptoDataService.getSessionKey() {
-                if let originalData = getBlob() {
-                    let salt = originalData.prefix(16)
-                    
-                    if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
-                        try encryptedBlob.write(to: path, options: .atomic)
+            if let tag = Bundle.main.bundleIdentifier {
+                if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                    if let originalData = getBlob() {
+                        let salt = originalData.prefix(16)
                         
-                        initializationGroup.wait()
-                        
-                        if settings.iCloudSync {
-                            if let path = iCloudPath {
-                                try encryptedBlob.write(to: path, options: .atomic)
+                        if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
+                            try encryptedBlob.write(to: path, options: .atomic)
+                            
+                            initializationGroup.wait()
+                            
+                            if settings.iCloudSync {
+                                if let path = iCloudPath {
+                                    try encryptedBlob.write(to: path, options: .atomic)
+                                }
                             }
                         }
                     }
                 }
-            } else if let password = authentication.password {
-                if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, password: password) {
-                    try encryptedBlob.write(to: path, options: .atomic)
-                    
-                    initializationGroup.wait()
-                    
-                    if settings.iCloudSync {
-                        if let path = iCloudPath {
-                            try encryptedBlob.write(to: path, options: .atomic)
-                        }
-                    }
-                }
-            } else {
-                throw SaveError.defaultError
             }
         } catch {
             print("Error writing notes data: \(error)")
