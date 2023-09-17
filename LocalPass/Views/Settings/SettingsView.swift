@@ -29,15 +29,10 @@ struct SettingsView: View {
                         .onChange(of: settings.iCloudSync) { setting in
                             if setting == true {
                                 do {
-                                    try accountsDataService.saveData(accounts: accountsDataService.getAccountData())
+                                    try AccountsDataService().saveData(accounts: accountsDataService.getAccountData())
+                                    try NotesDataService().saveData(notes: notesDataService.getNoteData())
                                 } catch {
-                                    print("Error writing accounts data: \(error)")
-                                }
-                                
-                                do {
-                                    try notesDataService.saveData(notes: notesDataService.getNoteData())
-                                } catch {
-                                    print("Error writing notes data: \(error)")
+                                    print("Error writing data to iCloud: \(error)")
                                 }
                             } else {
                                 accountsDataService.removeiCloudData()

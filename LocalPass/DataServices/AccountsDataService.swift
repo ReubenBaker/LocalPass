@@ -20,7 +20,7 @@ class AccountsDataService {
         return dateFormatter
     }
     
-    init() {        
+    init() {
         initializationGroup.enter()
         
         DispatchQueue.global(qos: .userInitiated).async {
