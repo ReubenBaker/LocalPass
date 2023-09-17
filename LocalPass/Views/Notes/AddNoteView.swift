@@ -30,7 +30,7 @@ struct AddNoteView: View {
             .padding(.vertical)
         }
         .background(.ultraThinMaterial)
-        .overlay(closeButton, alignment: .bottom)
+        .overlay(CloseButtonView(), alignment: .bottom)
         .alert(isPresented: $showNoteSuccessAlert) {
             getNoteSuccessAlert(noteSuccess: noteSuccess)
         }
@@ -77,10 +77,7 @@ extension AddNoteView {
 extension AddNoteView {
     private var titleItem: some View {
         TextField("Enter title...", text: $newTitle)
-            .font(.title)
-            .fontWeight(.semibold)
-            .lineLimit(1)
-            .padding(.horizontal, 70)
+            .modifier(TitleTextStyle())
             .tint(.primary)
             .multilineTextAlignment(.center)
             .focused($titleTextFieldFocused)
@@ -123,21 +120,6 @@ extension AddNoteView {
                 .foregroundColor(.primary)
                 .frame(minWidth: 150)
                 .background(.cyan)
-                .cornerRadius(10)
-                .shadow(radius: 4)
-                .padding()
-        }
-    }
-    
-    private var closeButton: some View {
-        Button {
-            dismiss()
-        } label: {
-            Image(systemName: "xmark")
-                .font(.headline)
-                .padding()
-                .foregroundColor(Color("AccentColor"))
-                .background(.thickMaterial)
                 .cornerRadius(10)
                 .shadow(radius: 4)
                 .padding()

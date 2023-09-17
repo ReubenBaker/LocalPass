@@ -44,7 +44,7 @@ struct AddAccountView: View {
             .padding(.vertical)
         }
         .background(.ultraThinMaterial)
-        .overlay(closeButton, alignment: .bottom)
+        .overlay(CloseButtonView(), alignment: .bottom)
         .alert(isPresented: $showAccountSuccessAlert) {
             getAccountSuccessAlert(accountSuccess: accountSuccess)
         }
@@ -96,10 +96,7 @@ extension AddAccountView {
 extension AddAccountView {
     private var titleItem: some View {
         Text(newName != "" ? newName : "New Account")
-            .font(.title)
-            .fontWeight(.semibold)
-            .lineLimit(2)
-            .padding(.horizontal, 70)
+            .modifier(TitleTextStyle())
     }
     
     private var nameItem: some View {
@@ -359,21 +356,6 @@ extension AddAccountView {
                .foregroundColor(.primary)
                .frame(minWidth: 150)
                .background(.cyan)
-               .cornerRadius(10)
-               .shadow(radius: 4)
-               .padding()
-       }
-    }
-    
-    private var closeButton: some View {
-        Button {
-           dismiss()
-       } label: {
-           Image(systemName: "xmark")
-               .font(.headline)
-               .padding()
-               .foregroundColor(Color("AccentColor"))
-               .background(.thickMaterial)
                .cornerRadius(10)
                .shadow(radius: 4)
                .padding()

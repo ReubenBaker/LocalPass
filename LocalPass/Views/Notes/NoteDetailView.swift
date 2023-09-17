@@ -46,7 +46,7 @@ struct NoteDetailView: View {
             .padding(.vertical)
         }
         .background(.ultraThinMaterial)
-        .overlay(closeButton, alignment: .bottom)
+        .overlay(CloseButtonView(), alignment: .bottom)
         .overlay(CopyPopupOverlayView(), alignment: .top)
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
@@ -95,10 +95,7 @@ extension NoteDetailView {
     private var titleItem: some View {
         ZStack {
             Text(note.title)
-                .font(.title)
-                .fontWeight(.semibold)
-                .lineLimit(1)
-                .padding(.horizontal, 70)
+                .modifier(TitleTextStyle())
             
             HStack {
                 EditButton()
@@ -112,10 +109,7 @@ extension NoteDetailView {
     private var editTitleItem: some View {
         ZStack {
             TextField("\(note.title)", text: $newTitle)
-                .font(.title)
-                .fontWeight(.semibold)
-                .lineLimit(1)
-                .padding(.horizontal, 70)
+                .modifier(TitleTextStyle())
                 .tint(.primary)
                 .multilineTextAlignment(.center)
                 .focused($titleTextFieldFocused)
@@ -185,33 +179,10 @@ extension NoteDetailView {
     }
     
     private var deleteItem: some View {
-        Button {
+        Button("Delete") {
             notesViewModel.noteToDelete = note
             showDeleteAlert.toggle()
-       } label: {
-           Text("Delete")
-               .font(.headline)
-               .padding()
-               .foregroundColor(.primary)
-               .background(.red)
-               .cornerRadius(10)
-               .shadow(radius: 4)
-               .padding()
-       }
-    }
-    
-    private var closeButton: some View {
-        Button {
-           dismiss()
-       } label: {
-           Image(systemName: "xmark")
-               .font(.headline)
-               .padding()
-               .foregroundColor(Color("AccentColor"))
-               .background(.thickMaterial)
-               .cornerRadius(10)
-               .shadow(radius: 4)
-               .padding()
-       }
+        }
+        .buttonStyle(DeleteButtonStyle())
     }
 }

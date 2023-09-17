@@ -24,8 +24,8 @@ struct AccountDetailView: View {
     @State private var otpTimeLeft: Int = 0
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
-    @State private var urlField: Bool = false
-    @State private var otpSecretField: Bool = false
+    @State private var addUrlFieldClicked: Bool = false
+    @State private var addTOTPFieldClicked: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
     @FocusState private var nameTextFieldFocused: Bool
     @FocusState private var usernameTextFieldFocused: Bool
@@ -75,8 +75,9 @@ struct AccountDetailView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical)
         }
+        .padding(.horizontal)
         .background(.ultraThinMaterial)
-        .overlay(closeButton, alignment: .bottom)
+        .overlay(CloseButtonView(), alignment: .bottom)
         .overlay(alignment: .top) {
             CopyPopupOverlayView()
         }
@@ -160,16 +161,12 @@ extension AccountDetailView {
     private var titleItem: some View {
         ZStack {
             Text(account.name)
-                .font(.title)
-                .fontWeight(.semibold)
-                .lineLimit(2)
-                .padding(.horizontal, 70)
+                .modifier(TitleTextStyle())
             
             HStack {
                 EditButton()
                 Spacer()
             }
-            .padding(.horizontal)
         }
         .padding(.top, copyPopupOverlayViewModel.showCopyPopupOverlay ? 30 : 0)
     }
@@ -190,15 +187,9 @@ extension AccountDetailView {
                 
                 Spacer()
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var editUsernameItem: some View {
@@ -221,13 +212,7 @@ extension AccountDetailView {
                     }
                 }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var passwordItem: some View {
@@ -255,15 +240,9 @@ extension AccountDetailView {
                         .foregroundColor(Color("AccentColor"))
                 }
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var editPasswordItem: some View {
@@ -338,13 +317,7 @@ extension AccountDetailView {
                     .foregroundColor(Color("AccentColor"))
             }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var urlItem: some View {
@@ -363,24 +336,18 @@ extension AccountDetailView {
                 
                 Spacer()
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var noUrlItem: some View {
         Button {
             withAnimation() {
-                urlField = true
+                addUrlFieldClicked = true
             }
         } label: {
-            if urlField {
+            if addUrlFieldClicked {
                 HStack() {
                     Image(systemName: "link.circle.fill")
                         .resizable()
@@ -419,7 +386,7 @@ extension AccountDetailView {
                     
                     Button {
                         withAnimation() {
-                            urlField = false
+                            addUrlFieldClicked = false
                             newUrl = ""
                         }
                     } label: {
@@ -431,13 +398,7 @@ extension AccountDetailView {
                 Text("Add URL")
             }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(minWidth: 150, maxWidth: urlField ? .infinity : nil)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle(fieldClicked: addUrlFieldClicked))
     }
     
     private var editUrlItem: some View {
@@ -460,13 +421,7 @@ extension AccountDetailView {
                     }
                 }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var otpItem: some View {
@@ -500,24 +455,18 @@ extension AccountDetailView {
                 
                 Spacer()
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
             .padding(.vertical, 10)
         }
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var noOtpItem: some View {
         Button {
             withAnimation() {
-                otpSecretField = true
+                addTOTPFieldClicked = true
             }
         } label: {
-            if otpSecretField {
+            if addTOTPFieldClicked {
                 HStack() {
                     Image(systemName: "repeat.circle.fill")
                         .resizable()
@@ -556,7 +505,7 @@ extension AccountDetailView {
                     
                     Button {
                         withAnimation() {
-                            otpSecretField = false
+                            addTOTPFieldClicked = false
                             newOtpSecret = ""
                         }
                     } label: {
@@ -568,13 +517,7 @@ extension AccountDetailView {
                 Text("Setup TOTP")
             }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(minWidth: 150, maxWidth: otpSecretField ? .infinity : nil)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle(fieldClicked: addTOTPFieldClicked))
     }
     
     private var editOtpItem: some View {
@@ -597,13 +540,7 @@ extension AccountDetailView {
                     }
                 }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var creationDateTimeItem: some View {
@@ -627,33 +564,10 @@ extension AccountDetailView {
     }
     
     private var deleteItem: some View {
-        Button {
+        Button("Delete") {
             accountsViewModel.accountToDelete = account
             showDeleteAlert.toggle()
-       } label: {
-           Text("Delete")
-               .font(.headline)
-               .padding()
-               .foregroundColor(.primary)
-               .background(.red)
-               .cornerRadius(10)
-               .shadow(radius: 4)
-               .padding()
        }
-    }
-    
-    private var closeButton: some View {
-        Button {
-           dismiss()
-       } label: {
-           Image(systemName: "xmark")
-               .font(.headline)
-               .padding()
-               .foregroundColor(Color("AccentColor"))
-               .background(.thickMaterial)
-               .cornerRadius(10)
-               .shadow(radius: 4)
-               .padding()
-       }
+        .buttonStyle(DeleteButtonStyle())
     }
 }
