@@ -67,6 +67,7 @@ struct AuthenticationView: View {
                                     if let tag = Bundle.main.bundleIdentifier {
                                         if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
                                             if let _ = cryptoDataService.decryptBlob(blob: blob, key: key) {
+                                                authenticationViewModel.authenticatedWithBiometrics = true
                                                 authenticationViewModel.authenticated = true
                                             } else {
                                                 showBiometricsNotAllowedAlert.toggle()

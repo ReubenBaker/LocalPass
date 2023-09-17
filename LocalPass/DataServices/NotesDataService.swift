@@ -119,14 +119,14 @@ class NotesDataService {
         return parseData(blob: blob)
     }
     
-    func saveData(notes: [Note]?) throws {
+    func saveData(notes: [Note]?, salt: Data? = nil) throws {
         do {
             let blob = formatForSave(notes: notes)
             
             if let tag = Bundle.main.bundleIdentifier {
                 if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
                     if let originalData = getBlob() {
-                        let salt = originalData.prefix(16)
+                        let salt = salt ?? originalData.prefix(16)
                         
                         if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
                             try encryptedBlob.write(to: path, options: .atomic)

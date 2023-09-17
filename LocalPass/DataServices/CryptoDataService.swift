@@ -137,13 +137,7 @@ class CryptoDataService {
         }
         
         if result == kCCSuccess {
-            if let tag = Bundle.main.bundleIdentifier {
-                let key = SymmetricKey(data: Data(derivedKey))
-                _ = deleteKeyFromSecureEnclave(tag: tag)
-                _ = writeKeyToSecureEnclave(key: key, tag: tag)
-                
-                return key
-            }
+            return SymmetricKey(data: Data(derivedKey))
         }
         
         return nil
