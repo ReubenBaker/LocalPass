@@ -69,10 +69,14 @@ extension AccountListItemView {
                     .font(.title3)
                     .fontWeight(.semibold)
                 
+                if account.starred {
+                    Image(systemName: "star")
+                }
+                
                 Spacer()
                 
                 Button {
-                    mainViewModel.copyToClipboard(text: account.password)
+                    GlobalHelperDataService.copyToClipboard(text: account.password)
                     copyPopupOverlayViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "lock.circle.fill")
@@ -81,13 +85,7 @@ extension AccountListItemView {
                         .foregroundColor(Color("AccentColor"))
                 }
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
-            .padding(.vertical, 10)
         }
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
+        .modifier(ListItemStyle())
     }
 }

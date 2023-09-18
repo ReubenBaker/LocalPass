@@ -47,11 +47,13 @@ struct NotesView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
+        @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         NotesView()
             .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
             .environmentObject(copyPopupOverlayViewModel)
+            .environmentObject(privacyOverlayViewModel)
     }
 }
 

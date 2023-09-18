@@ -86,17 +86,12 @@ import LocalAuthentication
  - Date: September 17, 2023
  */
 class CryptoDataService {
-//    private var sessionKey: SymmetricKey?
-    private let saltSize: Int = 16
-    private let hashingIterations: UInt32 = 10000
-    private var settings = Settings()
-    
     /**
      Generates a random salt for key derivation.
      
      - Returns: A random salt as `Data` or `nil` if the salt generation fails.
      */
-    func generateRandomSalt() -> Data? {
+    static func generateRandomSalt() -> Data? {
         var salt = [UInt8](repeating: 0, count: 16)
         let status = SecRandomCopyBytes(kSecRandomDefault, salt.count, &salt)
         
@@ -116,7 +111,7 @@ class CryptoDataService {
      
      - Returns: A derived encryption key as `SymmetricKey` or `nil` if key derivation fails.
      */
-    func deriveKey(password: String, salt: Data) -> SymmetricKey? {
+    static func deriveKey(password: String, salt: Data, saltSize: Int = 16, hashingIterations: UInt32 = 10000) -> SymmetricKey? {
         let passwordData = Data(password.utf8)
         var derivedKey = [UInt8](repeating: 0, count: 32)
         
@@ -151,7 +146,7 @@ class CryptoDataService {
      
      - Returns: The calculated checksum as `Data`.
      */
-    func calculateChecksum(data: Data) -> Data {
+    static func calculateChecksum(data: Data) -> Data {
         var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         
         data.withUnsafeBytes { dataBytes in
@@ -170,10 +165,10 @@ class CryptoDataService {
      
      - Returns: The encrypted blob as `Data` or `nil` if encryption fails.
      */
-    func encryptBlob(blob: String, password: String) -> Data? {
+    static func encryptBlob(blob: String, password: String) -> Data? {
         guard let salt = generateRandomSalt(),
-            let key = deriveKey(password: password, salt: salt),
-            let data = blob.data(using: .utf8) else {
+              let key = deriveKey(password: password, salt: salt),
+              let data = blob.data(using: .utf8) else {
           return nil
         }
         
@@ -201,7 +196,7 @@ class CryptoDataService {
      
      - Returns: The encrypted blob as `Data` or `nil` if encryption fails.
      */
-    func encryptBlob(blob: String, key: SymmetricKey, salt: Data) -> Data? {
+    static func encryptBlob(blob: String, key: SymmetricKey, salt: Data) -> Data? {
         guard let data = blob.data(using: .utf8) else {
           return nil
         }
@@ -229,7 +224,7 @@ class CryptoDataService {
      
      - Returns: The decrypted blob as `String` or `nil` if decryption fails.
      */
-    func decryptBlob(blob: Data, password: String) -> String? {
+    static func decryptBlob(blob: Data, password: String, saltSize: Int = 16) -> String? {
         let salt = blob.prefix(saltSize)
         
         guard let key = deriveKey(password: password, salt: salt) else {
@@ -263,7 +258,7 @@ class CryptoDataService {
      
      - Returns: The decrypted blob as `String` or `nil` if decryption fails.
      */
-    func decryptBlob(blob: Data, key: SymmetricKey) -> String? {
+    static func decryptBlob(blob: Data, key: SymmetricKey, saltSize: Int = 16) -> String? {
         let salt = blob.prefix(saltSize)
         
         let encryptedData = blob.dropFirst(saltSize)
@@ -296,7 +291,7 @@ extension CryptoDataService {
      
      - Returns: `true` if the key is successfully written to the secure enclave, `false` otherwise.
      */
-    func writeKeyToSecureEnclave(key: SymmetricKey, tag: String) -> Bool {
+    static func writeKeyToSecureEnclave(key: SymmetricKey, tag: String) -> Bool {
         let keyData = key.withUnsafeBytes { Data(Array($0)) }
         
         print("Key Set: \(String(describing: key.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
@@ -311,7 +306,7 @@ extension CryptoDataService {
      
      - Returns: The stored `SymmetricKey` if it exists, `nil` otherwise.
      */
-    func readKeyFromSecureEnclave(tag: String) -> SymmetricKey? {
+    static func readKeyFromSecureEnclave(tag: String) -> SymmetricKey? {
         if let keyData = readDataFromSecureEnclave(tag: tag) {
             print("Key Get: \(String(describing: keyData.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
             return SymmetricKey(data: keyData)
@@ -328,7 +323,7 @@ extension CryptoDataService {
      
      - Returns: `true` if the key is successfully deleted from the secure enclave or if it doesn't exist, `false` otherwise.
      */
-    func deleteKeyFromSecureEnclave(tag: String) -> Bool {
+    static func deleteKeyFromSecureEnclave(tag: String) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
@@ -351,7 +346,7 @@ extension CryptoDataService {
      
      - Returns: `true` if the `Data` is successfully written to the secure enclave, `false` otherwise.
      */
-    func writeDataToSecureEnclave(data: Data, tag: String) -> Bool {
+    static func writeDataToSecureEnclave(data: Data, tag: String) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
@@ -374,7 +369,7 @@ extension CryptoDataService {
      
      - Returns: The stored `Data` if it exists, `nil` otherwise.
      */
-    func readDataFromSecureEnclave(tag: String) -> Data? {
+    static func readDataFromSecureEnclave(tag: String) -> Data? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
             kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
@@ -405,7 +400,7 @@ extension CryptoDataService {
      - Parameters:
         - completion: A closure that receives the result of the biometric authentication. It is called with `true` if the authentication is successful, `false` otherwise.
      */
-    func authenticateWithBiometrics(completion: @escaping (Bool) -> Void) {
+    static func authenticateWithBiometrics(completion: @escaping (Bool) -> Void) {
         let context = LAContext()
         var error: NSError?
         

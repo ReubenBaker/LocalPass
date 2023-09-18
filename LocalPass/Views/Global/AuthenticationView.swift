@@ -14,7 +14,6 @@ struct AuthenticationView: View {
     @State private var showBiometricsNotAllowedAlert: Bool = false
     @FocusState private var passwordFieldFocused: Bool
     private var settings = Settings()
-    private var cryptoDataService = CryptoDataService()
     
     var body: some View {
         ScrollView {
@@ -44,7 +43,7 @@ struct AuthenticationView: View {
                 
                 Button {
                     if let blob = AccountsDataService().getBlob() {
-                        if let _ = cryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
+                        if let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
                             authenticationViewModel.authenticated = true
                             authenticationViewModel.password = nil
                         } else {
@@ -61,12 +60,12 @@ struct AuthenticationView: View {
                 
                 if settings.useBiometrics {
                     Button {
-                        cryptoDataService.authenticateWithBiometrics { success in
+                        CryptoDataService.authenticateWithBiometrics { success in
                             if success {
                                 if let blob = NotesDataService().getBlob() {
                                     if let tag = Bundle.main.bundleIdentifier {
-                                        if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
-                                            if let _ = cryptoDataService.decryptBlob(blob: blob, key: key) {
+                                        if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                                            if let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
                                                 authenticationViewModel.authenticatedWithBiometrics = true
                                                 authenticationViewModel.authenticated = true
                                             } else {

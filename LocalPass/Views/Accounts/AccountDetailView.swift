@@ -27,17 +27,7 @@ struct AccountDetailView: View {
     @State private var addUrlFieldClicked: Bool = false
     @State private var addTOTPFieldClicked: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
-    @FocusState private var nameTextFieldFocused: Bool
-    @FocusState private var usernameTextFieldFocused: Bool
-    @FocusState private var passwordTextFieldFocused: Bool
-    @FocusState private var urlTextFieldFocused: Bool
-    @FocusState private var otpSecretTextFieldFocused: Bool
-    private var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        return dateFormatter
-    }
+    @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
         ScrollView {
@@ -173,7 +163,7 @@ extension AccountDetailView {
     
     private var usernameItem: some View {
         Button {
-            mainViewModel.copyToClipboard(text: account.username)
+            GlobalHelperDataService.copyToClipboard(text: account.username)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
@@ -205,10 +195,10 @@ extension AccountDetailView {
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.leading)
                 .tint(.primary)
-                .focused($usernameTextFieldFocused)
+                .focused($focusedTextField, equals: .username)
                 .onTapGesture {
                     DispatchQueue.main.async {
-                        usernameTextFieldFocused = true
+                        focusedTextField = .username
                     }
                 }
         }
@@ -217,7 +207,7 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            mainViewModel.copyToClipboard(text: account.password)
+            GlobalHelperDataService.copyToClipboard(text: account.password)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
@@ -259,10 +249,10 @@ extension AccountDetailView {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.leading)
                     .tint(.primary)
-                    .focused($passwordTextFieldFocused)
+                    .focused($focusedTextField, equals: .password)
                     .onTapGesture {
                         DispatchQueue.main.async {
-                            passwordTextFieldFocused = true
+                            focusedTextField = .password
                         }
                     }
             } else {
@@ -271,10 +261,10 @@ extension AccountDetailView {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.leading)
                     .tint(.primary)
-                    .focused($passwordTextFieldFocused)
+                    .focused($focusedTextField, equals: .password)
                     .onTapGesture {
                         DispatchQueue.main.async {
-                            passwordTextFieldFocused = true
+                            focusedTextField = .password
                         }
                     }
             }
@@ -300,15 +290,15 @@ extension AccountDetailView {
             }
             
             Button {
-                let isFocused = passwordTextFieldFocused
-                
-                showPassword.toggle()
-                
-                if isFocused {
-                    DispatchQueue.main.async {
-                        passwordTextFieldFocused = true
-                    }
-                }
+//                let isFocused = textFieldFocused.password
+//
+//                showPassword.toggle()
+//
+//                if isFocused {
+//                    DispatchQueue.main.async {
+//                        textFieldFocused.password = true
+//                    }
+//                }
             } label: {
                 Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                     .resizable()
@@ -322,7 +312,7 @@ extension AccountDetailView {
     
     private var urlItem: some View {
         Button {
-            mainViewModel.copyToClipboard(text: account.url ?? "")
+            GlobalHelperDataService.copyToClipboard(text: account.url ?? "")
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
@@ -360,10 +350,10 @@ extension AccountDetailView {
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
                         .tint(.primary)
-                        .focused($urlTextFieldFocused)
+                        .focused($focusedTextField, equals: .url)
                         .onAppear {
                             DispatchQueue.main.async {
-                                urlTextFieldFocused = true
+                                focusedTextField = .url
                             }
                         }
                         .onSubmit {
@@ -414,10 +404,10 @@ extension AccountDetailView {
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.leading)
                 .tint(.primary)
-                .focused($urlTextFieldFocused)
+                .focused($focusedTextField, equals: .url)
                 .onTapGesture {
                     DispatchQueue.main.async {
-                        urlTextFieldFocused = true
+                        focusedTextField = .url
                     }
                 }
         }
@@ -426,7 +416,7 @@ extension AccountDetailView {
     
     private var otpItem: some View {
         Button {
-            mainViewModel.copyToClipboard(text: otpValue)
+            GlobalHelperDataService.copyToClipboard(text: otpValue)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
@@ -479,10 +469,10 @@ extension AccountDetailView {
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
                         .tint(.primary)
-                        .focused($otpSecretTextFieldFocused)
+                        .focused($focusedTextField, equals: .otpSecret)
                         .onAppear {
                             DispatchQueue.main.async {
-                                otpSecretTextFieldFocused = true
+                                focusedTextField = .otpSecret
                             }
                         }
                         .onSubmit {
@@ -533,10 +523,10 @@ extension AccountDetailView {
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.leading)
                 .tint(.primary)
-                .focused($otpSecretTextFieldFocused)
+                .focused($focusedTextField, equals: .otpSecret)
                 .onTapGesture {
                     DispatchQueue.main.async {
-                        otpSecretTextFieldFocused = true
+                        focusedTextField = .otpSecret
                     }
                 }
         }
@@ -545,7 +535,7 @@ extension AccountDetailView {
     
     private var creationDateTimeItem: some View {
         ZStack {
-            let createdText = Text("\(dateFormatter.string(from: account.creationDateTime))")
+            let createdText = Text("\(GlobalHelperDataService.dateFormatter.string(from: account.creationDateTime))")
             
             return Text("Time Created: \(createdText)")
         }
@@ -556,7 +546,7 @@ extension AccountDetailView {
             var lastUpdatedText = Text("Never")
 
             if let lastUpdated = account.updatedDateTime {
-                lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
+                lastUpdatedText = Text("\(GlobalHelperDataService.dateFormatter.string(from: lastUpdated))")
             }
             
             return Text("Last Updated: \(lastUpdatedText)")

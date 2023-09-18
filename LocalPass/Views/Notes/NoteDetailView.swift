@@ -18,14 +18,7 @@ struct NoteDetailView: View {
     @State private var newTitle: String = ""
     @State private var newBody: String = ""
     @State private var showDeleteAlert: Bool = false
-    @FocusState private var titleTextFieldFocused: Bool
-    @FocusState private var bodyTextFieldFocused: Bool
-    private var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        return dateFormatter
-    }
+    @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
         ScrollView {
@@ -41,13 +34,12 @@ struct NoteDetailView: View {
                 creationDateTimeItem
                 updatedDateTimeItem
                 deleteItem
+                CloseButtonView()
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical)
         }
         .background(.ultraThinMaterial)
-        .overlay(CloseButtonView(), alignment: .bottom)
-        .overlay(CopyPopupOverlayView(), alignment: .top)
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
         }
@@ -112,10 +104,10 @@ extension NoteDetailView {
                 .modifier(TitleTextStyle())
                 .tint(.primary)
                 .multilineTextAlignment(.center)
-                .focused($titleTextFieldFocused)
+                .focused($focusedTextField, equals: .title)
                 .onTapGesture {
                     DispatchQueue.main.async {
-                        titleTextFieldFocused = true
+                        focusedTextField = .title
                     }
                 }
                 .onAppear {
@@ -147,10 +139,10 @@ extension NoteDetailView {
             .tint(.primary)
             .lineLimit(20...20)
             .scrollContentBackground(.hidden)
-            .focused($bodyTextFieldFocused)
+            .focused($focusedTextField, equals: .body)
             .onTapGesture {
                 DispatchQueue.main.async {
-                    bodyTextFieldFocused = true
+                    focusedTextField = .body
                 }
             }
             .onAppear {
@@ -160,7 +152,7 @@ extension NoteDetailView {
     
     private var creationDateTimeItem: some View {
         ZStack {
-            let createdText = Text("\(dateFormatter.string(from: note.creationDateTime))")
+            let createdText = Text("\(GlobalHelperDataService.dateFormatter.string(from: note.creationDateTime))")
             
             return Text("Time Created: \(createdText)")
         }
@@ -171,7 +163,7 @@ extension NoteDetailView {
             var lastUpdatedText = Text("Never")
 
             if let lastUpdated = note.updatedDateTime {
-                lastUpdatedText = Text("\(dateFormatter.string(from: lastUpdated))")
+                lastUpdatedText = Text("\(GlobalHelperDataService.dateFormatter.string(from: lastUpdated))")
             }
             
             return Text("Last Updated: \(lastUpdatedText)")

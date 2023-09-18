@@ -27,9 +27,9 @@ class NotesViewModel: ObservableObject {
         let notes = notesDataService.getNoteData()
         self.notes = notes
         
-//        if notes == nil {
-//            self.notes = NoteTestDataService.notes // REMOVE!
-//        }
+        if notes == nil {
+            self.notes = NoteTestDataService.notes // REMOVE!
+        }
     }
     
     func addNote(title: String, body: String) -> Bool {

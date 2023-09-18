@@ -41,12 +41,12 @@ struct NoteListItemView_Previews: PreviewProvider {
 
 // Views
 extension NoteListItemView {
-    private var noteListItem: some View {
+    private var noteListItem: some View {            
         Button {
             showNoteDetailViewSheet.toggle()
         } label: {
             HStack {
-                Image(systemName: note.starred ? "star.fill" : "pencil.circle.fill")
+                Image(systemName: "pencil.circle.fill")
                     .resizable()
                     .scaledToFit()
                     .foregroundColor(Color("AccentColor"))
@@ -55,10 +55,15 @@ extension NoteListItemView {
                     .font(.title3)
                     .fontWeight(.semibold)
                 
+                if note.starred {
+                    Image(systemName: "star")
+                        .foregroundColor(Color("AccentColor"))
+                }
+                
                 Spacer()
                 
                 Button {
-                    mainViewModel.copyToClipboard(text: note.body) // Keep?
+                    GlobalHelperDataService.copyToClipboard(text: note.body) // Keep?
                     copyPopupOverlayViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "doc.circle.fill")
@@ -67,13 +72,7 @@ extension NoteListItemView {
                         .foregroundColor(Color("AccentColor"))
                 }
             }
-            .foregroundColor(.primary)
-            .padding(.horizontal)
-            .padding(.vertical, 10)
         }
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
+        .modifier(ListItemStyle())
     }
 }

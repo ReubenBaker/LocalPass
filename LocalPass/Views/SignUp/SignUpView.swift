@@ -14,7 +14,6 @@ struct SignUpView: View {
     @EnvironmentObject private var settings: Settings
     @State private var password: String? = nil
     @FocusState private var passwordFieldFocused: Bool
-    private var cryptoDataService = CryptoDataService()
     
     var body: some View {
         ScrollView {
@@ -74,12 +73,12 @@ struct SignUpView_Previews: PreviewProvider {
 extension SignUpView {
     private func signUp() {
         if let tag = Bundle.main.bundleIdentifier {
-            if let salt = cryptoDataService.generateRandomSalt() {
+            if let salt = CryptoDataService.generateRandomSalt() {
                 if let password = self.password {
-                    if let key = cryptoDataService.deriveKey(password: password, salt: salt) {
-                        _ = cryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
+                    if let key = CryptoDataService.deriveKey(password: password, salt: salt) {
+                        _ = CryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
                         
-                        if cryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
+                        if CryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
                             if createFiles(key: key, salt: salt) {
                                 authenticationViewModel.authenticated = true
                                 settings.signedUp = true
@@ -97,8 +96,8 @@ extension SignUpView {
         let notesPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
         
         if let tag = Bundle.main.bundleIdentifier {
-            if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
-                if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
+            if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
                     do {
                         try encryptedBlob.write(to: accountsPath, options: .atomic)
                         try encryptedBlob.write(to: notesPath, options: .atomic)

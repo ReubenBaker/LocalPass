@@ -12,7 +12,6 @@ class AccountsDataService {
     private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
     private var iCloudPath: URL? = nil
     private let initializationGroup = DispatchGroup()
-    private let cryptoDataService = CryptoDataService()
     private var settings = Settings()
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
@@ -85,8 +84,8 @@ class AccountsDataService {
     func parseData(blob: Data?) -> [Account]? {
         if let blob = blob {
             if let tag = Bundle.main.bundleIdentifier {
-                if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
-                    if let decryptedBlob = cryptoDataService.decryptBlob(blob: blob, key: key) {
+                if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                    if let decryptedBlob = CryptoDataService.decryptBlob(blob: blob, key: key) {
                         if decryptedBlob == "empty" {
                             return nil
                         }
@@ -131,11 +130,11 @@ class AccountsDataService {
     
             
             if let tag = Bundle.main.bundleIdentifier {
-                if let key = cryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
                     if let originalData = getBlob() {
                         let salt = salt ?? originalData.prefix(16)
                         
-                        if let encryptedBlob = cryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
+                        if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
                             try encryptedBlob.write(to: path, options: .atomic)
                             
                             initializationGroup.wait()
