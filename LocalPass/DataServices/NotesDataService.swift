@@ -10,38 +10,28 @@ import SwiftUI
 
 class NotesDataService {
     static private let localPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
-    static private var iCloudPath: URL? = nil
     static private let initializationGroup = DispatchGroup()
-    
-    init() {
-        NotesDataService.initializationGroup.enter()
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
-                NotesDataService.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt")
-            }
-            
-            NotesDataService.initializationGroup.leave()
-        }
-    }
     
     static func getBlob() -> Data? {
         do {
-            let blob = try Data(contentsOf: localPath)
-            var iCloudBlob: Data? = nil
+            var blob = try Data(contentsOf: localPath)
             
-            initializationGroup.wait()
-            
-            if let path = iCloudPath {
-                if LocalPassApp.settings.iCloudSync {
-                    do {
-                        iCloudBlob = try Data(contentsOf: path)
-                    } catch {
-                        print("Couldn't retreive iCloud blob: \(error)")
-                    }
-                    
-                    if iCloudBlob != nil {
-                        return iCloudBlob
+            if LocalPassApp.settings.iCloudSync {
+                initializationGroup.wait()
+                
+                var iCloudBlob: Data? = nil
+                
+                getiCloudPath { iCloudPath in
+                    if let path = iCloudPath {
+                        do {
+                            iCloudBlob = try Data(contentsOf: path)
+                        } catch {
+                            print("Couldn't retreive iCloud blob: \(error)")
+                        }
+                        
+                        if iCloudBlob != nil {
+                            blob = iCloudBlob ?? blob
+                        }
                     }
                 }
             }
@@ -131,8 +121,14 @@ class NotesDataService {
                             initializationGroup.wait()
                             
                             if LocalPassApp.settings.iCloudSync {
-                                if let path = iCloudPath {
-                                    try encryptedBlob.write(to: path, options: .atomic)
+                                getiCloudPath { iCloudPath in
+                                    if let path = iCloudPath {
+                                        do {
+                                            try encryptedBlob.write(to: path, options: .atomic)
+                                        } catch {
+                                            print("Error syncing iCloud data: \(error)")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -144,14 +140,30 @@ class NotesDataService {
         }
     }
     
+    static func getiCloudPath(completion: @escaping (URL?) -> Void) {
+        initializationGroup.enter()
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.reuben.LocalPass") {
+                completion(iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt"))
+            }
+            
+            initializationGroup.leave()
+        }
+        
+        completion(nil)
+    }
+    
     static func removeiCloudData() {
         initializationGroup.wait()
         
-        if let iCloudPath = self.iCloudPath {
-            do {
-                try FileManager.default.removeItem(at: iCloudPath)
-            } catch {
-                print("Error removing iCloud file: \(error)")
+        getiCloudPath { iCloudPath in
+            if let path = iCloudPath {
+                do {
+                    try FileManager.default.removeItem(at: path)
+                } catch {
+                    print("Error removing iCloud file: \(error)")
+                }
             }
         }
     }

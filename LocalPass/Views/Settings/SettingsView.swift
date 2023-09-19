@@ -28,6 +28,7 @@ struct SettingsView: View {
                             
                             if newValue == true {
                                 do {
+                                    _ = AccountsDataService.init()
                                     try AccountsDataService.saveData(AccountsDataService.getAccountData())
                                     try NotesDataService.saveData(NotesDataService.getNoteData())
                                 } catch {
