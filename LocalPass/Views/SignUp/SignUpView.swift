@@ -78,7 +78,7 @@ extension SignUpView {
                         if CryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
                             if createFiles(key: key, salt: salt) {
                                 authenticationViewModel.authenticated = true
-                                Settings.shared.signedUp = true
+                                LocalPassApp.settings.signedUp = true
                             }
                         }
                     }

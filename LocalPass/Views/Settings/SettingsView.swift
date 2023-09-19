@@ -9,6 +9,9 @@ import SwiftUI
 import LocalAuthentication
 
 struct SettingsView: View {
+    
+    @StateObject private var settings = LocalPassApp.settings
+    
     var body: some View {
         NavigationStack {
             List {
@@ -19,17 +22,14 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("iCloud Sync", isOn: Binding(
-                        get: { Settings.shared.iCloudSync },
-                        set: { newValue in
-                            Settings.shared.iCloudSync = newValue
-                        }
-                    ))
-                        .onChange(of: Settings.shared.iCloudSync) { setting in
-                            if setting == true {
+                    Toggle("iCloud Sync", isOn: $settings.iCloudSync)
+                        .onChange(of: settings.iCloudSync) { newValue in
+                            LocalPassApp.settings.iCloudSync = newValue
+                            
+                            if newValue == true {
                                 do {
                                     try AccountsDataService.saveData(AccountsDataService.getAccountData())
-                                    try NotesDataService.saveData(notes: NotesDataService.getNoteData())
+                                    try NotesDataService.saveData(NotesDataService.getNoteData())
                                 } catch {
                                     print("Error writing data to iCloud: \(error)")
                                 }
@@ -39,26 +39,21 @@ struct SettingsView: View {
                             }
                         }
                     
-                    Toggle("Show Account Icons", isOn: Binding(
-                        get: { Settings.shared.showFavicons },
-                        set: { newValue in
-                            Settings.shared.showFavicons = newValue
+                    Toggle("Show Account Icons", isOn: $settings.showFavicons)
+                        .onChange(of: settings.showFavicons) { newValue in
+                            LocalPassApp.settings.showFavicons = newValue
                         }
-                    ))
                     
                     let biometricsEnrolled = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
                     
-                    Toggle("Use Biometrics", isOn: Binding(
-                        get: { Settings.shared.useBiometrics },
-                        set: { newValue in
-                            Settings.shared.useBiometrics = newValue
-                        }
-                    ))
-                        .onChange(of: Settings.shared.useBiometrics) { setting in
-                            if setting == true {
+                    Toggle("Use Biometrics", isOn: $settings.useBiometrics)
+                        .onChange(of: Settings.shared.useBiometrics) { newValue in
+                            LocalPassApp.settings.useBiometrics = newValue
+                            
+                            if newValue == true {
                                 let context = LAContext()
                                 var error: NSError?
-                                
+
                                 if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
                                     context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Enable biometric authentication") { success, authenticationError in
                                         DispatchQueue.main.async {

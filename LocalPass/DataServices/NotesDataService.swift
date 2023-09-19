@@ -12,7 +12,6 @@ class NotesDataService {
     static private let localPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
     static private var iCloudPath: URL? = nil
     static private let initializationGroup = DispatchGroup()
-    static private var settings = Settings()
     
     init() {
         NotesDataService.initializationGroup.enter()
@@ -34,7 +33,7 @@ class NotesDataService {
             initializationGroup.wait()
             
             if let path = iCloudPath {
-                if settings.iCloudSync {
+                if LocalPassApp.settings.iCloudSync {
                     do {
                         iCloudBlob = try Data(contentsOf: path)
                     } catch {
@@ -53,7 +52,7 @@ class NotesDataService {
         }
     }
     
-    static func formatForSave(notes: [Note]?) -> String {
+    static func formatForSave(_ notes: [Note]?) -> String {
         if notes != nil {
             var formattedString: String = ""
             
@@ -73,7 +72,7 @@ class NotesDataService {
         return "empty"
     }
     
-    static func parseData(blob: Data?) -> [Note]? {
+    static func parseData(_ blob: Data?) -> [Note]? {
         if let blob = blob {
             if let tag = Bundle.main.bundleIdentifier {
                 if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
@@ -111,15 +110,15 @@ class NotesDataService {
     static func getNoteData() -> [Note]? {
         if AuthenticationViewModel.shared.authenticated {
             let blob = getBlob()
-            return parseData(blob: blob)
+            return parseData(blob)
         }
         
         return nil
     }
     
-    static func saveData(notes: [Note]?, salt: Data? = nil) throws {
+    static func saveData(_ notes: [Note]?, salt: Data? = nil) throws {
         do {
-            let blob = formatForSave(notes: notes)
+            let blob = formatForSave(notes)
             
             if let tag = Bundle.main.bundleIdentifier {
                 if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
@@ -131,7 +130,7 @@ class NotesDataService {
                             
                             initializationGroup.wait()
                             
-                            if settings.iCloudSync {
+                            if LocalPassApp.settings.iCloudSync {
                                 if let path = iCloudPath {
                                     try encryptedBlob.write(to: path, options: .atomic)
                                 }

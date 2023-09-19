@@ -57,7 +57,7 @@ class AuthenticationViewModel: ObservableObject {
                             if CryptoDataService.writeKeyToSecureEnclave(key: newKey, tag: tag) {
                                 do {
                                     try AccountsDataService.saveData(accounts, salt: salt)
-                                    try NotesDataService.saveData(notes: notes, salt: salt)
+                                    try NotesDataService.saveData(notes, salt: salt)
                                 } catch {
                                     print("Error rewriting data with new key: \(error)")
                                 }

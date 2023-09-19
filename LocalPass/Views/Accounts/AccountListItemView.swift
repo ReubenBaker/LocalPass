@@ -47,7 +47,7 @@ extension AccountListItemView {
         } label: {
             HStack {
                 if let url = account.url {
-                    if Settings.shared.showFavicons {
+                    if LocalPassApp.settings.showFavicons {
                         FaviconImageView(url: url)
                     } else {
                         Image(systemName: "person.circle.fill")

@@ -12,7 +12,7 @@ class NotesViewModel: ObservableObject {
     @Published var notes: [Note]? {
         didSet {
             do {
-                try NotesDataService.saveData(notes: notes)
+                try NotesDataService.saveData(notes)
             } catch {
                 print("Error writing notes data: \(error)")
             }

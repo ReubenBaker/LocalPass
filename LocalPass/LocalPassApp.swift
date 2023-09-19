@@ -33,11 +33,12 @@ struct LocalPassApp: App {
     @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     @StateObject private var authenticationViewModel = AuthenticationViewModel()
     @State private var authenticationStatus: Bool = false
+    static var settings = Settings.shared
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if Settings.shared.signedUp {
+                if LocalPassApp.settings.signedUp {
                     ZStack {
                         if authenticationStatus {
                             MainView()
@@ -56,7 +57,7 @@ struct LocalPassApp: App {
                         .environmentObject(authenticationViewModel)
                 }
             }
-            .animation(.easeInOut, value: Settings.shared.signedUp)
+            .animation(.easeInOut, value: LocalPassApp.settings.signedUp)
         }
         .onChange(of: authenticationViewModel.authenticated) { authenticatedStatus in
             authenticationStatus = authenticatedStatus

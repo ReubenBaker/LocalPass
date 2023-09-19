@@ -12,7 +12,6 @@ class AccountsDataService {
     static private let localPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
     static private var iCloudPath: URL? = nil
     static private let initializationGroup = DispatchGroup()
-    static private var settings = Settings()
     
     init() {
         AccountsDataService.initializationGroup.enter()
@@ -34,7 +33,7 @@ class AccountsDataService {
             initializationGroup.wait()
             
             if let path = iCloudPath {
-                if settings.iCloudSync {
+                if LocalPassApp.settings.iCloudSync {
                     do {
                         iCloudBlob = try Data(contentsOf: path)
                     } catch {
@@ -137,7 +136,7 @@ class AccountsDataService {
                             
                             initializationGroup.wait()
                             
-                            if settings.iCloudSync {
+                            if LocalPassApp.settings.iCloudSync {
                                 if let path = iCloudPath {
                                     try encryptedBlob.write(to: path, options: .atomic)
                                 }
