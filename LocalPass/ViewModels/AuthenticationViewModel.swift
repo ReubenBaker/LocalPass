@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class AuthenticationViewModel: ObservableObject {
-    static let shared = AuthenticationViewModel()
+    static var shared = AuthenticationViewModel()
     
     @Published var password: String? = nil
     @Published var authenticated: Bool = false {
@@ -19,6 +19,7 @@ class AuthenticationViewModel: ObservableObject {
             }
         }
     }
+    
     @Published var authenticatedWithBiometrics: Bool = false
     
     func getIncorrectPasswordAlert() -> Alert {

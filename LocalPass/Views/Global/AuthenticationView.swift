@@ -13,7 +13,7 @@ struct AuthenticationView: View {
     @State private var showIncorrectPasswordAlert: Bool = false
     @State private var showBiometricsNotAllowedAlert: Bool = false
     @FocusState private var passwordFieldFocused: Bool
-    private var settings = Settings()
+    private var settings = Settings() // change
     
     var body: some View {
         ScrollView {
@@ -44,6 +44,7 @@ struct AuthenticationView: View {
                 Button {
                     if let blob = AccountsDataService.getBlob() {
                         if let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
+                            AuthenticationViewModel.shared.authenticated = true
                             authenticationViewModel.authenticated = true
                             authenticationViewModel.password = nil
                         } else {
@@ -66,6 +67,8 @@ struct AuthenticationView: View {
                                     if let tag = Bundle.main.bundleIdentifier {
                                         if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
                                             if let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
+                                                AuthenticationViewModel.shared.authenticatedWithBiometrics = true
+                                                AuthenticationViewModel.shared.authenticated = true
                                                 authenticationViewModel.authenticatedWithBiometrics = true
                                                 authenticationViewModel.authenticated = true
                                             } else {
