@@ -7,31 +7,34 @@
 
 import Foundation
 import SwiftUI
+import LocalAuthentication
 
-class Settings: ObservableObject {
-    @Published var signedUp: Bool = true {
+class Settings {
+    static var shared = Settings()
+    
+    var signedUp: Bool = true {
         didSet {
             UserDefaults.standard.set(signedUp, forKey: "signedUp")
         }
     }
     
-    @Published var iCloudSync: Bool = false {
+    var iCloudSync: Bool = false {
         didSet {
             UserDefaults.standard.set(iCloudSync, forKey: "iCloudSync")
         }
     }
     
-    @Published var showFavicons: Bool = false {
+    var showFavicons: Bool = false {
         didSet {
             UserDefaults.standard.set(showFavicons, forKey: "showFavicons")
         }
     }
     
-    @Published var useBiometrics: Bool = false {
+    var useBiometrics: Bool = false {
         didSet {
             UserDefaults.standard.set(useBiometrics, forKey: "useBiometrics")
             
-            if useBiometrics == true {
+            if useBiometrics == true && LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
                 biometricsAllowed = true
             } else {
                 biometricsAllowed = false
@@ -39,7 +42,7 @@ class Settings: ObservableObject {
         }
     }
     
-    @Published var biometricsAllowed: Bool = false {
+    var biometricsAllowed: Bool = false {
         didSet {
             UserDefaults.standard.set(biometricsAllowed, forKey: "biometricsAllowed")
         }

@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 class AuthenticationViewModel: ObservableObject {
+    static let shared = AuthenticationViewModel()
+    
     @Published var password: String? = nil
     @Published var authenticated: Bool = false {
         didSet {
@@ -45,10 +47,8 @@ class AuthenticationViewModel: ObservableObject {
     
     func rotateKey() {
         if let password = self.password {
-            let accountsDataService = AccountsDataService()
-            let notesDataService = NotesDataService()
-            let accounts = accountsDataService.getAccountData()
-            let notes = notesDataService.getNoteData()
+            let accounts = AccountsDataService.getAccountData()
+            let notes = NotesDataService.getNoteData()
          
             if let salt = CryptoDataService.generateRandomSalt() {
                 if let newKey = CryptoDataService.deriveKey(password: password, salt: salt) {
@@ -56,8 +56,8 @@ class AuthenticationViewModel: ObservableObject {
                         if CryptoDataService.deleteKeyFromSecureEnclave(tag: tag) {
                             if CryptoDataService.writeKeyToSecureEnclave(key: newKey, tag: tag) {
                                 do {
-                                    try accountsDataService.saveData(accounts: accounts, salt: salt)
-                                    try notesDataService.saveData(notes: notes, salt: salt)
+                                    try AccountsDataService.saveData(accounts, salt: salt)
+                                    try NotesDataService.saveData(notes: notes, salt: salt)
                                 } catch {
                                     print("Error rewriting data with new key: \(error)")
                                 }

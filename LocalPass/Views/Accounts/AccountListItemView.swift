@@ -12,7 +12,6 @@ struct AccountListItemView: View {
     @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
-    @EnvironmentObject private var settings: Settings
     @Binding var account: Account
     @State private var showAccountDetailViewSheet: Bool = false
     
@@ -31,14 +30,12 @@ struct AccountListItemView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @StateObject var settings = Settings()
         @State var account = Account(name: "default", username: "default", password: "default", url: "apple.com")
         
         AccountListItemView(account: $account)
             .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
-            .environmentObject(settings)
     }
 }
 
@@ -50,7 +47,7 @@ extension AccountListItemView {
         } label: {
             HStack {
                 if let url = account.url {
-                    if settings.showFavicons {
+                    if Settings.shared.showFavicons {
                         FaviconImageView(url: url)
                     } else {
                         Image(systemName: "person.circle.fill")

@@ -42,7 +42,7 @@ struct AuthenticationView: View {
                 }
                 
                 Button {
-                    if let blob = AccountsDataService().getBlob() {
+                    if let blob = AccountsDataService.getBlob() {
                         if let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
                             authenticationViewModel.authenticated = true
                             authenticationViewModel.password = nil
@@ -62,7 +62,7 @@ struct AuthenticationView: View {
                     Button {
                         CryptoDataService.authenticateWithBiometrics { success in
                             if success {
-                                if let blob = NotesDataService().getBlob() {
+                                if let blob = NotesDataService.getBlob() {
                                     if let tag = Bundle.main.bundleIdentifier {
                                         if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
                                             if let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {

@@ -9,31 +9,26 @@ import Foundation
 import SwiftUI
 
 class AccountsDataService {
-    private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
-    private var iCloudPath: URL? = nil
-    private let initializationGroup = DispatchGroup()
-    private var settings = Settings()
-    private var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
-        return dateFormatter
-    }
+    static private let localPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
+    static private var iCloudPath: URL? = nil
+    static private let initializationGroup = DispatchGroup()
+    static private var settings = Settings()
     
     init() {
-        initializationGroup.enter()
+        AccountsDataService.initializationGroup.enter()
         
         DispatchQueue.global(qos: .userInitiated).async {
             if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
-                self.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassaccounts.txt")
+                AccountsDataService.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassaccounts.txt")
             }
             
-            self.initializationGroup.leave()
+            AccountsDataService.initializationGroup.leave()
         }
     }
     
-    func getBlob() -> Data? {
+    static func getBlob() -> Data? {
         do {
-            let blob = try Data(contentsOf: path)
+            let blob = try Data(contentsOf: localPath)
             var iCloudBlob: Data? = nil
             
             initializationGroup.wait()
@@ -58,7 +53,7 @@ class AccountsDataService {
         }
     }
     
-    func formatForSave(accounts: [Account]?) -> String {
+    static func formatForSave(_ accounts: [Account]?) -> String {
         if accounts != nil {
             var formattedString: String = ""
             
@@ -81,7 +76,7 @@ class AccountsDataService {
         return "empty"
     }
     
-    func parseData(blob: Data?) -> [Account]? {
+    static func parseData(_ blob: Data?) -> [Account]? {
         if let blob = blob {
             if let tag = Bundle.main.bundleIdentifier {
                 if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
@@ -101,8 +96,8 @@ class AccountsDataService {
                                     username: String(blobEntryData[1]),
                                     password: String(blobEntryData[2]),
                                     url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
-                                    creationDateTime: dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
-                                    updatedDateTime: blobEntryData[5] != "nil" ? dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
+                                    creationDateTime: GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
+                                    updatedDateTime: blobEntryData[5] != "nil" ? GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
                                     starred: blobEntryData[6] == "true" ? true : false,
                                     otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
                                     id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()
@@ -119,15 +114,18 @@ class AccountsDataService {
         return nil   
     }
     
-    func getAccountData() -> [Account]? {
-        let blob = getBlob()
-        return parseData(blob: blob)
+    static func getAccountData() -> [Account]? {
+        if AuthenticationViewModel.shared.authenticated {
+            let blob = getBlob()
+            return parseData(blob)
+        }
+        
+        return nil
     }
     
-    func saveData(accounts: [Account]?, salt: Data? = nil) throws {
+    static func saveData(_ accounts: [Account]?, salt: Data? = nil) throws {
         do {
-            let blob = formatForSave(accounts: accounts)
-    
+            let blob = formatForSave(accounts)
             
             if let tag = Bundle.main.bundleIdentifier {
                 if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
@@ -135,7 +133,7 @@ class AccountsDataService {
                         let salt = salt ?? originalData.prefix(16)
                         
                         if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
-                            try encryptedBlob.write(to: path, options: .atomic)
+                            try encryptedBlob.write(to: localPath, options: .atomic)
                             
                             initializationGroup.wait()
                             
@@ -151,10 +149,9 @@ class AccountsDataService {
         } catch {
             print("Error writing accounts data: \(error)")
         }
-            
     }
     
-    func removeiCloudData() {
+    static func removeiCloudData() {
         initializationGroup.wait()
         
         if let iCloudPath = self.iCloudPath {

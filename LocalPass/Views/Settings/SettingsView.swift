@@ -9,45 +9,52 @@ import SwiftUI
 import LocalAuthentication
 
 struct SettingsView: View {
-    
-    @EnvironmentObject private var settings: Settings
-    private var accountsDataService = AccountsDataService()
-    private var notesDataService = NotesDataService()
-    private var cryptoDataService = CryptoDataService()
-    
     var body: some View {
         NavigationStack {
             List {
                 Section(header: Text("About")) {
-                    NavigationLink("About") {
+                    NavigationLink("About LocalPass") {
                         AboutView()
                     }
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("iCloud Sync", isOn: $settings.iCloudSync)
-                        .onChange(of: settings.iCloudSync) { setting in
+                    Toggle("iCloud Sync", isOn: Binding(
+                        get: { Settings.shared.iCloudSync },
+                        set: { newValue in
+                            Settings.shared.iCloudSync = newValue
+                        }
+                    ))
+                        .onChange(of: Settings.shared.iCloudSync) { setting in
                             if setting == true {
                                 do {
-                                    try AccountsDataService().saveData(accounts: accountsDataService.getAccountData())
-                                    try NotesDataService().saveData(notes: notesDataService.getNoteData())
+                                    try AccountsDataService.saveData(AccountsDataService.getAccountData())
+                                    try NotesDataService.saveData(notes: NotesDataService.getNoteData())
                                 } catch {
                                     print("Error writing data to iCloud: \(error)")
                                 }
                             } else {
-                                accountsDataService.removeiCloudData()
-                                notesDataService.removeiCloudData()
+                                AccountsDataService.removeiCloudData()
+                                NotesDataService.removeiCloudData()
                             }
                         }
                     
-                    Toggle("Signed Up: \(settings.signedUp.description)", isOn: $settings.signedUp)
-                    
-                    Toggle("Show URL Icons", isOn: $settings.showFavicons)
+                    Toggle("Show Account Icons", isOn: Binding(
+                        get: { Settings.shared.showFavicons },
+                        set: { newValue in
+                            Settings.shared.showFavicons = newValue
+                        }
+                    ))
                     
                     let biometricsEnrolled = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
                     
-                    Toggle("Use Biometrics", isOn: $settings.useBiometrics)
-                        .onChange(of: settings.useBiometrics) { setting in
+                    Toggle("Use Biometrics", isOn: Binding(
+                        get: { Settings.shared.useBiometrics },
+                        set: { newValue in
+                            Settings.shared.useBiometrics = newValue
+                        }
+                    ))
+                        .onChange(of: Settings.shared.useBiometrics) { setting in
                             if setting == true {
                                 let context = LAContext()
                                 var error: NSError?
@@ -56,33 +63,19 @@ struct SettingsView: View {
                                     context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Enable biometric authentication") { success, authenticationError in
                                         DispatchQueue.main.async {
                                             if success {
-                                                settings.useBiometrics = true
+                                                Settings.shared.useBiometrics = true
                                             } else {
-                                                settings.useBiometrics = false
+                                                Settings.shared.useBiometrics = false
                                             }
                                         }
                                     }
                                 }
                             } else {
-                                settings.useBiometrics = false
+                                Settings.shared.useBiometrics = false
                             }
                         }
                         .disabled(!biometricsEnrolled)
                         .foregroundColor(biometricsEnrolled ? .primary : .primary.opacity(0.5))
-                }
-                
-                Section(header: Text("Tests")) {
-                    Button {
-//                        CryptoDataService().test()
-                    } label: {
-                        Text("Test Crypto")
-                    }
-                    
-                    Button {
-//                        CryptoDataService().testBiometrics()
-                    } label: {
-                        Text("Test Crypto - Biometrics")
-                    }
                 }
             }
         }
@@ -94,9 +87,6 @@ struct SettingsView: View {
 // Preview
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var settings = Settings()
-        
         SettingsView()
-            .environmentObject(settings)
     }
 }

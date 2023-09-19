@@ -8,13 +8,11 @@
 import Foundation
 import SwiftUI
 
-class NotesViewModel: ObservableObject {
-    private var notesDataService = NotesDataService()
-    
+class NotesViewModel: ObservableObject {    
     @Published var notes: [Note]? {
         didSet {
             do {
-                try notesDataService.saveData(notes: notes)
+                try NotesDataService.saveData(notes: notes)
             } catch {
                 print("Error writing notes data: \(error)")
             }
@@ -24,7 +22,7 @@ class NotesViewModel: ObservableObject {
     @Published var noteToDelete: Note? = nil
     
     init() {
-        let notes = notesDataService.getNoteData()
+        let notes = NotesDataService.getNoteData()
         self.notes = notes
         
         if notes == nil {

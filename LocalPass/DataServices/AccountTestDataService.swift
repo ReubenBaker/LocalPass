@@ -9,26 +9,15 @@ import Foundation
 
 class AccountTestDataService {
     static let accounts: [Account] = [
-        Account(name: "Test Account 1", username: "Test User 1", password: "Test Password 1"),
-        Account(name: "Test Account 2", username: "Test User 2", password: "Test Password 2"),
-        Account(name: "Test Account 3", username: "Test User 3", password: "Test Password 3"),
-        Account(name: "Test Account 4", username: "Test User 4", password: "Test Password 4"),
-        Account(name: "Test Account 5", username: "Test User 5", password: "Test Password 5"),
-        Account(name: "Test Account 6", username: "Test User 6", password: "Test Password 6", url: "apple.com"),
-        Account(name: "Test Account 7", username: "Test User 7", password: "Test Password 7", url: "google.com"),
-        Account(name: "Test Account 8", username: "Test User 8", password: "Test Password 8", url: "github.com"),
-        Account(name: "Test Account 9", username: "Test User 9", password: "Test Password 9", url: "stackoverflow.com"),
-        Account(name: "Test Account 10", username: "Test User 10", password: "Test Password 10", url: "leetcode.com"),
-        Account(name: "Test Account 11", username: "Test User 11", password: "Test Password 11", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 12", username: "Test User 12", password: "Test Password 12", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 13", username: "Test User 13", password: "Test Password 13", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 14", username: "Test User 14", password: "Test Password 14", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 15", username: "Test User 15", password: "Test Password 15", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 16", username: "Test User 16", password: "Test Password 16", url: "Test url 16", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 17", username: "Test User 17", password: "Test Password 17", url: "Test url 17", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 18", username: "Test User 18", password: "Test Password 18", url: "Test url 18", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 19", username: "Test User 19", password: "Test Password 19", url: "Test url 19", otpSecret: "TESTKEY"),
-        Account(name: "Test Account 20", username: "Test User 20", password: "Test Password 20", url: "Test url 20", otpSecret: "TESTKEY"),
-        Account(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas congue ligula sed placerat congue. Integer faucibus interdum dui, non dignissim sapien tempor blandit. Aliquam ullamcorper molestie massa id dignissim. Maecenas vitae metus posuere, cursus magna eget, porttitor diam. Sed molestie, nunc ac euismod gravida, felis tortor aliquet lacus, quis commodo odio velit eu diam. Donec ultrices orci ut sapien tristique, ut ultrices nulla finibus. Phasellus pulvinar faucibus arcu, vitae molestie orci congue vel. Nullam rhoncus aliquet fermentum. Quisque enim metus, egestas ut congue ac, gravida ut erat. Quisque ac magna non ex lobortis pharetra. Morbi dolor mi, sollicitudin in aliquam at, imperdiet sit amet velit. Maecenas scelerisque porta felis nec porttitor. Sed vehicula nibh venenatis efficitur tincidunt.", username: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas congue ligula sed placerat congue. Integer faucibus interdum dui, non dignissim sapien tempor blandit. Aliquam ullamcorper molestie massa id dignissim. Maecenas vitae metus posuere, cursus magna eget, porttitor diam. Sed molestie, nunc ac euismod gravida, felis tortor aliquet lacus, quis commodo odio velit eu diam. Donec ultrices orci ut sapien tristique, ut ultrices nulla finibus. Phasellus pulvinar faucibus arcu, vitae molestie orci congue vel. Nullam rhoncus aliquet fermentum. Quisque enim metus, egestas ut congue ac, gravida ut erat. Quisque ac magna non ex lobortis pharetra. Morbi dolor mi, sollicitudin in aliquam at, imperdiet sit amet velit. Maecenas scelerisque porta felis nec porttitor. Sed vehicula nibh venenatis efficitur tincidunt.", password: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas congue ligula sed placerat congue. Integer faucibus interdum dui, non dignissim sapien tempor blandit. Aliquam ullamcorper molestie massa id dignissim. Maecenas vitae metus posuere, cursus magna eget, porttitor diam. Sed molestie, nunc ac euismod gravida, felis tortor aliquet lacus, quis commodo odio velit eu diam. Donec ultrices orci ut sapien tristique, ut ultrices nulla finibus. Phasellus pulvinar faucibus arcu, vitae molestie orci congue vel. Nullam rhoncus aliquet fermentum. Quisque enim metus, egestas ut congue ac, gravida ut erat. Quisque ac magna non ex lobortis pharetra. Morbi dolor mi, sollicitudin in aliquam at, imperdiet sit amet velit. Maecenas scelerisque porta felis nec porttitor. Sed vehicula nibh venenatis efficitur tincidunt.", url: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas congue ligula sed placerat congue. Integer faucibus interdum dui, non dignissim sapien tempor blandit. Aliquam ullamcorper molestie massa id dignissim. Maecenas vitae metus posuere, cursus magna eget, porttitor diam. Sed molestie, nunc ac euismod gravida, felis tortor aliquet lacus, quis commodo odio velit eu diam. Donec ultrices orci ut sapien tristique, ut ultrices nulla finibus. Phasellus pulvinar faucibus arcu, vitae molestie orci congue vel. Nullam rhoncus aliquet fermentum. Quisque enim metus, egestas ut congue ac, gravida ut erat. Quisque ac magna non ex lobortis pharetra. Morbi dolor mi, sollicitudin in aliquam at, imperdiet sit amet velit. Maecenas scelerisque porta felis nec porttitor. Sed vehicula nibh venenatis efficitur tincidunt.")
+        Account(name: "Apple", username: "apple@apple.com", password: "apple", url: "apple.com", otpSecret: "apple"),
+        Account(name: "Google", username: "google@google.com", password: "google", url: "google.com", otpSecret: "google"),
+        Account(name: "GitHub", username: "github@github.com", password: "github", url: "github.com", otpSecret: "github"),
+        Account(name: "Stack Overflow", username: "stackoverflow@stackoverflow.com", password: "stackoverflow", url: "stackoverflow.com", otpSecret: "stackoverflow"),
+        Account(name: "LeetCode", username: "leetcode@leetcode.com", password: "leetcode", url: "leetcode.com", otpSecret: "leetcode"),
+        Account(name: "X", username: "x@x.com", password: "x", url: "x.com", otpSecret: "x"),
+        Account(name: "Reddit", username: "reddit@reddit.com", password: "reddit", url: "reddit.com", otpSecret: "reddit"),
+        Account(name: "Spotify", username: "spotify@spotify.com", password: "spotify", url: "spotify.com", otpSecret: "spotify"),
+        Account(name: "Outlook", username: "outlook@outlook.com", password: "outlook", url: "outlook.com", otpSecret: "outlook"),
+        Account(name: "Netflix", username: "netflix@netflix.com", password: "netflix", url: "netflix.com", otpSecret: "netflix"),
     ]
 }

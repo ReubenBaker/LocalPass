@@ -141,7 +141,7 @@ extension AccountDetailView {
     
     private func generateTOTP() {
         if let secret = currentOtpSecret {
-            otpValue = TOTPGeneratorDataService().TOTP(secret: secret)
+            otpValue = TOTPGeneratorDataService.TOTP(secret: secret)
         }
     }
 }
@@ -167,10 +167,21 @@ extension AccountDetailView {
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color("AccentColor"))
+                if let url = account.url {
+                    if Settings.shared.showFavicons {
+                        FaviconImageView(url: url)
+                    } else {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color("AccentColor"))
+                    }
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(Color("AccentColor"))
+                }
                 
                 Text(account.username)
                     .fontWeight(.semibold)

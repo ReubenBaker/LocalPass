@@ -32,13 +32,12 @@ struct LocalPassApp: App {
     @StateObject private var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
     @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     @StateObject private var authenticationViewModel = AuthenticationViewModel()
-    @StateObject private var settings = Settings()
     @State private var authenticationStatus: Bool = false
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if settings.signedUp {
+                if Settings.shared.signedUp {
                     ZStack {
                         if authenticationStatus {
                             MainView()
@@ -46,7 +45,6 @@ struct LocalPassApp: App {
                                 .environmentObject(copyPopupOverlayViewModel)
                                 .environmentObject(privacyOverlayViewModel)
                                 .environmentObject(authenticationViewModel)
-                                .environmentObject(settings)
                         } else {
                             AuthenticationView()
                                 .environmentObject(authenticationViewModel)
@@ -56,10 +54,9 @@ struct LocalPassApp: App {
                 } else {
                     SignUpView()
                         .environmentObject(authenticationViewModel)
-                        .environmentObject(settings)
                 }
             }
-            .animation(.easeInOut, value: settings.signedUp)
+            .animation(.easeInOut, value: Settings.shared.signedUp)
         }
         .onChange(of: authenticationViewModel.authenticated) { authenticatedStatus in
             authenticationStatus = authenticatedStatus

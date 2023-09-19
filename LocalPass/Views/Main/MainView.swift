@@ -12,6 +12,7 @@ struct MainView: View {
     @EnvironmentObject private var mainViewModel: MainViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notesViewModel = NotesViewModel()
+    @State private var selectedTab: Int = 0
     
     var body: some View {
         mainTabView
@@ -24,13 +25,11 @@ struct MainView_Previews: PreviewProvider {
         @StateObject var mainViewModel = MainViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
-        @StateObject var settings = Settings()
         
         MainView()
             .environmentObject(mainViewModel)
             .environmentObject(copyPopupOverlayViewModel)
             .environmentObject(privacyOverlayViewModel)
-            .environmentObject(settings)
     }
 }
 
@@ -38,23 +37,28 @@ struct MainView_Previews: PreviewProvider {
 extension MainView {
     private var mainTabView: some View {
         ZStack {
-            TabView(selection: Binding.constant(0)) {
+            TabView(selection: $selectedTab) {
                 AccountsView()
                     .tabItem {
                         Label("Accounts", systemImage: "lock.rectangle.stack.fill")
                     }
                     .environmentObject(accountsViewModel)
+                    .tag(0)
                 
                 NotesView()
                     .tabItem {
                         Label("Notes", systemImage: "sparkles.rectangle.stack.fill")
                     }
                     .environmentObject(notesViewModel)
+                    .tag(1)
+                    .toolbar(.visible, for: .tabBar)
+                    .toolbarBackground(.ultraThinMaterial, for: .tabBar)
                 
                 SettingsView()
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }
+                    .tag(2)
             }
         }
         .overlay(PrivacyOverlayView())

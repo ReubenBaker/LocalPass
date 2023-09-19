@@ -9,12 +9,10 @@ import Foundation
 import SwiftUI
 
 class AccountsViewModel: ObservableObject {
-    private var accountsDataService = AccountsDataService()
-    
     @Published var accounts: [Account]? {
         didSet {
             do {
-                try accountsDataService.saveData(accounts: accounts)
+                try AccountsDataService.saveData(accounts)
             } catch {
                 print("Error writing accounts data: \(error)")
             }
@@ -24,7 +22,7 @@ class AccountsViewModel: ObservableObject {
     @Published var accountToDelete: Account? = nil
     
     init() {
-        let accounts = accountsDataService.getAccountData()
+        let accounts = AccountsDataService.getAccountData()
         self.accounts = accounts
         
         if accounts == nil {

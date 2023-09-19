@@ -9,31 +9,26 @@ import Foundation
 import SwiftUI
 
 class NotesDataService {
-    private let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
-    private var iCloudPath: URL? = nil
-    private let initializationGroup = DispatchGroup()
-    private var settings = Settings()
-    private var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZZ"
-        return dateFormatter
-    }
+    static private let localPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
+    static private var iCloudPath: URL? = nil
+    static private let initializationGroup = DispatchGroup()
+    static private var settings = Settings()
     
     init() {
-        initializationGroup.enter()
+        NotesDataService.initializationGroup.enter()
         
         DispatchQueue.global(qos: .userInitiated).async {
             if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
-                self.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt")
+                NotesDataService.iCloudPath = iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt")
             }
             
-            self.initializationGroup.leave()
+            NotesDataService.initializationGroup.leave()
         }
     }
     
-    func getBlob() -> Data? {
+    static func getBlob() -> Data? {
         do {
-            let blob = try Data(contentsOf: path)
+            let blob = try Data(contentsOf: localPath)
             var iCloudBlob: Data? = nil
             
             initializationGroup.wait()
@@ -58,7 +53,7 @@ class NotesDataService {
         }
     }
     
-    func formatForSave(notes: [Note]?) -> String {
+    static func formatForSave(notes: [Note]?) -> String {
         if notes != nil {
             var formattedString: String = ""
             
@@ -78,7 +73,7 @@ class NotesDataService {
         return "empty"
     }
     
-    func parseData(blob: Data?) -> [Note]? {
+    static func parseData(blob: Data?) -> [Note]? {
         if let blob = blob {
             if let tag = Bundle.main.bundleIdentifier {
                 if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
@@ -96,8 +91,8 @@ class NotesDataService {
                                 Note(
                                     title: String(blobEntryData[0]),
                                     body: String(blobEntryData[1]),
-                                    creationDateTime: dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
-                                    updatedDateTime: blobEntryData[3] != "nil" ? dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
+                                    creationDateTime: GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
+                                    updatedDateTime: blobEntryData[3] != "nil" ? GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
                                     starred: blobEntryData[4] == "true" ? true : false,
                                     id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
                                 )
@@ -113,12 +108,16 @@ class NotesDataService {
         return nil
     }
     
-    func getNoteData() -> [Note]? {
-        let blob = getBlob()
-        return parseData(blob: blob)
+    static func getNoteData() -> [Note]? {
+        if AuthenticationViewModel.shared.authenticated {
+            let blob = getBlob()
+            return parseData(blob: blob)
+        }
+        
+        return nil
     }
     
-    func saveData(notes: [Note]?, salt: Data? = nil) throws {
+    static func saveData(notes: [Note]?, salt: Data? = nil) throws {
         do {
             let blob = formatForSave(notes: notes)
             
@@ -128,7 +127,7 @@ class NotesDataService {
                         let salt = salt ?? originalData.prefix(16)
                         
                         if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
-                            try encryptedBlob.write(to: path, options: .atomic)
+                            try encryptedBlob.write(to: localPath, options: .atomic)
                             
                             initializationGroup.wait()
                             
@@ -146,7 +145,7 @@ class NotesDataService {
         }
     }
     
-    func removeiCloudData() {
+    static func removeiCloudData() {
         initializationGroup.wait()
         
         if let iCloudPath = self.iCloudPath {
@@ -158,3 +157,4 @@ class NotesDataService {
         }
     }
 }
+

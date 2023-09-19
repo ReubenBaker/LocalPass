@@ -11,7 +11,6 @@ import CryptoKit
 struct SignUpView: View {
     
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
-    @EnvironmentObject private var settings: Settings
     @State private var password: String? = nil
     @FocusState private var passwordFieldFocused: Bool
     
@@ -61,11 +60,9 @@ struct SignUpView: View {
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var authenticationViewModel = AuthenticationViewModel()
-        @StateObject var settings = Settings()
         
         SignUpView()
             .environmentObject(authenticationViewModel)
-            .environmentObject(settings)
     }
 }
 
@@ -81,7 +78,7 @@ extension SignUpView {
                         if CryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
                             if createFiles(key: key, salt: salt) {
                                 authenticationViewModel.authenticated = true
-                                settings.signedUp = true
+                                Settings.shared.signedUp = true
                             }
                         }
                     }

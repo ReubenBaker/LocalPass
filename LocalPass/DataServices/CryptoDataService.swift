@@ -52,15 +52,14 @@ import LocalAuthentication
  ```swift
  let blob = "Data to be encrypted"
  let password = "Password123"
- let service = CryptoDataService()
  
- if let encryptedBlob = service.encryptBlob(blob: blob, password: password) {
+ if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, password: password) {
     // Store or transmit the encryptedBlob
  
     // To decrypt:
     if let tag = Bundle.main.bundleIdentifier {
-        if let key = service.readKeyFromSecureEnclave(tag: tag) {
-            if let decryptedBlob = service.decryptBlob(blob: encryptedBlob, key: key) {
+        if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+            if let decryptedBlob = CryptoDataService.decryptBlob(blob: encryptedBlob, key: key) {
                 // Handle the decrypted data
             }
         }

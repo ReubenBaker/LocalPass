@@ -9,7 +9,7 @@ import Foundation
 import CryptoKit
 
 class TOTPGeneratorDataService {
-    func TOTP(secret: String, period: TimeInterval = TimeInterval(30), digits: Int = 6) -> String {
+    static func TOTP(secret: String, period: TimeInterval = TimeInterval(30), digits: Int = 6) -> String {
         if let data = base32Decode(secret) {
             let counter = UInt64(Date().timeIntervalSince1970 / period)
             let counterBytes = (0..<8).reversed().map { UInt8(counter >> (8 * $0) & 0xff) }
@@ -26,7 +26,7 @@ class TOTPGeneratorDataService {
         return "Invalid Key!"
     }
     
-    func base32Decode(_ encodedString: String) -> Data? {
+    static func base32Decode(_ encodedString: String) -> Data? {
         let base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
         let base32Map = Dictionary(uniqueKeysWithValues: base32Alphabet.enumerated().map { ($1, $0) })
         var encoded = encodedString.uppercased()
