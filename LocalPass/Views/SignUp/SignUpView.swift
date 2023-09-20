@@ -12,47 +12,112 @@ struct SignUpView: View {
     
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     @State private var password: String? = nil
+    @State private var passwordConfirmation: String? = nil
     @FocusState private var passwordFieldFocused: Bool
+    @FocusState private var passwordConfirmationFieldFocused: Bool
+    @State private var showInvalidPasswordAlert: Bool = false
+    @State private var showPasswordMismatchAlert: Bool = false
     
     var body: some View {
-        ScrollView {
-            VStack {
-                Text("Sign Up")
-                    .font(.largeTitle)
-                    .padding()
-                
-                SecureField("Enter password...", text: Binding(
-                    get: { password ?? "" },
-                    set: { password = $0 }
-                ))
-                .frame(maxWidth: .infinity)
-                .padding()
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.leading)
-                .tint(.primary)
-                .background(Color("GeneralColor"))
-                .cornerRadius(10)
-                .padding()
-                .focused($passwordFieldFocused)
-                .onTapGesture {
-                    DispatchQueue.main.async {
-                        passwordFieldFocused = true
-                    }
-                }
-                
-                Button {
-                    if password != nil {
-                        signUp()
-                    }
-                } label: {
-                    Image("AppIconImageRoundedCorners")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: UIScreen.main.bounds.width / 6)
-                        .padding()
+        VStack {
+            Text("Choose Your Password")
+                .font(.largeTitle)
+                .foregroundColor(.white)
+            
+            SecureField("Enter password...", text: Binding(
+                get: { password ?? "" },
+                set: { password = $0 }
+            ))
+            .frame(maxWidth: .infinity)
+            .padding()
+            .fontWeight(.semibold)
+            .multilineTextAlignment(.leading)
+            .tint(.primary)
+            .background(Color("GeneralColor"))
+            .cornerRadius(10)
+            .padding(.bottom)
+            .focused($passwordFieldFocused)
+            .onTapGesture {
+                DispatchQueue.main.async {
+                    passwordFieldFocused = true
                 }
             }
+            
+            SecureField("Confirm password...", text: Binding(
+                get: { passwordConfirmation ?? "" },
+                set: { passwordConfirmation = $0 }
+            ))
+            .frame(maxWidth: .infinity)
+            .padding()
+            .fontWeight(.semibold)
+            .multilineTextAlignment(.leading)
+            .tint(.primary)
+            .background(Color("GeneralColor"))
+            .cornerRadius(10)
+            .padding(.bottom)
+            .focused($passwordConfirmationFieldFocused)
+            .onTapGesture {
+                DispatchQueue.main.async {
+                    passwordConfirmationFieldFocused = true
+                }
+            }
+            
+            VStack {
+                VStack(alignment: .leading) {
+                    if !isValidPassword(password ?? "") {
+                        Text("Passwords Requirements:")
+                            .foregroundColor(.white)
+                        Text("At least 12 Characters")
+                            .foregroundColor(password?.count ?? 0 < 12 ? .red : .green)
+                        Text("At least 1 Number")
+                            .foregroundColor(!(password?.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil) ? .red : .green)
+                        Text("At least 1 Special Character")
+                            .foregroundColor(!(password?.rangeOfCharacter(from: CharacterSet(charactersIn: "!@#$%^&*()_-+=[]{}|;:'\",.<>?/\\~")) != nil) ? .red : .green)
+                    } else {
+                        Text("Valid Password 🥳")
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding()
+                .background(.ultraThinMaterial.opacity(0.5))
+                .cornerRadius(10)
+                .padding(.bottom)
+                
+                if isValidPassword(password ?? "") {
+                    Label("If you forget your password, your LocalPass data will not be recoverable!", systemImage: "exclamationmark.circle.fill")
+                        .foregroundColor(.yellow)
+                }
+            }
+            .animation(.easeInOut, value: password)
+            .frame(minHeight: 150)
+            .alert(isPresented: $showInvalidPasswordAlert) {
+                getInvalidPasswordAlert()
+            }
+            
+            Button {
+                if isValidPassword(password ?? "") {
+                    if password == passwordConfirmation {
+                        signUp()
+                    } else {
+                        showPasswordMismatchAlert.toggle()
+                    }
+                } else {
+                    showInvalidPasswordAlert.toggle()
+                }
+            } label: {
+                Image("AppIconImageRoundedCorners")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: UIScreen.main.bounds.width / 6)
+                    .padding()
+            }
+            .alert(isPresented: $showPasswordMismatchAlert) {
+                getPasswordMismatchAlert()
+            }
+            
+            Spacer()
         }
+        .padding()
         .background(Color("AppThemeColor"))
     }
 }
@@ -73,12 +138,14 @@ extension SignUpView {
             if let salt = CryptoDataService.generateRandomSalt() {
                 if let password = self.password {
                     if let key = CryptoDataService.deriveKey(password: password, salt: salt) {
-                        _ = CryptoDataService.deleteKeyFromSecureEnclave(tag: tag)
+                        self.password = nil
                         
-                        if CryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
-                            if createFiles(key: key, salt: salt) {
-                                authenticationViewModel.authenticated = true
-                                LocalPassApp.settings.signedUp = true
+                        if CryptoDataService.deleteKeyFromSecureEnclave(tag: tag) {
+                            if CryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
+                                if createFiles(key: key, salt: salt) {
+                                    authenticationViewModel.authenticated = true
+                                    LocalPassApp.settings.signedUp = true
+                                }
                             }
                         }
                     }
@@ -108,5 +175,36 @@ extension SignUpView {
         }
         
         return false
+    }
+    
+    private func isValidPassword(_ password: String) -> Bool {
+        let passwordRegex = "^(?=.*[0-9])(?=.*[!@#\\$%^&*()_\\-+=\\[\\]{}|;:'\",.<>?/\\\\~]).{12,}$"
+        
+        let passwordPredicate = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
+        return passwordPredicate.evaluate(with: password)
+    }
+    
+    private func getInvalidPasswordAlert() -> Alert {
+        let title = Text("Password is invalid!")
+        let message = Text("Please try again")
+        let dismissButton: Alert.Button = .default(Text("😢"))
+        
+        return Alert(
+            title: title,
+            message: message,
+            dismissButton: dismissButton
+        )
+    }
+    
+    private func getPasswordMismatchAlert() -> Alert {
+        let title = Text("Passwords do not match!")
+        let message = Text("Please try again")
+        let dismissButton: Alert.Button = .default(Text("😢"))
+        
+        return Alert(
+            title: title,
+            message: message,
+            dismissButton: dismissButton
+        )
     }
 }

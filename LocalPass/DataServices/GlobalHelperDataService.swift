@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-// Vars
+// Instances
 struct GlobalHelperDataService {
     static var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()

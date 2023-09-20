@@ -13,7 +13,7 @@ struct AccountsView: View {
     @State private var showDeleteAlert: Bool = false
     @State private var showAccountDetailSheet: Bool = false
     @State private var showAddAccountSheet: Bool = false
-    @State private var sortSelection: String = ""
+    @State private var sortOption: String = ""
     private let sortOptions: [String] = [
         "Date Added Ascending", "Date Added Descending", "Alphabetical"
     ]
@@ -35,8 +35,8 @@ struct AccountsView: View {
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
         }
-        .onChange(of: sortSelection) { _ in
-            sortAccounts(sortSelection: sortSelection)
+        .onChange(of: sortOption) { _ in
+            sortAccounts(sortOption: sortOption)
         }
     }
 }
@@ -59,9 +59,9 @@ struct AccountsView_Previews: PreviewProvider {
 
 // Functions
 extension AccountsView {
-    private func sortAccounts(sortSelection: String) {
+    private func sortAccounts(sortOption: String) {
         if accountsViewModel.accounts != nil {
-            accountsViewModel.sortAccounts(accounts: &accountsViewModel.accounts, sortOption: sortSelection)
+            accountsViewModel.sortAccountsByOption(accounts: &accountsViewModel.accounts, sortOption: sortOption)
             accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
         }
     }
@@ -91,7 +91,7 @@ extension AccountsView {
                                     accountsViewModel.accounts?[index].starred.toggle()
                                     accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
                                 } label: {
-                                    Image(systemName: account.starred ? "star.fill" : "star")
+                                    Image(systemName: "star")
                                 }
                                 .tint(.yellow)
                             }
@@ -112,7 +112,7 @@ extension AccountsView {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Menu {
-                    Picker("Sort", selection: $sortSelection) {
+                    Picker("Sort", selection: $sortOption) {
                         ForEach(sortOptions, id: \.self) {
                             Text($0)
                         }

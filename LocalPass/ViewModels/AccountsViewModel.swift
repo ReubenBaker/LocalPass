@@ -82,7 +82,7 @@ class AccountsViewModel: ObservableObject {
         )
     }
     
-    func sortAccounts(accounts: inout [Account]?, sortOption: String) {
+    func sortAccountsByOption(accounts: inout [Account]?, sortOption: String) {
         if let unsortedAccounts = accounts {
             var sortedAccounts: [Account]? = nil
             

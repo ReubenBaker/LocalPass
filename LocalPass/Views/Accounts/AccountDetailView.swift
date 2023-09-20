@@ -141,7 +141,7 @@ extension AccountDetailView {
     
     private func generateTOTP() {
         if let secret = currentOtpSecret {
-            otpValue = TOTPGeneratorDataService.TOTP(secret: secret)
+            otpValue = TOTPGeneratorDataService.TOTP(secret)
         }
     }
 }
@@ -301,15 +301,7 @@ extension AccountDetailView {
             }
             
             Button {
-//                let isFocused = textFieldFocused.password
-//
-//                showPassword.toggle()
-//
-//                if isFocused {
-//                    DispatchQueue.main.async {
-//                        textFieldFocused.password = true
-//                    }
-//                }
+                showPassword.toggle()
             } label: {
                 Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
                     .resizable()

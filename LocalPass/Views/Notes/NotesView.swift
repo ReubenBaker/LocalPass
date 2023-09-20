@@ -91,7 +91,7 @@ extension NotesView {
                                     notesViewModel.notes?[index].starred.toggle()
                                     notesViewModel.sortNotesByStar(notes: &notesViewModel.notes)
                                 } label: {
-                                    Image(systemName: note.starred ? "star.fill" : "star")
+                                    Image(systemName: "star")
                                 }
                                 .tint(.yellow)
                             }

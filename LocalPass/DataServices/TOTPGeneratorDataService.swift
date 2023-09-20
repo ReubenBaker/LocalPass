@@ -9,7 +9,7 @@ import Foundation
 import CryptoKit
 
 class TOTPGeneratorDataService {
-    static func TOTP(secret: String, period: TimeInterval = TimeInterval(30), digits: Int = 6) -> String {
+    static func TOTP(_ secret: String, period: TimeInterval = TimeInterval(30), digits: Int = 6) -> String {
         if let data = base32Decode(secret) {
             let counter = UInt64(Date().timeIntervalSince1970 / period)
             let counterBytes = (0..<8).reversed().map { UInt8(counter >> (8 * $0) & 0xff) }

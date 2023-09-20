@@ -53,7 +53,7 @@ struct LocalPassApp: App {
                     }
                     .animation(.easeInOut, value: authenticationStatus)
                 } else {
-                    SignUpView()
+                    SignUpRootView()
                         .environmentObject(authenticationViewModel)
                 }
             }
