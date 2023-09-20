@@ -33,7 +33,7 @@ struct SignUpRootView: View {
                         .padding()
                 }
                 .frame(maxWidth: .infinity)
-                .background(.ultraThinMaterial)
+                .background(.ultraThickMaterial.opacity(0.75))
                 .cornerRadius(10)
                 
                 NavigationLink {
@@ -44,18 +44,19 @@ struct SignUpRootView: View {
                         .padding()
                 }
                 .frame(maxWidth: .infinity)
-                .background(.ultraThinMaterial.opacity(0.5))
+                .background(.ultraThickMaterial.opacity(0.5))
                 .cornerRadius(10)
                 
                 NavigationLink {
                     AboutView()
+                        .navigationTitle("About LocalPass")
                 } label: {
                     Text("About LocalPass")
                         .foregroundColor(.white)
                         .padding()
                 }
                 .frame(maxWidth: .infinity)
-                .background(.ultraThinMaterial.opacity(0.25))
+                .background(.ultraThickMaterial.opacity(0.25))
                 .cornerRadius(10)
                 
             }

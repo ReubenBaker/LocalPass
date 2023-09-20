@@ -110,7 +110,7 @@ class CryptoDataService {
      
      - Returns: A derived encryption key as `SymmetricKey` or `nil` if key derivation fails.
      */
-    static func deriveKey(password: String, salt: Data, saltSize: Int = 16, hashingIterations: UInt32 = 10000) -> SymmetricKey? {
+    static func deriveKey(password: String, salt: Data, saltSize: Int = 16, hashingIterations: UInt32 = 100000) -> SymmetricKey? {
         let passwordData = Data(password.utf8)
         var derivedKey = [UInt8](repeating: 0, count: 32)
         

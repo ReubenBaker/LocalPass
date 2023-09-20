@@ -18,6 +18,7 @@ struct SettingsView: View {
                 Section(header: Text("About")) {
                     NavigationLink("About LocalPass") {
                         AboutView()
+                            .navigationTitle("About LocalPass")
                     }
                 }
                 
