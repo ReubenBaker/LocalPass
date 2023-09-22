@@ -42,6 +42,7 @@ struct AuthenticationView: View {
                 if let blob = AccountsDataService.getBlob() {
                     if let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
                         AuthenticationViewModel.shared.authenticated = true
+                        AuthenticationViewModel.shared.password = nil
                         authenticationViewModel.authenticated = true
                         authenticationViewModel.password = nil
                     } else {
@@ -90,12 +91,12 @@ struct AuthenticationView: View {
                         showBiometricsNotAllowedAlert.toggle()
                     }
                 }
+                .alert(isPresented: $showBiometricsNotAllowedAlert) {
+                    authenticationViewModel.getBiometricsNotAllowedAlert()
+                }
             }
             
             Spacer()
-        }
-        .alert(isPresented: $showBiometricsNotAllowedAlert) {
-            authenticationViewModel.getBiometricsNotAllowedAlert()
         }
         .padding()
         .background(Color("AppThemeColor"))

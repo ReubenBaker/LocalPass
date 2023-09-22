@@ -73,7 +73,7 @@ extension AccountListItemView {
                 Spacer()
                 
                 Button {
-                    GlobalHelperDataService.copyToClipboard(text: account.password)
+                    GlobalHelperDataService.copyToClipboard(account.password)
                     copyPopupOverlayViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "lock.circle.fill")

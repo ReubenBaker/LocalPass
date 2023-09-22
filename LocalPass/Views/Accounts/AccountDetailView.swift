@@ -62,10 +62,8 @@ struct AccountDetailView: View {
                 updatedDateTimeItem
                 deleteItem
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical)
         }
-        .padding(.horizontal)
+        .padding()
         .background(.ultraThinMaterial)
         .overlay(CloseButtonView(), alignment: .bottom)
         .overlay(alignment: .top) {
@@ -158,12 +156,11 @@ extension AccountDetailView {
                 Spacer()
             }
         }
-        .padding(.top, copyPopupOverlayViewModel.showCopyPopupOverlay ? 30 : 0)
     }
     
     private var usernameItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(text: account.username)
+            GlobalHelperDataService.copyToClipboard(account.username)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
@@ -172,15 +169,11 @@ extension AccountDetailView {
                         FaviconImageView(url: url)
                     } else {
                         Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(Color("AccentColor"))
+                            .ListItemImageStyle()
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                 }
                 
                 Text(account.username)
@@ -188,7 +181,6 @@ extension AccountDetailView {
                 
                 Spacer()
             }
-            .padding(.vertical, 10)
         }
         .modifier(AccountDetailViewItemStyle())
     }
@@ -196,16 +188,11 @@ extension AccountDetailView {
     private var editUsernameItem: some View {
         HStack {
             Image(systemName: "person.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             TextField("\(account.username)", text: $newUsername)
-                .frame(maxHeight: .infinity)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.leading)
-                .tint(.primary)
+                .modifier(RawTextFieldInputStyle())
+                .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .username)
                 .onTapGesture {
                     DispatchQueue.main.async {
@@ -218,14 +205,12 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(text: account.password)
+            GlobalHelperDataService.copyToClipboard(account.password)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color("AccentColor"))
+                    .ListItemImageStyle()
                 
                 Text(showPassword ? account.password : "************")
                     .fontWeight(.semibold)
@@ -236,12 +221,9 @@ extension AccountDetailView {
                     showPassword.toggle()
                 } label: {
                     Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                 }
             }
-            .padding(.vertical, 10)
         }
         .modifier(AccountDetailViewItemStyle())
     }
@@ -249,17 +231,12 @@ extension AccountDetailView {
     private var editPasswordItem: some View {
         HStack {
             Image(systemName: "lock.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             if showPassword {
                 TextField("\(account.password)", text: $newPassword)
-                    .frame(maxHeight: .infinity)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-                    .tint(.primary)
+                    .modifier(RawTextFieldInputStyle())
+                    .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
                     .onTapGesture {
                         DispatchQueue.main.async {
@@ -268,10 +245,8 @@ extension AccountDetailView {
                     }
             } else {
                 SecureField("************", text: $newPassword)
-                    .frame(maxHeight: .infinity)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-                    .tint(.primary)
+                    .modifier(RawTextFieldInputStyle())
+                    .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
                     .onTapGesture {
                         DispatchQueue.main.async {
@@ -285,29 +260,15 @@ extension AccountDetailView {
             Button {
                 showPasswordGeneratorSheet.toggle()
             } label: {
-                ZStack {
-                    Image(systemName: "circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .foregroundColor(Color("AccentColor"))
-                    
-                    Image(systemName: "key.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 15)
-                        .foregroundColor(Color("GeneralColor"))
-                }
+                Image(systemName: "gear.circle.fill")
+                    .ListItemImageStyle()
             }
             
             Button {
                 showPassword.toggle()
             } label: {
                 Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.vertical, 10)
-                    .foregroundColor(Color("AccentColor"))
+                    .ListItemImageStyle()
             }
         }
         .modifier(AccountDetailViewItemStyle())
@@ -315,21 +276,18 @@ extension AccountDetailView {
     
     private var urlItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(text: account.url ?? "")
+            GlobalHelperDataService.copyToClipboard(account.url ?? "")
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "link.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color("AccentColor"))
+                    .ListItemImageStyle()
                 
                 Text(account.url ?? "")
                     .fontWeight(.semibold)
                 
                 Spacer()
             }
-            .padding(.vertical, 10)
         }
         .modifier(AccountDetailViewItemStyle())
     }
@@ -343,16 +301,11 @@ extension AccountDetailView {
             if addUrlFieldClicked {
                 HStack() {
                     Image(systemName: "link.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                     
                     TextField("Enter url...", text: $newUrl)
-                        .frame(maxHeight: .infinity)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                        .tint(.primary)
+                        .modifier(RawTextFieldInputStyle())
+                        .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .url)
                         .onAppear {
                             DispatchQueue.main.async {
@@ -397,16 +350,11 @@ extension AccountDetailView {
     private var editUrlItem: some View {
         HStack {
             Image(systemName: "link.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             TextField("\(account.url ?? "Enter url...")", text: $newUrl)
-                .frame(maxHeight: .infinity)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.leading)
-                .tint(.primary)
+                .modifier(RawTextFieldInputStyle())
+                .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .url)
                 .onTapGesture {
                     DispatchQueue.main.async {
@@ -419,14 +367,12 @@ extension AccountDetailView {
     
     private var otpItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(text: otpValue)
+            GlobalHelperDataService.copyToClipboard(otpValue)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "repeat.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color("AccentColor"))
+                    .ListItemImageStyle()
                 
                 Text(otpValue)
                     .fontWeight(.semibold)
@@ -448,7 +394,6 @@ extension AccountDetailView {
                 
                 Spacer()
             }
-            .padding(.vertical, 10)
         }
         .modifier(AccountDetailViewItemStyle())
     }
@@ -462,16 +407,11 @@ extension AccountDetailView {
             if addTOTPFieldClicked {
                 HStack() {
                     Image(systemName: "repeat.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                     
                     TextField("Enter TOTP key...", text: $newOtpSecret)
-                        .frame(maxHeight: .infinity)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                        .tint(.primary)
+                        .modifier(RawTextFieldInputStyle())
+                        .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .otpSecret)
                         .onAppear {
                             DispatchQueue.main.async {
@@ -516,16 +456,11 @@ extension AccountDetailView {
     private var editOtpItem: some View {
         HStack {
             Image(systemName: "repeat.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             TextField("\(account.otpSecret ?? "Enter TOTP key...")", text: $newOtpSecret)
-                .frame(maxHeight: .infinity)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.leading)
-                .tint(.primary)
+                .modifier(RawTextFieldInputStyle())
+                .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .otpSecret)
                 .onTapGesture {
                     DispatchQueue.main.async {

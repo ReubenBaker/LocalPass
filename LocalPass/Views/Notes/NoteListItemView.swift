@@ -47,9 +47,7 @@ extension NoteListItemView {
         } label: {
             HStack {
                 Image(systemName: "pencil.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color("AccentColor"))
+                    .ListItemImageStyle()
                 
                 Text(note.title)
                     .font(.title3)
@@ -63,13 +61,11 @@ extension NoteListItemView {
                 Spacer()
                 
                 Button {
-                    GlobalHelperDataService.copyToClipboard(text: note.body) // Keep?
+                    GlobalHelperDataService.copyToClipboard(note.body)
                     copyPopupOverlayViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "doc.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                 }
             }
         }

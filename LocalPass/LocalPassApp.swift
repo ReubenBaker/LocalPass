@@ -63,12 +63,10 @@ struct LocalPassApp: App {
             authenticationStatus = authenticatedStatus
         }
         .onChange(of: scenePhase) { phase in
-            if phase != .active {
-                withAnimation(.easeInOut) {
+            withAnimation(.easeOut) {
+                if phase != .active {
                     privacyOverlayViewModel.showPrivacyOverlay = true
-                }
-            } else {
-                withAnimation(.easeInOut) {
+                } else {
                     privacyOverlayViewModel.showPrivacyOverlay = false
                 }
             }

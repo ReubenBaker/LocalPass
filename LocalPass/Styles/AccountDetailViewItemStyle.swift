@@ -17,6 +17,7 @@ struct AccountDetailViewItemStyle: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .padding(.vertical, 10)
             .padding(.horizontal)
             .frame(height: 50)
             .frame(minWidth: 150, maxWidth: fieldClicked ? .infinity : nil)

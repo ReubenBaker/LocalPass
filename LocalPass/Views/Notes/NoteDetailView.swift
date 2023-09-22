@@ -95,7 +95,6 @@ extension NoteDetailView {
             }
             .padding(.horizontal)
         }
-        .padding(.top, copyPopupOverlayViewModel.showCopyPopupOverlay ? 30 : 0)
     }
     
     private var editTitleItem: some View {

@@ -145,7 +145,7 @@ class CryptoDataService {
      
      - Returns: The calculated checksum as `Data`.
      */
-    static func calculateChecksum(data: Data) -> Data {
+    static func calculateChecksum(_ data: Data) -> Data {
         var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
         
         data.withUnsafeBytes { dataBytes in
@@ -172,7 +172,7 @@ class CryptoDataService {
         }
         
         let combined = salt + data
-        let checksum = calculateChecksum(data: combined)
+        let checksum = calculateChecksum(combined)
         
         if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
             if let combined = sealedBox.combined {
@@ -201,7 +201,7 @@ class CryptoDataService {
         }
         
         let combined = salt + data
-        let checksum = calculateChecksum(data: combined)
+        let checksum = calculateChecksum(combined)
         
         if let sealedBox = try? AES.GCM.seal(data + checksum, using: key) {
             if let combined = sealedBox.combined {
@@ -236,7 +236,7 @@ class CryptoDataService {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: key)
             let appendedChecksum = decryptedData.suffix(Int(CC_SHA256_DIGEST_LENGTH))
-            let expectedChecksum = calculateChecksum(data: salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
+            let expectedChecksum = calculateChecksum(salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
             
             if appendedChecksum.base64EncodedData() == expectedChecksum.base64EncodedData() {
                 return String(data: decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)), encoding: .utf8)
@@ -266,7 +266,7 @@ class CryptoDataService {
             let sealedBox = try AES.GCM.SealedBox(combined: encryptedData)
             let decryptedData = try AES.GCM.open(sealedBox, using: key)
             let appendedChecksum = decryptedData.suffix(Int(CC_SHA256_DIGEST_LENGTH))
-            let expectedChecksum = calculateChecksum(data: salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
+            let expectedChecksum = calculateChecksum(salt + decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)))
             
             if appendedChecksum.base64EncodedData() == expectedChecksum.base64EncodedData() {
                 return String(data: decryptedData.dropLast(Int(CC_SHA256_DIGEST_LENGTH)), encoding: .utf8)

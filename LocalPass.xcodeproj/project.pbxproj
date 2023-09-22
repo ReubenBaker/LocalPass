@@ -11,6 +11,10 @@
 		1B42D4252A9E78A200763016 /* FileManagerTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4242A9E78A200763016 /* FileManagerTestView.swift */; };
 		1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */; };
 		1B42D4292A9FBE5700763016 /* PasswordGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */; };
+		1B47EB942ABCF70200739463 /* RawTextFieldInputStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */; };
+		1B47EB962ABCFA1A00739463 /* ListItemImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */; };
+		1B47EB982ABDD75600739463 /* ListItemTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */; };
+		1B47EB9A2ABDD92800739463 /* SignUpReturningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB992ABDD92800739463 /* SignUpReturningView.swift */; };
 		1B523DCF2AAD381F002F94EA /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DCE2AAD381F002F94EA /* SignUpView.swift */; };
 		1B523DD12AAD384B002F94EA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD02AAD384B002F94EA /* AuthenticationView.swift */; };
 		1B523DD32AAD39D9002F94EA /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD22AAD39D9002F94EA /* AuthenticationViewModel.swift */; };
@@ -61,6 +65,10 @@
 		1B42D4242A9E78A200763016 /* FileManagerTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerTestView.swift; sourceTree = "<group>"; };
 		1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPGeneratorDataService.swift; sourceTree = "<group>"; };
 		1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorDataService.swift; sourceTree = "<group>"; };
+		1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTextFieldInputStyle.swift; sourceTree = "<group>"; };
+		1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemImageStyle.swift; sourceTree = "<group>"; };
+		1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemTextFieldStyle.swift; sourceTree = "<group>"; };
+		1B47EB992ABDD92800739463 /* SignUpReturningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpReturningView.swift; sourceTree = "<group>"; };
 		1B523DCE2AAD381F002F94EA /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		1B523DD02AAD384B002F94EA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		1B523DD22AAD39D9002F94EA /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
@@ -125,6 +133,7 @@
 			children = (
 				1B523DCE2AAD381F002F94EA /* SignUpView.swift */,
 				1BF94E472ABA6AC300B51BD6 /* SignUpRootView.swift */,
+				1B47EB992ABDD92800739463 /* SignUpReturningView.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -197,6 +206,9 @@
 				1B92619E2AB69FF400EC445D /* DeleteButtonStyle.swift */,
 				1B9261A02AB6A0F500EC445D /* AccountDetailViewItemStyle.swift */,
 				1B9261A42AB7CDAA00EC445D /* ListItemStyle.swift */,
+				1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */,
+				1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */,
+				1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -373,17 +385,20 @@
 				1BF1A7D62A8E4F7C00663733 /* LocalPassApp.swift in Sources */,
 				1B65F2882AA2529B00EC2AE8 /* NoteListItemView.swift in Sources */,
 				1B8A725C2AA7C77000BB9D13 /* AboutView.swift in Sources */,
+				1B47EB962ABCFA1A00739463 /* ListItemImageStyle.swift in Sources */,
 				1BF1A7F62A8E514700663733 /* AccountsViewModel.swift in Sources */,
 				1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */,
 				1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */,
 				1B65F2862AA2528600EC2AE8 /* AddNoteView.swift in Sources */,
 				1B65F2842AA2527A00EC2AE8 /* NotesView.swift in Sources */,
+				1B47EB942ABCF70200739463 /* RawTextFieldInputStyle.swift in Sources */,
 				1BEC56B72A9D63E3009FE9FA /* MainViewModel.swift in Sources */,
 				1B523DD52AAE8E77002F94EA /* FaviconModel.swift in Sources */,
 				1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */,
 				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,
 				1B5543432A99252300F0B703 /* PrivacyOverlayView.swift in Sources */,
 				1B65F27A2AA245A100EC2AE8 /* NoteModel.swift in Sources */,
+				1B47EB9A2ABDD92800739463 /* SignUpReturningView.swift in Sources */,
 				1B523DD32AAD39D9002F94EA /* AuthenticationViewModel.swift in Sources */,
 				1B9261A12AB6A0F500EC445D /* AccountDetailViewItemStyle.swift in Sources */,
 				1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */,
@@ -410,6 +425,7 @@
 				1B523DD12AAD384B002F94EA /* AuthenticationView.swift in Sources */,
 				1B42D4292A9FBE5700763016 /* PasswordGeneratorDataService.swift in Sources */,
 				1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */,
+				1B47EB982ABDD75600739463 /* ListItemTextFieldStyle.swift in Sources */,
 				1B95602D2AA3D951006F2AA2 /* NoteDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

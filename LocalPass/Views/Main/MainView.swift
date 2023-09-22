@@ -51,8 +51,6 @@ extension MainView {
                     }
                     .environmentObject(notesViewModel)
                     .tag(1)
-                    .toolbar(.visible, for: .tabBar)
-                    .toolbarBackground(.ultraThinMaterial, for: .tabBar)
                 
                 SettingsView()
                     .tabItem {

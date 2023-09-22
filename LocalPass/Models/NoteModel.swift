@@ -15,7 +15,7 @@ struct Note: Identifiable, Equatable {
     var starred: Bool
     
     // Identifiable
-    var id: UUID = UUID()
+    var id = UUID()
     
     // Equatable
     static func == (lhs: Note, rhs: Note) -> Bool {

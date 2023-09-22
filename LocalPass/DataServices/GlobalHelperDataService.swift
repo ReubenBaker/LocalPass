@@ -18,14 +18,14 @@ struct GlobalHelperDataService {
     }
     
     enum FocusedTextField: Hashable {
-        case username, password, url, otpSecret
+        case name, username, password, url, otpSecret
         case title, body
     }
 }
 
 // Functions
 extension GlobalHelperDataService {
-    static func copyToClipboard(text: String) {
+    static func copyToClipboard(_ text: String) {
         UIPasteboard.general.string = text
     }
 }

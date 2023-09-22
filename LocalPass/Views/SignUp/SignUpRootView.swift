@@ -37,7 +37,7 @@ struct SignUpRootView: View {
                 .cornerRadius(10)
                 
                 NavigationLink {
-                    
+                    SignUpReturningView()
                 } label: {
                     Text("Already Use LocalPass?")
                         .foregroundColor(.white)

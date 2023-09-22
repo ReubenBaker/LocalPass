@@ -24,6 +24,7 @@ struct AboutView: View {
             "🤖 Password Autofill:\nThis will make logging in to your favourite apps and websites even more convenient!",
             "♻️ Recycle Bin (Optional):\nMistakenly delete something? The recycle bin will help you recover that data securely.",
             "🔔 Password Change Reminders (Optional):\nStay secure with password change reminders at your chosen frequency.",
+            "📁 Folders:\nHelp organize your passwords and secure notes with customizable folders.",
             "💳 Secure Storage for Cards and IDs",
             "📱 Enhanced iPad Support"
         ]

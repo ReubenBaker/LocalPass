@@ -18,16 +18,12 @@ struct AddAccountView: View {
     @State private var newUrl: String = ""
     @State private var newOtpSecret: String = ""
     @State private var showPassword: Bool = false
-    @State private var urlField: Bool = false
-    @State private var otpSecretField: Bool = false
+    @State private var urlFieldClicked: Bool = false
+    @State private var TOTPFieldClicked: Bool = false
     @State private var accountSuccess: Bool = false
     @State private var showAccountSuccessAlert: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
-    @FocusState private var nameTextFieldFocused: Bool
-    @FocusState private var usernameTextFieldFocused: Bool
-    @FocusState private var passwordTextFieldFocused: Bool
-    @FocusState private var urlTextFieldFocused: Bool
-    @FocusState private var otpSecretTextFieldFocused: Bool
+    @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
         ScrollView {
@@ -40,9 +36,8 @@ struct AddAccountView: View {
                 otpItem
                 addItem
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical)
         }
+        .padding()
         .background(.ultraThinMaterial)
         .overlay(CloseButtonView(), alignment: .bottom)
         .alert(isPresented: $showAccountSuccessAlert) {
@@ -102,93 +97,63 @@ extension AddAccountView {
     private var nameItem: some View {
         HStack {
             Image(systemName: "tag.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             TextField("Enter account name...", text: $newName)
-                .frame(maxHeight: .infinity)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.leading)
-                .tint(.primary)
-                .focused($nameTextFieldFocused)
+                .modifier(ListItemTextFieldStyle())
+                .focused($focusedTextField, equals: .name)
                 .onTapGesture {
                     DispatchQueue.main.async {
-                        nameTextFieldFocused = true
+                        focusedTextField = .name
                     }
                 }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var usernameItem: some View {
         HStack {
             Image(systemName: "person.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             TextField("Enter username...", text: $newUsername)
-                .frame(maxHeight: .infinity)
-                .fontWeight(.semibold)
-                .multilineTextAlignment(.leading)
-                .tint(.primary)
-                .focused($usernameTextFieldFocused)
+                .modifier(RawTextFieldInputStyle())
+                .modifier(ListItemTextFieldStyle())
+                .focused($focusedTextField, equals: .username)
                 .onTapGesture {
                     DispatchQueue.main.async {
-                        usernameTextFieldFocused = true
+                        focusedTextField = .username
                     }
                 }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var passwordItem: some View {
         HStack {
             Image(systemName: "lock.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(.vertical, 10)
-                .foregroundColor(Color("AccentColor"))
+                .ListItemImageStyle()
             
             @State var blankPassword = ""
             
             if showPassword {
                 TextField("Enter password...", text: $newPassword)
-                    .frame(maxHeight: .infinity)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-                    .tint(.primary)
-                    .focused($passwordTextFieldFocused)
+                    .modifier(RawTextFieldInputStyle())
+                    .modifier(ListItemTextFieldStyle())
+                    .focused($focusedTextField, equals: .password)
                     .onTapGesture {
                         DispatchQueue.main.async {
-                            passwordTextFieldFocused = true
+                            focusedTextField = .password
                         }
                     }
             } else {
                 SecureField("Enter password...", text: $newPassword)
-                    .frame(maxHeight: .infinity)
-                    .fontWeight(.semibold)
-                    .multilineTextAlignment(.leading)
-                    .tint(.primary)
-                    .focused($passwordTextFieldFocused)
+                    .modifier(RawTextFieldInputStyle())
+                    .modifier(ListItemTextFieldStyle())
+                    .focused($focusedTextField, equals: .password)
                     .onTapGesture {
                         DispatchQueue.main.async {
-                            passwordTextFieldFocused = true
+                            focusedTextField = .password
                         }
                     }
             }
@@ -198,77 +163,44 @@ extension AddAccountView {
             Button {
                 showPasswordGeneratorSheet.toggle()
             } label: {
-                ZStack {
-                    Image(systemName: "circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .foregroundColor(Color("AccentColor"))
-                    
-                    Image(systemName: "key.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 15)
-                        .foregroundColor(Color("GeneralColor"))
-                }
+                Image(systemName: "gear.circle.fill")
+                    .ListItemImageStyle()
             }
             
             Button {
-                let isFocused = passwordTextFieldFocused
-                
                 showPassword.toggle()
-                
-                if isFocused {
-                    DispatchQueue.main.async {
-                        passwordTextFieldFocused = true
-                    }
-                }
             } label: {
                 Image(systemName: showPassword ? "eye.slash.circle.fill" : "eye.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.vertical, 10)
-                    .foregroundColor(Color("AccentColor"))
+                    .ListItemImageStyle()
             }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(maxWidth: .infinity)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle())
     }
     
     private var urlItem: some View {
         Button {
             withAnimation() {
-                urlField = true
+                urlFieldClicked = true
             }
         } label: {
-            if urlField {
+            if urlFieldClicked {
                 HStack() {
                     Image(systemName: "link.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                     
                     TextField("Enter url...", text: $newUrl)
-                        .frame(maxHeight: .infinity)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                        .tint(.primary)
-                        .focused($urlTextFieldFocused)
-                        .onAppear {
+                        .modifier(RawTextFieldInputStyle())
+                        .modifier(ListItemTextFieldStyle())
+                        .focused($focusedTextField, equals: .url)
+                        .onTapGesture {
                             DispatchQueue.main.async {
-                                urlTextFieldFocused = true
+                                focusedTextField = .url
                             }
                         }
                     
                     Button {
                         withAnimation() {
-                            urlField = false
+                            urlFieldClicked = false
                             newUrl = ""
                         }
                     } label: {
@@ -280,44 +212,33 @@ extension AddAccountView {
                 Text("Add URL")
             }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(minWidth: 150, maxWidth: urlField ? .infinity : nil)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle(fieldClicked: urlFieldClicked))
     }
     
     private var otpItem: some View {
         Button {
             withAnimation() {
-                otpSecretField = true
+                TOTPFieldClicked = true
             }
         } label: {
-            if otpSecretField {
+            if TOTPFieldClicked {
                 HStack() {
                     Image(systemName: "repeat.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                     
                     TextField("Enter TOTP key...", text: $newOtpSecret)
-                        .frame(maxHeight: .infinity)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                        .tint(.primary)
-                        .focused($otpSecretTextFieldFocused)
-                        .onAppear {
+                        .modifier(RawTextFieldInputStyle())
+                        .modifier(ListItemTextFieldStyle())
+                        .focused($focusedTextField, equals: .otpSecret)
+                        .onTapGesture {
                             DispatchQueue.main.async {
-                                otpSecretTextFieldFocused = true
+                                focusedTextField = .otpSecret
                             }
                         }
                     
                     Button {
                         withAnimation() {
-                            otpSecretField = false
+                            TOTPFieldClicked = false
                             newOtpSecret = ""
                         }
                     } label: {
@@ -329,13 +250,7 @@ extension AddAccountView {
                 Text("Setup TOTP")
             }
         }
-        .foregroundColor(.primary)
-        .padding(.horizontal)
-        .frame(height: mainViewModel.viewItemHeight)
-        .frame(minWidth: 150, maxWidth: otpSecretField ? .infinity : nil)
-        .background(Color("GeneralColor"))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .modifier(AccountDetailViewItemStyle(fieldClicked: TOTPFieldClicked))
     }
     
     private var addItem: some View {
