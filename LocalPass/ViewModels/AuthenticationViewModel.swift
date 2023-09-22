@@ -19,7 +19,7 @@ class AuthenticationViewModel: ObservableObject {
     func getIncorrectPasswordAlert() -> Alert {
         let title: Text = Text("Your password was incorrect!")
         let message: Text = Text("Please try again")
-        let dismissButton: Alert.Button = .default(Text("OK"))
+        let dismissButton: Alert.Button = .default(Text("😢"))
         
         return Alert(
             title: title,

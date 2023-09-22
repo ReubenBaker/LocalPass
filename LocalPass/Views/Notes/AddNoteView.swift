@@ -10,7 +10,6 @@ import SwiftUI
 struct AddNoteView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @State private var newTitle: String = ""
     @State private var newBody: String = ""
@@ -39,11 +38,9 @@ struct AddNoteView: View {
 
 struct AddNoteView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         
         AddNoteView()
-            .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
     }
 }

@@ -25,9 +25,9 @@ class AccountsViewModel: ObservableObject {
         let accounts = AccountsDataService.getAccountData()
         self.accounts = accounts
         
-//        if accounts == nil {
-//            self.accounts = AccountTestDataService.accounts // REMOVE!
-//        }
+        if accounts == nil {
+            self.accounts = AccountTestDataService.accounts // REMOVE!
+        }
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) -> Bool {
@@ -67,8 +67,8 @@ class AccountsViewModel: ObservableObject {
         let title: Text = Text("Are you sure you want to delete this account?")
         let message: Text = Text("This action cannot be undone!")
         let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
-            if self.accountToDelete != nil {
-                self.deleteAccount(account: self.accountToDelete!)
+            if let account = self.accountToDelete {
+                self.deleteAccount(account: account)
                 self.accountToDelete = nil
             }
         })

@@ -11,7 +11,6 @@ struct AccountDetailView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
@@ -107,13 +106,11 @@ struct AccountDetailView: View {
 // Preview
 struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @State var account = Account(name: "default", username: "default", password: "default")
         
         AccountDetailView(account: $account)
-            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
     }

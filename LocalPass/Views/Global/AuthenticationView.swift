@@ -24,13 +24,8 @@ struct AuthenticationView: View {
                 get: { authenticationViewModel.password ?? "" },
                 set: { authenticationViewModel.password = $0 }
             ))
-            .frame(maxWidth: .infinity)
-            .padding()
-            .fontWeight(.semibold)
-            .multilineTextAlignment(.leading)
-            .tint(.primary)
-            .background(Color("GeneralColor"))
-            .cornerRadius(10)
+            .modifier(AuthenticationTextFieldStyle())
+            .padding(.top)
             .focused($passwordFieldFocused)
             .onTapGesture {
                 DispatchQueue.main.async {
@@ -39,8 +34,8 @@ struct AuthenticationView: View {
             }
             
             Button {
-                if let blob = AccountsDataService.getBlob() {
-                    if let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
+                if let blob = AccountsDataService.getBlob(),
+                   let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
                         AuthenticationViewModel.shared.authenticated = true
                         AuthenticationViewModel.shared.password = nil
                         authenticationViewModel.rotateKey()
@@ -48,7 +43,6 @@ struct AuthenticationView: View {
                         authenticationViewModel.password = nil
                     } else {
                         showIncorrectPasswordAlert.toggle()
-                    }
                 }
             } label: {
                 Image("AppIconImageRoundedCorners")
@@ -62,20 +56,17 @@ struct AuthenticationView: View {
                 Button {
                     CryptoDataService.authenticateWithBiometrics { success in
                         if success {
-                            if let blob = NotesDataService.getBlob() {
-                                if let tag = Bundle.main.bundleIdentifier {
-                                    if let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
-                                        if let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
-                                            AuthenticationViewModel.shared.authenticatedWithBiometrics = true
-                                            AuthenticationViewModel.shared.authenticated = true
-                                            authenticationViewModel.authenticatedWithBiometrics = true
-                                            authenticationViewModel.authenticated = true
-                                        } else {
-                                            showBiometricsNotAllowedAlert.toggle()
-                                            LocalPassApp.settings.biometricsAllowed = false
-                                        }
-                                    }
-                                }
+                            if let blob = NotesDataService.getBlob(),
+                               let tag = Bundle.main.bundleIdentifier,
+                               let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
+                               let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
+                                    AuthenticationViewModel.shared.authenticatedWithBiometrics = true
+                                    AuthenticationViewModel.shared.authenticated = true
+                                    authenticationViewModel.authenticatedWithBiometrics = true
+                                    authenticationViewModel.authenticated = true
+                                } else {
+                                    showBiometricsNotAllowedAlert.toggle()
+                                    LocalPassApp.settings.biometricsAllowed = false
                             }
                         }
                     }

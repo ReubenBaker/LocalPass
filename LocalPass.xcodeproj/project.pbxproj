@@ -15,6 +15,7 @@
 		1B47EB962ABCFA1A00739463 /* ListItemImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */; };
 		1B47EB982ABDD75600739463 /* ListItemTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */; };
 		1B47EB9A2ABDD92800739463 /* SignUpReturningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB992ABDD92800739463 /* SignUpReturningView.swift */; };
+		1B47EB9C2ABE210500739463 /* AuthenticationTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB9B2ABE210500739463 /* AuthenticationTextFieldStyle.swift */; };
 		1B523DCF2AAD381F002F94EA /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DCE2AAD381F002F94EA /* SignUpView.swift */; };
 		1B523DD12AAD384B002F94EA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD02AAD384B002F94EA /* AuthenticationView.swift */; };
 		1B523DD32AAD39D9002F94EA /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD22AAD39D9002F94EA /* AuthenticationViewModel.swift */; };
@@ -42,7 +43,6 @@
 		1B9261A52AB7CDAA00EC445D /* ListItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9261A42AB7CDAA00EC445D /* ListItemStyle.swift */; };
 		1B95602D2AA3D951006F2AA2 /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B95602C2AA3D951006F2AA2 /* NoteDetailView.swift */; };
 		1BA317DF2A96DDBD00368EDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BA317DE2A96DDBD00368EDB /* LaunchScreen.storyboard */; };
-		1BEC56B72A9D63E3009FE9FA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56B62A9D63E3009FE9FA /* MainViewModel.swift */; };
 		1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */; };
 		1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */; };
 		1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */; };
@@ -69,6 +69,7 @@
 		1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemImageStyle.swift; sourceTree = "<group>"; };
 		1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemTextFieldStyle.swift; sourceTree = "<group>"; };
 		1B47EB992ABDD92800739463 /* SignUpReturningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpReturningView.swift; sourceTree = "<group>"; };
+		1B47EB9B2ABE210500739463 /* AuthenticationTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationTextFieldStyle.swift; sourceTree = "<group>"; };
 		1B523DCE2AAD381F002F94EA /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		1B523DD02AAD384B002F94EA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		1B523DD22AAD39D9002F94EA /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
@@ -98,7 +99,6 @@
 		1BA317DE2A96DDBD00368EDB /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1BCA01772AA7B42500CB5889 /* LocalPass.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LocalPass.entitlements; sourceTree = "<group>"; };
 		1BCA017C2AA7BC8D00CB5889 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1BEC56B62A9D63E3009FE9FA /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
 		1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayViewModel.swift; sourceTree = "<group>"; };
 		1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyOverlayViewModel.swift; sourceTree = "<group>"; };
@@ -170,6 +170,7 @@
 				1B523DD02AAD384B002F94EA /* AuthenticationView.swift */,
 				1B523DD62AAE9D17002F94EA /* FaviconImageView.swift */,
 				1B92619C2AB69EE300EC445D /* CloseButtonView.swift */,
+				1B8A725B2AA7C77000BB9D13 /* AboutView.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -186,7 +187,6 @@
 			isa = PBXGroup;
 			children = (
 				1BF1A7F72A8E557800663733 /* SettingsView.swift */,
-				1B8A725B2AA7C77000BB9D13 /* AboutView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -209,6 +209,7 @@
 				1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */,
 				1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */,
 				1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */,
+				1B47EB9B2ABE210500739463 /* AuthenticationTextFieldStyle.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -283,7 +284,6 @@
 			isa = PBXGroup;
 			children = (
 				1BF1A7F52A8E514700663733 /* AccountsViewModel.swift */,
-				1BEC56B62A9D63E3009FE9FA /* MainViewModel.swift */,
 				1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */,
 				1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */,
 				1B65F27B2AA2472C00EC2AE8 /* NotesViewModel.swift */,
@@ -390,9 +390,9 @@
 				1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */,
 				1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */,
 				1B65F2862AA2528600EC2AE8 /* AddNoteView.swift in Sources */,
+				1B47EB9C2ABE210500739463 /* AuthenticationTextFieldStyle.swift in Sources */,
 				1B65F2842AA2527A00EC2AE8 /* NotesView.swift in Sources */,
 				1B47EB942ABCF70200739463 /* RawTextFieldInputStyle.swift in Sources */,
-				1BEC56B72A9D63E3009FE9FA /* MainViewModel.swift in Sources */,
 				1B523DD52AAE8E77002F94EA /* FaviconModel.swift in Sources */,
 				1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */,
 				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,

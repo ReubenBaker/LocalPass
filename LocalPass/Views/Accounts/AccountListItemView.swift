@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AccountListItemView: View {
     
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
@@ -27,13 +26,11 @@ struct AccountListItemView: View {
 // Preview
 struct AccountListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @State var account = Account(name: "default", username: "default", password: "default", url: "apple.com")
         
         AccountListItemView(account: $account)
-            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
     }

@@ -36,14 +36,7 @@ struct SignUpReturningView: View {
                 get: { password ?? "" },
                 set: { password = $0 }
             ))
-            .frame(maxWidth: .infinity)
-            .padding()
-            .fontWeight(.semibold)
-            .multilineTextAlignment(.leading)
-            .tint(.primary)
-            .background(Color("GeneralColor"))
-            .cornerRadius(10)
-            .padding(.bottom)
+            .modifier(AuthenticationTextFieldStyle())
             .focused($passwordFieldFocused)
             .onTapGesture {
                 DispatchQueue.main.async {

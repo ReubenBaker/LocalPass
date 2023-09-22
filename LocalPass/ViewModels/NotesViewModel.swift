@@ -64,8 +64,8 @@ class NotesViewModel: ObservableObject {
         let title: Text = Text("Are you sure you want to delete this note?")
         let message: Text = Text("This action cannot be undone!")
         let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
-            if self.noteToDelete != nil {
-                self.deleteNote(note: self.noteToDelete!)
+            if let note = self.noteToDelete {
+                self.deleteNote(note: note)
                 self.noteToDelete = nil
             }
         })

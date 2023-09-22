@@ -67,6 +67,7 @@ struct AboutView: View {
                             .font(.headline)
                     }
                 }
+                .frame(maxWidth: .infinity)
                 
                 Text("Thank you for using LocalPass! 🤩")
                     .font(.title3)
@@ -150,12 +151,18 @@ struct AboutView: View {
                         }
                     }
                 }
+                
+                Spacer()
+                    .frame(height: 75)
             }
             .frame(maxWidth: .infinity)
             .padding()
         }
         .background(Color("AppThemeColor"))
         .foregroundColor(.white)
+        .overlay(alignment: .bottom) {
+            CloseButtonView()
+        }
     }
 }
 

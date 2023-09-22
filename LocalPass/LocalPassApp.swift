@@ -28,7 +28,6 @@ import SwiftUI
 struct LocalPassApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var mainViewModel = MainViewModel()
     @StateObject private var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
     @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     @StateObject private var authenticationViewModel = AuthenticationViewModel()
@@ -42,7 +41,6 @@ struct LocalPassApp: App {
                     ZStack {
                         if authenticationStatus {
                             MainView()
-                                .environmentObject(mainViewModel)
                                 .environmentObject(copyPopupOverlayViewModel)
                                 .environmentObject(privacyOverlayViewModel)
                                 .environmentObject(authenticationViewModel)

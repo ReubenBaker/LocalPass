@@ -11,7 +11,6 @@ struct NoteDetailView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var note: Note
@@ -70,13 +69,11 @@ struct NoteDetailView: View {
 // Preview
 struct NoteDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @State var note = Note(title: "default", body: "default")
         
         NoteDetailView(note: $note)
-            .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
             .environmentObject(copyPopupOverlayViewModel)
     }

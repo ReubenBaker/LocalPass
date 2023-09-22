@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NoteListItemView: View {
     
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var note: Note
@@ -27,13 +26,11 @@ struct NoteListItemView: View {
 // Preview
 struct NoteListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var notesViewModel = NotesViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @State var note = Note(title: "Test Title", body: "Test Body")
         
         NoteListItemView(note: $note)
-            .environmentObject(mainViewModel)
             .environmentObject(notesViewModel)
             .environmentObject(copyPopupOverlayViewModel)
     }

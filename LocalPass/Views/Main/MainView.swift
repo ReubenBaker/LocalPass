@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MainView: View {
     
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var selectedTab: Int = 0
@@ -22,12 +21,10 @@ struct MainView: View {
 // Preview
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         MainView()
-            .environmentObject(mainViewModel)
             .environmentObject(copyPopupOverlayViewModel)
             .environmentObject(privacyOverlayViewModel)
     }

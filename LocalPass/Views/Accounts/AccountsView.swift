@@ -44,13 +44,11 @@ struct AccountsView: View {
 // Preview
 struct AccountsView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @StateObject var privacyOverlayViewModel = PrivacyOverlayViewModel()
         
         AccountsView()
-            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
             .environmentObject(copyPopupOverlayViewModel)
             .environmentObject(privacyOverlayViewModel)
@@ -74,32 +72,32 @@ extension AccountsView {
              if let accounts = accountsViewModel.accounts {
                  ForEach(accounts) { account in
                      AccountListItemView(account: Binding.constant(account))
-                        .overlay(PrivacyOverlayView())
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button {
-                                accountsViewModel.accountToDelete = account
-                                showDeleteAlert.toggle()
-                            } label: {
-                                Image(systemName: "trash.fill")
-                            }
-                            .tint(.red)
-                            
-                            if let index = accountsViewModel.accounts?.firstIndex(where: { $0.id == account.id }) {
-                                Button {
-                                    accountsViewModel.accounts?[index].starred.toggle()
-                                    accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
-                                } label: {
-                                    Image(systemName: "star")
-                                }
-                                .tint(.yellow)
-                            }
-                        }
-                    
-                   Spacer()
-                        .listRowSeparator(.hidden)
-                        .moveDisabled(true)
+                         .overlay(PrivacyOverlayView())
+                         .listRowSeparator(.hidden)
+                         .listRowInsets(EdgeInsets())
+                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                             Button {
+                                 accountsViewModel.accountToDelete = account
+                                 showDeleteAlert.toggle()
+                             } label: {
+                                 Image(systemName: "trash.fill")
+                             }
+                             .tint(.red)
+                             
+                             if let index = accountsViewModel.accounts?.firstIndex(where: { $0.id == account.id }) {
+                                 Button {
+                                     accountsViewModel.accounts?[index].starred.toggle()
+                                     accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
+                                 } label: {
+                                     Image(systemName: "star")
+                                 }
+                                 .tint(.yellow)
+                             }
+                         }
+                     
+                     Spacer()
+                         .listRowSeparator(.hidden)
+                         .moveDisabled(true)
                  }
              }
         }

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SignUpRootView: View {
+    
+    @State private var showAboutView: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -47,9 +50,8 @@ struct SignUpRootView: View {
                 .background(.ultraThickMaterial.opacity(0.5))
                 .cornerRadius(10)
                 
-                NavigationLink {
-                    AboutView()
-                        .navigationTitle("About LocalPass")
+                Button {
+                    showAboutView.toggle()
                 } label: {
                     Text("About LocalPass")
                         .foregroundColor(.white)
@@ -58,7 +60,9 @@ struct SignUpRootView: View {
                 .frame(maxWidth: .infinity)
                 .background(.ultraThickMaterial.opacity(0.25))
                 .cornerRadius(10)
-                
+                .fullScreenCover(isPresented: $showAboutView) {
+                    AboutView()
+                }
             }
             .frame(maxWidth: .infinity)
             .padding()

@@ -10,7 +10,6 @@ import SwiftUI
 struct AddAccountView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var mainViewModel: MainViewModel
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var newName: String = ""
     @State private var newUsername: String = ""
@@ -53,11 +52,9 @@ struct AddAccountView: View {
 // Preview
 struct AddAccountView_Previews: PreviewProvider {
     static var previews: some View {
-        @StateObject var mainViewModel = MainViewModel()
         @StateObject var accountsViewModel = AccountsViewModel()
         
         AddAccountView()
-            .environmentObject(mainViewModel)
             .environmentObject(accountsViewModel)
     }
 }

@@ -28,14 +28,7 @@ struct SignUpView: View {
                 get: { password ?? "" },
                 set: { password = $0 }
             ))
-            .frame(maxWidth: .infinity)
-            .padding()
-            .fontWeight(.semibold)
-            .multilineTextAlignment(.leading)
-            .tint(.primary)
-            .background(Color("GeneralColor"))
-            .cornerRadius(10)
-            .padding(.bottom)
+            .modifier(AuthenticationTextFieldStyle())
             .focused($passwordFieldFocused)
             .onTapGesture {
                 DispatchQueue.main.async {
@@ -47,14 +40,7 @@ struct SignUpView: View {
                 get: { passwordConfirmation ?? "" },
                 set: { passwordConfirmation = $0 }
             ))
-            .frame(maxWidth: .infinity)
-            .padding()
-            .fontWeight(.semibold)
-            .multilineTextAlignment(.leading)
-            .tint(.primary)
-            .background(Color("GeneralColor"))
-            .cornerRadius(10)
-            .padding(.bottom)
+            .modifier(AuthenticationTextFieldStyle())
             .focused($passwordConfirmationFieldFocused)
             .onTapGesture {
                 DispatchQueue.main.async {
@@ -139,6 +125,7 @@ extension SignUpView {
                 if let password = self.password {
                     if let key = CryptoDataService.deriveKey(password: password, salt: salt) {
                         self.password = nil
+                        self.passwordConfirmation = nil
                         
                         if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                             if CryptoDataService.setkey(key: key, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {

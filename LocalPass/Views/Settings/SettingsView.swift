@@ -11,14 +11,19 @@ import LocalAuthentication
 struct SettingsView: View {
     
     @StateObject private var settings = LocalPassApp.settings
+    @State private var showAboutView: Bool = false
     
     var body: some View {
         NavigationStack {
             List {
                 Section(header: Text("About")) {
-                    NavigationLink("About LocalPass") {
+                    Button {
+                        showAboutView.toggle()
+                    } label: {
+                        Text("About LocalPass")
+                    }
+                    .fullScreenCover(isPresented: $showAboutView) {
                         AboutView()
-                            .navigationTitle("About LocalPass")
                     }
                 }
                 
