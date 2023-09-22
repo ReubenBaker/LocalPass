@@ -140,9 +140,10 @@ extension SignUpView {
                     if let key = CryptoDataService.deriveKey(password: password, salt: salt) {
                         self.password = nil
                         
-                        if CryptoDataService.deleteKeyFromSecureEnclave(tag: tag) {
-                            if CryptoDataService.writeKeyToSecureEnclave(key: key, tag: tag) {
+                        if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
+                            if CryptoDataService.setkey(key: key, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                                 if createFiles(key: key, salt: salt) {
+                                    AuthenticationViewModel.shared.authenticated = true
                                     authenticationViewModel.authenticated = true
                                     LocalPassApp.settings.signedUp = true
                                 }
@@ -160,7 +161,7 @@ extension SignUpView {
         let notesPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
         
         if let tag = Bundle.main.bundleIdentifier {
-            if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+            if let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                 if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
                     do {
                         try encryptedBlob.write(to: accountsPath, options: .atomic)

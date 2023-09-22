@@ -12,13 +12,7 @@ class AuthenticationViewModel: ObservableObject {
     static var shared = AuthenticationViewModel()
     
     @Published var password: String? = nil
-    @Published var authenticated: Bool = false {
-        didSet {
-            if authenticated && !authenticatedWithBiometrics {
-                rotateKey()
-            }
-        }
-    }
+    @Published var authenticated: Bool = false
     
     @Published var authenticatedWithBiometrics: Bool = false
     
@@ -54,8 +48,8 @@ class AuthenticationViewModel: ObservableObject {
             if let salt = CryptoDataService.generateRandomSalt() {
                 if let newKey = CryptoDataService.deriveKey(password: password, salt: salt) {
                     if let tag = Bundle.main.bundleIdentifier {
-                        if CryptoDataService.deleteKeyFromSecureEnclave(tag: tag) {
-                            if CryptoDataService.writeKeyToSecureEnclave(key: newKey, tag: tag) {
+                        if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
+                            if CryptoDataService.setkey(key: newKey, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                                 do {
                                     try AccountsDataService.saveData(accounts, salt: salt)
                                     try NotesDataService.saveData(notes, salt: salt)

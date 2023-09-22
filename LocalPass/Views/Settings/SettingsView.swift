@@ -27,9 +27,15 @@ struct SettingsView: View {
                         .onChange(of: settings.iCloudSync) { newValue in
                             LocalPassApp.settings.iCloudSync = newValue
                             
+                            if let tag = Bundle.main.bundleIdentifier {
+                                if let currentKey = CryptoDataService.readKey(tag: tag) {
+                                    _ = CryptoDataService.deleteKey(tag: tag, iCloudSync: true)
+                                    _ = CryptoDataService.setkey(key: currentKey, tag: tag, iCloudSync: newValue)
+                                }
+                            }
+                            
                             if newValue == true {
                                 do {
-                                    _ = AccountsDataService.init()
                                     try AccountsDataService.saveData(AccountsDataService.getAccountData())
                                     try NotesDataService.saveData(NotesDataService.getNoteData())
                                 } catch {

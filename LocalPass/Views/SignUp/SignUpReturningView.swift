@@ -54,7 +54,14 @@ struct SignUpReturningView: View {
             Button {
                 LocalPassApp.settings.iCloudSync = true
                 
-                
+                if retrieveiCloudData() {
+                    AuthenticationViewModel.shared.authenticated = true
+                    authenticationViewModel.authenticated = true
+                    LocalPassApp.settings.signedUp = true
+                } else {
+                    showInvalidPasswordAlert.toggle()
+                    LocalPassApp.settings.iCloudSync = false
+                }
             } label: {
                 Image("AppIconImageRoundedCorners")
                     .resizable()
@@ -83,7 +90,11 @@ struct SignUpReturningView_Previews: PreviewProvider {
 extension SignUpReturningView {
     private func retrieveiCloudData() -> Bool {
         if let password = self.password {
-            
+            if let blob = AccountsDataService.getBlob() {
+                if let _ = CryptoDataService.decryptBlob(blob: blob, password: password) {
+                    return true
+                }
+            }
         }
         
         return false

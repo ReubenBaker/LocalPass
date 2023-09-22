@@ -13,33 +13,21 @@ class AccountsDataService {
     static private let initializationGroup = DispatchGroup()
     
     static func getBlob() -> Data? {
-        do {
-            var blob = try Data(contentsOf: localPath)
-            
-            if LocalPassApp.settings.iCloudSync {
-                initializationGroup.wait()
-                
-                var iCloudBlob: Data? = nil
-                
-                getiCloudPath { iCloudPath in
-                    if let path = iCloudPath {
-                        do {
-                            iCloudBlob = try Data(contentsOf: path)
-                        } catch {
-                            print("Couldn't retreive iCloud blob: \(error)")
-                        }
-                        
-                        if iCloudBlob != nil {
-                            blob = iCloudBlob ?? blob
-                        }
-                    }
+        var blob = try? Data(contentsOf: localPath)
+        
+        if LocalPassApp.settings.iCloudSync {
+            getiCloudPath { iCloudPath in
+                if let path = iCloudPath {
+                    let iCloudBlob = try? Data(contentsOf: path)
+                    
+                    blob = iCloudBlob ?? blob
                 }
             }
             
-            return blob
-        } catch {
-            return nil
+            initializationGroup.wait()
         }
+        
+        return blob
     }
     
     static func formatForSave(_ accounts: [Account]?) -> String {
@@ -68,7 +56,7 @@ class AccountsDataService {
     static func parseData(_ blob: Data?) -> [Account]? {
         if let blob = blob {
             if let tag = Bundle.main.bundleIdentifier {
-                if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                if let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                     if let decryptedBlob = CryptoDataService.decryptBlob(blob: blob, key: key) {
                         if decryptedBlob == "empty" {
                             return nil
@@ -117,7 +105,7 @@ class AccountsDataService {
             let blob = formatForSave(accounts)
             
             if let tag = Bundle.main.bundleIdentifier {
-                if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                if let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                     if let originalData = getBlob() {
                         let salt = salt ?? originalData.prefix(16)
                         
@@ -125,8 +113,6 @@ class AccountsDataService {
                             try encryptedBlob.write(to: localPath, options: .atomic)
                             
                             if LocalPassApp.settings.iCloudSync {
-                                initializationGroup.wait()
-                                
                                 getiCloudPath { iCloudPath in
                                     if let path = iCloudPath {
                                         do {
@@ -136,6 +122,8 @@ class AccountsDataService {
                                         }
                                     }
                                 }
+                                
+                                initializationGroup.wait()
                             }
                         }
                     }
@@ -161,8 +149,6 @@ class AccountsDataService {
     }
     
     static func removeiCloudData() {
-        initializationGroup.wait()
-        
         getiCloudPath { iCloudPath in
             if let path = iCloudPath {
                 do {
@@ -172,5 +158,7 @@ class AccountsDataService {
                 }
             }
         }
+        
+        initializationGroup.wait()
     }
 }

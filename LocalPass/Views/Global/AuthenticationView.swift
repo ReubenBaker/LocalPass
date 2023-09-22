@@ -43,6 +43,7 @@ struct AuthenticationView: View {
                     if let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
                         AuthenticationViewModel.shared.authenticated = true
                         AuthenticationViewModel.shared.password = nil
+                        authenticationViewModel.rotateKey()
                         authenticationViewModel.authenticated = true
                         authenticationViewModel.password = nil
                     } else {
@@ -63,7 +64,7 @@ struct AuthenticationView: View {
                         if success {
                             if let blob = NotesDataService.getBlob() {
                                 if let tag = Bundle.main.bundleIdentifier {
-                                    if let key = CryptoDataService.readKeyFromSecureEnclave(tag: tag) {
+                                    if let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
                                         if let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
                                             AuthenticationViewModel.shared.authenticatedWithBiometrics = true
                                             AuthenticationViewModel.shared.authenticated = true
