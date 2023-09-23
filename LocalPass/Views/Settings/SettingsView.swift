@@ -28,27 +28,34 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("iCloud Sync", isOn: $settings.iCloudSync)
+                    Toggle("iCloud Sync (Beta)", isOn: $settings.iCloudSync)
                         .onChange(of: settings.iCloudSync) { newValue in
-                            LocalPassApp.settings.iCloudSync = newValue
-                            
-                            if let tag = Bundle.main.bundleIdentifier {
-                                if let currentKey = CryptoDataService.readKey(tag: tag) {
-                                    _ = CryptoDataService.deleteKey(tag: tag, iCloudSync: true)
-                                    _ = CryptoDataService.setkey(key: currentKey, tag: tag, iCloudSync: newValue)
+                            if let accounts = AccountsDataService.getAccountData(),
+                               let notes = NotesDataService.getNoteData(),
+                               let blob = AccountsDataService.getBlob() {
+                                
+                                let salt = blob.prefix(16)
+                                
+                                LocalPassApp.settings.iCloudSync = newValue
+                                
+                                if let tag = Bundle.main.bundleIdentifier {
+                                    if let currentKey = CryptoDataService.readKey(tag: tag) {
+                                        _ = CryptoDataService.deleteKey(tag: tag, iCloudSync: true)
+                                        _ = CryptoDataService.setkey(key: currentKey, tag: tag, iCloudSync: newValue)
+                                    }
                                 }
-                            }
-                            
-                            if newValue == true {
-                                do {
-                                    try AccountsDataService.saveData(AccountsDataService.getAccountData())
-                                    try NotesDataService.saveData(NotesDataService.getNoteData())
-                                } catch {
-                                    print("Error writing data to iCloud: \(error)")
+                                
+                                if newValue == true {
+                                    do {
+                                        try AccountsDataService.saveData(accounts, salt: salt)
+                                        try NotesDataService.saveData(notes, salt: salt)
+                                    } catch {
+                                        print("Error writing data to iCloud: \(error)")
+                                    }
+                                } else {
+                                    AccountsDataService.removeiCloudData()
+                                    NotesDataService.removeiCloudData()
                                 }
-                            } else {
-                                AccountsDataService.removeiCloudData()
-                                NotesDataService.removeiCloudData()
                             }
                         }
                     

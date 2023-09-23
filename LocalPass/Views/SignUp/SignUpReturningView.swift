@@ -29,6 +29,9 @@ struct SignUpReturningView: View {
                 
                 Label("Make sure you enter the same password used for LocalPass on your other devices!", systemImage: "exclamationmark.circle.fill")
                     .foregroundColor(.yellow)
+                
+                Label("iCloud sync is currently in beta and may produce unexpected results!", systemImage: "exclamationmark.circle.fill")
+                    .foregroundColor(.yellow)
             }
             .padding(.vertical)
             
@@ -84,6 +87,7 @@ extension SignUpReturningView {
     private func retrieveiCloudData() -> Bool {
         if let password = self.password {
             if let blob = AccountsDataService.getBlob() {
+                print(blob)
                 if let _ = CryptoDataService.decryptBlob(blob: blob, password: password) {
                     return true
                 }

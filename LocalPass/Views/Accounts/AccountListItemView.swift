@@ -48,15 +48,11 @@ extension AccountListItemView {
                         FaviconImageView(url: url)
                     } else {
                         Image(systemName: "person.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(Color("AccentColor"))
+                            .ListItemImageStyle()
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                 }
                 
                 Text(account.name)
@@ -74,9 +70,7 @@ extension AccountListItemView {
                     copyPopupOverlayViewModel.displayCopyPopupOverlay()
                 } label: {
                     Image(systemName: "lock.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(Color("AccentColor"))
+                        .ListItemImageStyle()
                 }
             }
         }

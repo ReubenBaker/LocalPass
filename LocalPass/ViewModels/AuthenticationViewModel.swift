@@ -13,7 +13,6 @@ class AuthenticationViewModel: ObservableObject {
     
     @Published var password: String? = nil
     @Published var authenticated: Bool = false
-    
     @Published var authenticatedWithBiometrics: Bool = false
     
     func getIncorrectPasswordAlert() -> Alert {
@@ -45,21 +44,18 @@ class AuthenticationViewModel: ObservableObject {
             let accounts = AccountsDataService.getAccountData()
             let notes = NotesDataService.getNoteData()
          
-            if let salt = CryptoDataService.generateRandomSalt() {
-                if let newKey = CryptoDataService.deriveKey(password: password, salt: salt) {
-                    if let tag = Bundle.main.bundleIdentifier {
-                        if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
-                            if CryptoDataService.setkey(key: newKey, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
-                                do {
-                                    try AccountsDataService.saveData(accounts, salt: salt)
-                                    try NotesDataService.saveData(notes, salt: salt)
-                                } catch {
-                                    print("Error rewriting data with new key: \(error)")
-                                }
-                            }
+            if let salt = CryptoDataService.generateRandomSalt(),
+               let newKey = CryptoDataService.deriveKey(password: password, salt: salt),
+               let tag = Bundle.main.bundleIdentifier {
+                    if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync)
+                    && CryptoDataService.setkey(key: newKey, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
+                        do {
+                            try AccountsDataService.saveData(accounts, salt: salt)
+                            try NotesDataService.saveData(notes, salt: salt)
+                        } catch {
+                            print("Error rewriting data with new key: \(error)")
                         }
                     }
-                }
             }
         }
     }

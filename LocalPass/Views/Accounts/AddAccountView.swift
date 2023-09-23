@@ -131,8 +131,6 @@ extension AddAccountView {
             Image(systemName: "lock.circle.fill")
                 .ListItemImageStyle()
             
-            @State var blankPassword = ""
-            
             if showPassword {
                 TextField("Enter password...", text: $newPassword)
                     .modifier(RawTextFieldInputStyle())

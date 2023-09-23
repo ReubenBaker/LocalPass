@@ -13,10 +13,10 @@ struct SignUpView: View {
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     @State private var password: String? = nil
     @State private var passwordConfirmation: String? = nil
-    @FocusState private var passwordFieldFocused: Bool
-    @FocusState private var passwordConfirmationFieldFocused: Bool
     @State private var showInvalidPasswordAlert: Bool = false
     @State private var showPasswordMismatchAlert: Bool = false
+    @FocusState private var passwordFieldFocused: Bool
+    @FocusState private var passwordConfirmationFieldFocused: Bool
     
     var body: some View {
         VStack {

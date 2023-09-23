@@ -35,10 +35,8 @@ class Settings: ObservableObject {
             UserDefaults.standard.set(useBiometrics, forKey: "useBiometrics")
             
             if useBiometrics == true && LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-                useBiometrics = true
                 biometricsAllowed = true
             } else {
-                useBiometrics = false
                 biometricsAllowed = false
             }
         }

@@ -12,10 +12,10 @@ struct AboutView: View {
         let features: [String] = [
             "🔐 Data Encryption:\nAll of your data is always encrypted, using strong AES encryption. Your sensitive information remains indecipherable to anyone without the encryption key",
             "🔑 PBKDF2 Hashing:\nLocalPass employs industry-standard PBKDF2 password hashing algorithms to ensure that your master password is securely transformed into the encryption key, making it virtually impossible for anyone to reverse engineer. The encryption key is also rotated every time you enter your password.",
-            "🗒️ Secure Notes:\nIn addition to password management, LocalPass allows you to store secure notes. Personal information, PINs, and other sensitive data are all encrypted, giving you peace of mind.",
+            "🗒️ Secure Notes:\nIn addition to password management, LocalPass allows you to store secure notes. Personal information, and other sensitive data are all encrypted, giving you peace of mind.",
             "🔒 Biometric Authentication:\nAccess your data with ease using biometric authentication, ensuring a seamless and secure experience.",
             "🔄 TOTP Support:\nLocalPass supports Time-Based One-Time Passwords (TOTP) for multifactor authentication.",
-            "🌐 iCloud Sync (Optional):\nWhile your data is protected by encryption on your device, LocalPass provides the option to sync your data with iCloud between devices for convenience. Only encrypted data is ever stored in iCloud, just like on your device.",
+            "🌐 iCloud Sync - Beta (Optional):\nWhile your data is protected by encryption on your device, LocalPass provides the option to sync your data with iCloud between devices for convenience. Only encrypted data is ever stored in iCloud, just like on your device. iCloud sync is currently in beta and may produce unexpected results!",
             "📊 No User Data Collection:\nLocalPass is built with a committment to privacy. LocalPass does not collect any personal data whatsoever, and does not talk to any external data servers.",
             "📲 iOS Development Enthusiasts:\nLocalPass is an open-source personal project, created by a Computer Science student. If you are an iOS developer and enjoy using LocalPass, consider exploring the codebase, and submit a pull request to enhance the security and features of LocalPass."
         ]
