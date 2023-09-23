@@ -1,6 +1,6 @@
 ## About LocalPass
 
-LocalPass is local password manager written with Swift/SwiftUI, for devices running iOS 16.0+
+LocalPass is a local password manager written in SwiftUI, for devices running iOS 16.0+
 
 ## License
 
