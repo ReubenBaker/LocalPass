@@ -14,59 +14,13 @@ struct SignUpRootView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Text("Welcome to LocalPass!")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                
+                titleItem
                 Spacer()
-                
-                Image("AppIconImageRoundedCorners")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: UIScreen.main.bounds.width / 3)
-                    .padding()
-                
+                logoItem
                 Spacer()
-                
-                NavigationLink {
-                    SignUpView()
-                } label: {
-                    Text("Get Started!")
-                        .foregroundColor(.white)
-                        .padding()
-                }
-                .frame(maxWidth: .infinity)
-                .background(.ultraThickMaterial.opacity(0.75))
-                .cornerRadius(10)
-                
-                NavigationLink {
-                    SignUpReturningView()
-                } label: {
-                    Text("Already Use LocalPass?")
-                        .foregroundColor(.white)
-                        .padding()
-                }
-                .frame(maxWidth: .infinity)
-                .background(.ultraThickMaterial.opacity(0.5))
-                .cornerRadius(10)
-                
-                Button {
-                    showAboutView.toggle()
-                } label: {
-                    Text("About LocalPass")
-                        .foregroundColor(.white)
-                        .padding()
-                }
-                .frame(maxWidth: .infinity)
-                .background(.ultraThickMaterial.opacity(0.25))
-                .cornerRadius(10)
-                .fullScreenCover(isPresented: $showAboutView) {
-                    AboutView()
-                }
+                navigationItem
             }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color("AppThemeColor"))
+            .modifier(SignUpViewStyle())
         }
     }
 }
@@ -74,5 +28,46 @@ struct SignUpRootView: View {
 struct SignUpRootView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpRootView()
+    }
+}
+
+// Views
+extension SignUpRootView {
+    private var titleItem: some View {
+        Text("Welcome to LocalPass!")
+            .font(.largeTitle)
+    }
+    
+    private var logoItem: some View {
+        Image("AppIconImageRoundedCorners")
+            .LogoIconStyle(large: true)
+    }
+    
+    private var navigationItem: some View {
+        VStack {
+            NavigationLink {
+                SignUpView()
+            } label: {
+                Text("Get Started!")
+                    .modifier(SignUpButtonStyle(opacity: 0.75))
+            }
+            
+            NavigationLink {
+                SignUpReturningView()
+            } label: {
+                Text("Already Use LocalPass?")
+                    .modifier(SignUpButtonStyle(opacity: 0.5))
+            }
+            
+            Button {
+                showAboutView.toggle()
+            } label: {
+                Text("About LocalPass")
+                    .modifier(SignUpButtonStyle(opacity: 0.25))
+            }
+            .fullScreenCover(isPresented: $showAboutView) {
+                AboutView()
+            }
+        }
     }
 }

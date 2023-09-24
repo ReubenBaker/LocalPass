@@ -20,6 +20,7 @@ struct GlobalHelperDataService {
     enum FocusedTextField: Hashable {
         case name, username, password, url, otpSecret
         case title, body
+        case passwordConfirmation
     }
 }
 

@@ -45,10 +45,7 @@ struct AuthenticationView: View {
                 }
             } label: {
                 Image("AppIconImageRoundedCorners")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: UIScreen.main.bounds.width / 6)
-                    .padding()
+                    .LogoIconStyle()
             }
             
             if LocalPassApp.settings.useBiometrics {
@@ -68,9 +65,7 @@ struct AuthenticationView: View {
                     }
                 } label: {
                     Image(systemName: "faceid")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: UIScreen.main.bounds.width / 6)
+                        .LogoIconStyle()
                 }
             }
             
