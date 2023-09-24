@@ -70,6 +70,14 @@
 		1BCBD6C82ABFF124009D7963 /* AuthenticationTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB9B2ABE210500739463 /* AuthenticationTextFieldStyle.swift */; };
 		1BCBD6CA2ABFF2E1009D7963 /* NotSignedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCBD6C92ABFF2E1009D7963 /* NotSignedUpView.swift */; };
 		1BCBD6CB2ABFF539009D7963 /* LogoIconStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA0032ABFB8FA006CB637 /* LogoIconStyle.swift */; };
+		1BCBD6CD2AC0C89A009D7963 /* AccountListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCBD6CC2AC0C89A009D7963 /* AccountListItemView.swift */; };
+		1BCBD6CE2AC0C8E0009D7963 /* EmptyListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA00C2ABFCECB006CB637 /* EmptyListRowView.swift */; };
+		1BCBD6CF2AC0CAD8009D7963 /* ListItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9261A42AB7CDAA00EC445D /* ListItemStyle.swift */; };
+		1BCBD6D02AC0CBAA009D7963 /* FaviconImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD62AAE9D17002F94EA /* FaviconImageView.swift */; };
+		1BCBD6D12AC0CBC0009D7963 /* FaviconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD42AAE8E77002F94EA /* FaviconModel.swift */; };
+		1BCBD6D22AC0CBC7009D7963 /* FaviconImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6A622E2AAFE3D3007655F7 /* FaviconImageViewModel.swift */; };
+		1BCBD6D32AC0CBE4009D7963 /* ListItemImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */; };
+		1BCBD6D42AC0CCE8009D7963 /* TOTPGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */; };
 		1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */; };
 		1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */; };
 		1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */; };
@@ -172,6 +180,7 @@
 		1BCBD6BD2ABFEEF2009D7963 /* AccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsView.swift; sourceTree = "<group>"; };
 		1BCBD6C42ABFEFF0009D7963 /* AccountsDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsDataService.swift; sourceTree = "<group>"; };
 		1BCBD6C92ABFF2E1009D7963 /* NotSignedUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotSignedUpView.swift; sourceTree = "<group>"; };
+		1BCBD6CC2AC0C89A009D7963 /* AccountListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountListItemView.swift; sourceTree = "<group>"; };
 		1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
 		1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayViewModel.swift; sourceTree = "<group>"; };
 		1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyOverlayViewModel.swift; sourceTree = "<group>"; };
@@ -248,6 +257,7 @@
 				1BCBD6BB2ABFEEEB009D7963 /* AuthenticationView.swift */,
 				1BCBD6BD2ABFEEF2009D7963 /* AccountsView.swift */,
 				1BCBD6C92ABFF2E1009D7963 /* NotSignedUpView.swift */,
+				1BCBD6CC2AC0C89A009D7963 /* AccountListItemView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -555,18 +565,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B562D302ABF5AE1004D37A4 /* CredentialProviderViewController.swift in Sources */,
+				1BCBD6D22AC0CBC7009D7963 /* FaviconImageViewModel.swift in Sources */,
 				1BCBD6BA2ABFEEE0009D7963 /* AuthenticationViewModel.swift in Sources */,
+				1BCBD6D02AC0CBAA009D7963 /* FaviconImageView.swift in Sources */,
 				1BCBD6BC2ABFEEEB009D7963 /* AuthenticationView.swift in Sources */,
+				1BCBD6D12AC0CBC0009D7963 /* FaviconModel.swift in Sources */,
 				1B562D4A2ABF6DD0004D37A4 /* CredentialProviderViewModel.swift in Sources */,
 				1BCBD6BE2ABFEEF2009D7963 /* AccountsView.swift in Sources */,
 				1BCBD6C12ABFEF79009D7963 /* AccountModel.swift in Sources */,
+				1BCBD6CF2AC0CAD8009D7963 /* ListItemStyle.swift in Sources */,
+				1BCBD6D32AC0CBE4009D7963 /* ListItemImageStyle.swift in Sources */,
 				1BCBD6CB2ABFF539009D7963 /* LogoIconStyle.swift in Sources */,
+				1BCBD6CD2AC0C89A009D7963 /* AccountListItemView.swift in Sources */,
 				1BCBD6C82ABFF124009D7963 /* AuthenticationTextFieldStyle.swift in Sources */,
 				1BCBD6C72ABFF018009D7963 /* SignUpViewStyle.swift in Sources */,
 				1BCBD6C62ABFF005009D7963 /* GlobalHelperDataService.swift in Sources */,
+				1BCBD6CE2AC0C8E0009D7963 /* EmptyListRowView.swift in Sources */,
 				1BCBD6CA2ABFF2E1009D7963 /* NotSignedUpView.swift in Sources */,
 				1BCBD6B82ABFEED7009D7963 /* AccountsViewModel.swift in Sources */,
 				1BCBD6C52ABFEFF0009D7963 /* AccountsDataService.swift in Sources */,
+				1BCBD6D42AC0CCE8009D7963 /* TOTPGeneratorDataService.swift in Sources */,
 				1BCBD6BF2ABFEF6E009D7963 /* CryptoDataService.swift in Sources */,
 				1B562D3E2ABF5E7F004D37A4 /* MainView.swift in Sources */,
 			);

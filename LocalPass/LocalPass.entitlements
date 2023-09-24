@@ -20,5 +20,9 @@
 	<array>
 		<string>group.com.reuben.LocalPass</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)com.reuben.LocalPass</string>
+	</array>
 </dict>
 </plist>

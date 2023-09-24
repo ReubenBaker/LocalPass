@@ -41,11 +41,11 @@ class AccountsDataService {
                 formattedString += "\(String(describing: account.name));;;"
                 formattedString += "\(String(describing: account.username));;;"
                 formattedString += "\(String(describing: account.password));;;"
-                formattedString += "\(String(describing: account.url));;;"
+                formattedString += "\(account.url ?? String(describing: account.url));;;"
                 formattedString += "\(String(describing: account.creationDateTime));;;"
                 formattedString += "\(String(describing: account.updatedDateTime));;;"
                 formattedString += "\(String(describing: account.starred));;;"
-                formattedString += "\(String(describing: account.otpSecret));;;"
+                formattedString += "\(account.otpSecret ?? String(describing: account.otpSecret));;;"
                 formattedString += "\(String(describing: account.id));;;"
                 formattedString += "~~~"
             }

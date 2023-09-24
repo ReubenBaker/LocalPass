@@ -37,7 +37,7 @@ class AccountsDataService {
     
     static func parseData(_ blob: Data?) -> [Account]? {
         if let blob = blob,
-           let tag = Bundle.main.bundleIdentifier,
+           let tag = Bundle.main.bundleIdentifier?.components(separatedBy: ".").dropLast().joined(separator: "."),
            let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass"),
            let key = CryptoDataService.readKey(tag: tag, iCloudSync: sharedUserDefaults.bool(forKey: "iCloudSync")),
            let decryptedBlob = CryptoDataService.decryptBlob(blob: blob, key: key) {

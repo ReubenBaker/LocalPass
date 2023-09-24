@@ -15,7 +15,6 @@ struct AccountsView: View {
     @State private var showAddAccountSheet: Bool = false
     @State private var sortOption: String = ""
     
-    
     var body: some View {
         ZStack {
             NavigationStack {

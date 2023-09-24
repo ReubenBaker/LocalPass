@@ -16,29 +16,13 @@ struct MainView: View {
     @State private var authenticationStatus: Bool = false
     
     var body: some View {
-//        VStack {
-//            Text("Coming Soon")
-//                .padding()
-//                .font(.largeTitle)
-//
-//            Button {
-//                credentialProviderViewModel.username = "test_username"
-//                credentialProviderViewModel.password = "test_password"
-//
-//                self.autoFill?()
-//            } label: {
-//                Text("AutoFill Default Credentials")
-//            }
-//            .buttonStyle(BorderedButtonStyle())
-//            .cornerRadius(10)
-//        }
-        
         ZStack {
             if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
                 if sharedUserDefaults.bool(forKey: "signedUp") {
                     ZStack {
                         if authenticationStatus {
-                            AccountsView()
+                            AccountsView(autoFill: autoFill)
+                                .environmentObject(credentialProviderViewModel)
                         } else {
                             AuthenticationView()
                                 .environmentObject(authenticationViewModel)
