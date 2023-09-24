@@ -52,10 +52,6 @@ LocalPass is a forever free, ad-free, and open-source solution for managing your
 - **Enhanced iPad Support:**
   LocalPass v1.0 has been designed with the iPhone in mind, however better support for iPad (and Mac running as an iPad app) is coming! No native MacOS app is currently planned.
 
-### Contact
-
-If you have any questions or concerns about the license or usage of this software, please [contact us](mailto:app.localpass@gmail.com).
-
 ## License
 
 This project is licensed under the [GNU General Public License (GPL) version 3](LICENSE).
@@ -70,9 +66,9 @@ The GPL-3.0 License allows you to use, modify, and distribute this software. How
 
 The full text of the license is available in the [LICENSE](LICENSE) file.
 
-## Version
+### Contact
 
-Version: LocalPass v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
+If you have any questions or concerns about the license or usage of this software, please [contact us](mailto:app.localpass@gmail.com).
 
 ## Links
 
