@@ -1,8 +1,8 @@
 //
 //  AuthenticationView.swift
-//  LocalPass
+//  LocalPassAutoFill
 //
-//  Created by Reuben on 10/09/2023.
+//  Created by Reuben on 24/09/2023.
 //
 
 import SwiftUI
@@ -19,8 +19,10 @@ struct AuthenticationView: View {
             passwordFieldItem
             authenticateButtonItem
             
-            if LocalPassApp.settings.useBiometrics {
-                authenticateWithBiometricsButtonItem
+            if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
+                if sharedUserDefaults.bool(forKey: "useBiometrics") {
+                    authenticateWithBiometricsButtonItem
+                }
             }
             
             Spacer()
@@ -29,15 +31,6 @@ struct AuthenticationView: View {
         .alert(isPresented: $showIncorrectPasswordAlert) {
             AuthenticationViewModel.getIncorrectPasswordAlert()
         }
-    }
-}
-
-struct AuthenticationView_Previews: PreviewProvider {
-    static var previews: some View {
-        @StateObject var authenticationViewModel = AuthenticationViewModel()
-        
-        AuthenticationView()
-            .environmentObject(authenticationViewModel)
     }
 }
 
@@ -69,7 +62,6 @@ extension AuthenticationView {
                let _ = CryptoDataService.decryptBlob(blob: blob, password: authenticationViewModel.password ?? "") {
                 AuthenticationViewModel.shared.authenticated = true
                 AuthenticationViewModel.shared.password = nil
-                AuthenticationViewModel.rotateKey(authenticationViewModel.password)
                 authenticationViewModel.authenticated = true
                 authenticationViewModel.password = nil
             } else {
@@ -87,7 +79,8 @@ extension AuthenticationView {
                 if success {
                     if let blob = AccountsDataService.getBlob(),
                        let tag = Bundle.main.bundleIdentifier,
-                       let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
+                       let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass"),
+                       let key = CryptoDataService.readKey(tag: tag, iCloudSync: sharedUserDefaults.bool(forKey: "iCloudSync")),
                        let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
                         AuthenticationViewModel.shared.authenticatedWithBiometrics = true
                         AuthenticationViewModel.shared.authenticated = true

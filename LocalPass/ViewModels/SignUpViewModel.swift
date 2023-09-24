@@ -27,15 +27,19 @@ class SignUpViewModel: ObservableObject {
     
     static func createFiles(key: SymmetricKey, salt: Data) -> Bool {
         let blob: String = "empty"
-        let accountsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassaccounts.txt")
-        let notesPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
+        
+        let accountsPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassaccounts.txt")
+        let notesPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassaccounts.txt")
         
         if let tag = Bundle.main.bundleIdentifier,
            let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
            let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
             do {
-                try encryptedBlob.write(to: accountsPath, options: .atomic)
-                try encryptedBlob.write(to: notesPath, options: .atomic)
+                if let accountsPath = accountsPath,
+                   let notesPath = notesPath {
+                    try encryptedBlob.write(to: accountsPath, options: .atomic)
+                    try encryptedBlob.write(to: notesPath, options: .atomic)
+                }
                 
                 return true
             } catch {

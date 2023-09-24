@@ -6,14 +6,17 @@
 //
 
 import Foundation
-import SwiftUI
 
 class NotesDataService {
-    static private let localPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("localpassnotes.txt")
+    static private let localPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassnotes.txt")
     static private let initializationGroup = DispatchGroup()
     
     static func getBlob() -> Data? {
-        var blob = try? Data(contentsOf: localPath)
+        var blob: Data?
+        
+        if let path = localPath {
+            blob = try? Data(contentsOf: path)
+        }
         
         if LocalPassApp.settings.iCloudSync {
             getiCloudPath { iCloudPath in
@@ -102,8 +105,9 @@ class NotesDataService {
                 
                 let salt = salt ?? originalData.prefix(16)
                 
-                if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
-                    try encryptedBlob.write(to: localPath, options: .atomic)
+                if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt),
+                   let path = localPath {
+                    try encryptedBlob.write(to: path, options: .atomic)
                     
                     if LocalPassApp.settings.iCloudSync {
                         getiCloudPath { iCloudPath in
