@@ -11,11 +11,7 @@ import SwiftUI
 class AccountsViewModel: ObservableObject {
     @Published var accounts: [Account]? {
         didSet {
-            do {
-                try AccountsDataService.saveData(accounts)
-            } catch {
-                print("Error writing accounts data: \(error)")
-            }
+            AccountsDataService.saveData(accounts)
         }
     }
     

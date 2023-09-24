@@ -11,11 +11,7 @@ import SwiftUI
 class NotesViewModel: ObservableObject {    
     @Published var notes: [Note]? {
         didSet {
-            do {
-                try NotesDataService.saveData(notes)
-            } catch {
-                print("Error writing notes data: \(error)")
-            }
+            NotesDataService.saveData(notes)
         }
     }
     

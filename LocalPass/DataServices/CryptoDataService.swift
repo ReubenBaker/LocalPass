@@ -36,15 +36,13 @@ import LocalAuthentication
  
  # Usage:
  
- 1. Initialize an instance of `CryptoDataService`.
+ 1. Encrypt sensitive data using the `encryptBlob` method, providing the data and the password.
  
- 2. Encrypt sensitive data using the `encryptBlob` method, providing the data and the password.
+ 2. Store the encrypted data.
  
- 3. Store the encrypted data.
+ 3. When data access is needed, decrypt it using the `decryptBlob` method with either the given key, or on app startup using the password.
  
- 4. When data access is needed, decrypt it using the `decryptBlob` method with either the given key, or on app startup using the password.
- 
- 5. After decryption has taken place on app startup, generate a new key and re-encrypt the data to make sure the key is refreshed each session.
+ 4. After decryption has taken place on app startup, generate a new key and re-encrypt the data to make sure the key is refreshed each session.
  
  This process ensures that data remains confidential and tamper-resistant during storage or transmission. If the password is incorrect or if the data has been tampered with, the decryption will fail, providing an additional layer of security.
  

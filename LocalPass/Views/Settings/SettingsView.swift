@@ -47,12 +47,8 @@ struct SettingsView: View {
                                 }
                                 
                                 if newValue == true {
-                                    do {
-                                        try AccountsDataService.saveData(accounts, salt: salt)
-                                        try NotesDataService.saveData(notes, salt: salt)
-                                    } catch {
-                                        print("Error writing data to iCloud: \(error)")
-                                    }
+                                    AccountsDataService.saveData(accounts, salt: salt)
+                                    NotesDataService.saveData(notes, salt: salt)
                                 } else {
                                     AccountsDataService.removeiCloudData()
                                     NotesDataService.removeiCloudData()

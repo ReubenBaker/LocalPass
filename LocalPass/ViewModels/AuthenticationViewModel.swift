@@ -25,12 +25,8 @@ class AuthenticationViewModel: ObservableObject {
                let tag = Bundle.main.bundleIdentifier {
                     if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync)
                     && CryptoDataService.setkey(key: newKey, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
-                        do {
-                            try AccountsDataService.saveData(accounts, salt: salt)
-                            try NotesDataService.saveData(notes, salt: salt)
-                        } catch {
-                            print("Error rewriting data with new key: \(error)")
-                        }
+                        AccountsDataService.saveData(accounts, salt: salt)
+                        NotesDataService.saveData(notes, salt: salt)
                     }
             }
         }
