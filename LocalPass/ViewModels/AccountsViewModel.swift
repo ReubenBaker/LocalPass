@@ -39,7 +39,12 @@ class AccountsViewModel: ObservableObject {
             otpSecret: otpSecret
         )
         
-        accounts = (accounts != nil) ? accounts! + [newAccount] : [newAccount]
+        if let accounts = self.accounts {
+            self.accounts = accounts + [newAccount]
+        } else {
+            self.accounts = [newAccount]
+        }
+        
         return true
     }
     
@@ -49,7 +54,7 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func deleteAccount(account: Account) {
+    func deleteAccount(_ account: Account) {
         DispatchQueue.main.async {
             if self.accounts?.count == 1 {
                 self.accounts = nil
@@ -59,26 +64,14 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func getDeleteAlert() -> Alert {
-        let title: Text = Text("Are you sure you want to delete this account?")
-        let message: Text = Text("This action cannot be undone!")
-        let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
-            if let account = self.accountToDelete {
-                self.deleteAccount(account: account)
-                self.accountToDelete = nil
-            }
-        })
-        let cancelButton: Alert.Button = .cancel()
-        
-        return Alert(
-            title: title,
-            message: message,
-            primaryButton: deleteButton,
-            secondaryButton: cancelButton
-        )
+    func sortAccounts(_ sortOption: String) {
+        if self.accounts != nil {
+            AccountsViewModel.sortAccountsByOption(&self.accounts, sortOption: sortOption)
+            AccountsViewModel.sortAccountsByStar(&self.accounts)
+        }
     }
     
-    func sortAccountsByOption(accounts: inout [Account]?, sortOption: String) {
+    static func sortAccountsByOption(_ accounts: inout [Account]?, sortOption: String) {
         if let unsortedAccounts = accounts {
             var sortedAccounts: [Account]? = nil
             
@@ -94,12 +87,31 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func sortAccountsByStar(accounts: inout [Account]?) {
+    static func sortAccountsByStar(_ accounts: inout [Account]?) {
         if let unsortedAccounts = accounts {
             let starredAccounts: [Account] = unsortedAccounts.filter({ $0.starred })
-            let unstarredAccounts: [Account] = unsortedAccounts.filter({ !$0.starred })
+            let unstarredAccounts: [Account] = unsortedAccounts.filter({ $0.starred })
             
             accounts = starredAccounts + unstarredAccounts
         }
+    }
+    
+    func getDeleteAlert() -> Alert {
+        let title: Text = Text("Are you sure you want to delete this account?")
+        let message: Text = Text("This action cannot be undone!")
+        let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
+            if let account = self.accountToDelete {
+                self.deleteAccount(account)
+                self.accountToDelete = nil
+            }
+        })
+        let cancelButton: Alert.Button = .cancel()
+        
+        return Alert(
+            title: title,
+            message: message,
+            primaryButton: deleteButton,
+            secondaryButton: cancelButton
+        )
     }
 }

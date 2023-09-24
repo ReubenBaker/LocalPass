@@ -17,6 +17,10 @@ struct GlobalHelperDataService {
         return dateFormatter
     }
     
+    static let sortOptions: [String] = [
+        "Date Added Ascending", "Date Added Descending", "Alphabetical"
+    ]
+    
     enum FocusedTextField: Hashable {
         case name, username, password, url, otpSecret
         case title, body

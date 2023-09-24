@@ -14,9 +14,7 @@ struct AccountsView: View {
     @State private var showAccountDetailSheet: Bool = false
     @State private var showAddAccountSheet: Bool = false
     @State private var sortOption: String = ""
-    private let sortOptions: [String] = [
-        "Date Added Ascending", "Date Added Descending", "Alphabetical"
-    ]
+    
     
     var body: some View {
         ZStack {
@@ -24,7 +22,7 @@ struct AccountsView: View {
                 if accountsViewModel.accounts == nil {
                     noAccountItem
                 } else {
-                    accountList
+                    accountListItem
                 }
             }
         }
@@ -35,8 +33,8 @@ struct AccountsView: View {
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
         }
-        .onChange(of: sortOption) { _ in
-            sortAccounts(sortOption: sortOption)
+        .onChange(of: sortOption) { newValue in
+            accountsViewModel.sortAccounts(newValue)
         }
     }
 }
@@ -55,26 +53,14 @@ struct AccountsView_Previews: PreviewProvider {
     }
 }
 
-// Functions
-extension AccountsView {
-    private func sortAccounts(sortOption: String) {
-        if accountsViewModel.accounts != nil {
-            accountsViewModel.sortAccountsByOption(accounts: &accountsViewModel.accounts, sortOption: sortOption)
-            accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
-        }
-    }
-}
-
 // Views
 extension AccountsView {
-    private var accountList: some View {
+    private var accountListItem: some View {
          List {
              if let accounts = accountsViewModel.accounts {
                  ForEach(accounts) { account in
                      AccountListItemView(account: Binding.constant(account))
-                         .overlay(PrivacyOverlayView())
-                         .listRowSeparator(.hidden)
-                         .listRowInsets(EdgeInsets())
+                         .modifier(ParentViewListItemStyle())
                          .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                              Button {
                                  accountsViewModel.accountToDelete = account
@@ -84,34 +70,27 @@ extension AccountsView {
                              }
                              .tint(.red)
                              
-                             if let index = accountsViewModel.accounts?.firstIndex(where: { $0.id == account.id }) {
-                                 Button {
+                             Button {
+                                 if let index = accountsViewModel.accounts?.firstIndex(where: { $0.id == account.id }) {
                                      accountsViewModel.accounts?[index].starred.toggle()
-                                     accountsViewModel.sortAccountsByStar(accounts: &accountsViewModel.accounts)
-                                 } label: {
-                                     Image(systemName: "star")
+                                     AccountsViewModel.sortAccountsByStar(&accountsViewModel.accounts)
                                  }
-                                 .tint(.yellow)
+                             } label: {
+                                 Image(systemName: "star")
                              }
+                             .tint(.yellow)
                          }
                      
-                     Spacer()
-                         .listRowSeparator(.hidden)
-                         .moveDisabled(true)
+                     EmptyListRowView()
                  }
              }
         }
-        .padding(.horizontal)
-        .environment(\.defaultMinListRowHeight, 0)
-        .listStyle(PlainListStyle())
-        .scrollContentBackground(.hidden)
-        .scrollIndicators(.hidden)
-        .navigationTitle("Accounts")
+        .modifier(DataListStyle(type: "Accounts"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Menu {
                     Picker("Sort", selection: $sortOption) {
-                        ForEach(sortOptions, id: \.self) {
+                        ForEach(GlobalHelperDataService.sortOptions, id: \.self) {
                             Text($0)
                         }
                     }
@@ -140,14 +119,7 @@ extension AccountsView {
                 showAddAccountSheet.toggle()
             } label: {
                 Text("Add Your First Account")
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.primary)
-                    .background(Color("AccentColor"))
-                    .cornerRadius(10)
-                    .shadow(radius: 4)
-                    .padding()
+                    .modifier(NoDataButtonStyle())
             }
 
             Spacer()

@@ -13,7 +13,7 @@ struct AddAccountView: View {
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var newName: String = ""
     @State private var newUsername: String = ""
-    @State var newPassword: String = ""
+    @State private var newPassword: String = ""
     @State private var newUrl: String = ""
     @State private var newOtpSecret: String = ""
     @State private var showPassword: Bool = false
@@ -33,9 +33,7 @@ struct AddAccountView: View {
             urlItem
             otpItem
             addItem
-            
             Spacer()
-            
             CloseButtonView()
         }
         .padding()
@@ -94,7 +92,7 @@ extension AddAccountView {
     
     private var nameItem: some View {
         HStack {
-            Image(systemName: "tag.circle.fill")
+            Image(systemName: "person.circle.fill")
                 .ListItemImageStyle()
             
             TextField("Enter account name...", text: $newName)
@@ -111,7 +109,7 @@ extension AddAccountView {
     
     private var usernameItem: some View {
         HStack {
-            Image(systemName: "person.circle.fill")
+            Image(systemName: "at.circle.fill")
                 .ListItemImageStyle()
             
             TextField("Enter username...", text: $newUsername)
@@ -262,13 +260,7 @@ extension AddAccountView {
             showAccountSuccessAlert.toggle()
        } label: {
            Text("Add Account")
-               .font(.headline)
-               .padding()
-               .foregroundColor(.primary)
-               .frame(minWidth: 150)
-               .background(.cyan)
-               .cornerRadius(10)
-               .shadow(radius: 4)
        }
+       .buttonStyle(ProminentButtonStyle(.cyan))
     }
 }

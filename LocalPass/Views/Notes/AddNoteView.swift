@@ -18,18 +18,19 @@ struct AddNoteView: View {
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
-            VStack {
-                titleItem
-                bodyItem
-                addItem
-                CloseButtonView()
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical)
-            .background(.ultraThinMaterial)
-            .alert(isPresented: $showNoteSuccessAlert) {
-                getNoteSuccessAlert(noteSuccess: noteSuccess)
-            }
+        VStack {
+            titleItem
+            bodyItem
+            addItem
+            Spacer()
+            CloseButtonView()
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical)
+        .background(.ultraThinMaterial)
+        .alert(isPresented: $showNoteSuccessAlert) {
+            getNoteSuccessAlert(noteSuccess: noteSuccess)
+        }
     }
 }
 
@@ -112,13 +113,7 @@ extension AddNoteView {
             showNoteSuccessAlert.toggle()
         } label: {
             Text("Add Note")
-                .font(.headline)
-                .padding()
-                .foregroundColor(.primary)
-                .frame(minWidth: 150)
-                .background(.cyan)
-                .cornerRadius(10)
-                .shadow(radius: 4)
         }
+        .buttonStyle(ProminentButtonStyle(.cyan))
     }
 }

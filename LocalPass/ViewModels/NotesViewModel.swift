@@ -36,7 +36,12 @@ class NotesViewModel: ObservableObject {
             body: body
         )
         
-        notes = (notes != nil) ? notes! + [newNote] : [newNote]
+        if let notes = self.notes {
+            self.notes = notes + [newNote]
+        } else {
+            self.notes = [newNote]
+        }
+        
         return true
     }
     
@@ -46,7 +51,7 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    func deleteNote(note: Note) {
+    func deleteNote(_ note: Note) {
         DispatchQueue.main.async {
             if self.notes?.count == 1 {
                 self.notes = nil
@@ -56,26 +61,14 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    func getDeleteAlert() -> Alert {
-        let title: Text = Text("Are you sure you want to delete this note?")
-        let message: Text = Text("This action cannot be undone!")
-        let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
-            if let note = self.noteToDelete {
-                self.deleteNote(note: note)
-                self.noteToDelete = nil
-            }
-        })
-        let cancelButton: Alert.Button = .cancel()
-        
-        return Alert(
-            title: title,
-            message: message,
-            primaryButton: deleteButton,
-            secondaryButton: cancelButton
-        )
+    func sortNotes(_ sortSelection: String) {
+        if self.notes != nil {
+            NotesViewModel.sortNotes(&self.notes, sortOption: sortSelection)
+            NotesViewModel.sortNotesByStar(&self.notes)
+        }
     }
     
-    func sortNotes(notes: inout [Note]?, sortOption: String) {
+    static func sortNotes(_ notes: inout [Note]?, sortOption: String) {
         if let unsortedNotes = notes {
             var sortedNotes: [Note]? = nil
             
@@ -91,12 +84,31 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    func sortNotesByStar(notes: inout [Note]?) {
+    static func sortNotesByStar(_ notes: inout [Note]?) {
         if let unsortedNotes = notes {
             let starredNotes: [Note] = unsortedNotes.filter({ $0.starred })
-            let unstarredNotes: [Note] = unsortedNotes.filter({ !$0.starred })
+            let unstarredNotes: [Note] = unsortedNotes.filter({ $0.starred })
             
             notes = starredNotes + unstarredNotes
         }
+    }
+    
+    func getDeleteAlert() -> Alert {
+        let title: Text = Text("Are you sure you want to delete this note?")
+        let message: Text = Text("This action cannot be undone!")
+        let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
+            if let note = self.noteToDelete {
+                self.deleteNote(note)
+                self.noteToDelete = nil
+            }
+        })
+        let cancelButton: Alert.Button = .cancel()
+        
+        return Alert(
+            title: title,
+            message: message,
+            primaryButton: deleteButton,
+            secondaryButton: cancelButton
+        )
     }
 }

@@ -14,9 +14,6 @@ struct NotesView: View {
     @State private var showNoteDetailSheet: Bool = false
     @State private var showAddNoteSheet: Bool = false
     @State private var sortSelection: String = ""
-    private let sortOptions: [String] = [
-        "Date Added Ascending", "Date Added Descending", "Alphabetical"
-    ]
     
     var body: some View {
         ZStack {
@@ -24,7 +21,7 @@ struct NotesView: View {
                 if notesViewModel.notes == nil {
                     noNoteItem
                 } else {
-                    noteList
+                    noteListItem
                 }
             }
         }
@@ -35,8 +32,8 @@ struct NotesView: View {
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
         }
-        .onChange(of: sortSelection) { _ in
-            sortNotes(sortSelection: sortSelection)
+        .onChange(of: sortSelection) { newValue in
+            notesViewModel.sortNotes(newValue)
         }
     }
 }
@@ -55,26 +52,14 @@ struct NotesView_Previews: PreviewProvider {
     }
 }
 
-// Functions
-extension NotesView {
-    private func sortNotes(sortSelection: String) {
-        if notesViewModel.notes != nil {
-            notesViewModel.sortNotes(notes: &notesViewModel.notes, sortOption: sortSelection)
-            notesViewModel.sortNotesByStar(notes: &notesViewModel.notes)
-        }
-    }
-}
-
 // Views
 extension NotesView {
-    private var noteList: some View {
+    private var noteListItem: some View {
         List {
             if let notes = notesViewModel.notes {
                 ForEach(notes) { note in
                     NoteListItemView(note: Binding.constant(note))
-                        .overlay(PrivacyOverlayView())
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
+                        .modifier(ParentViewListItemStyle())
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
                                 notesViewModel.noteToDelete = note
@@ -84,34 +69,27 @@ extension NotesView {
                             }
                             .tint(.red)
                             
-                            if let index = notesViewModel.notes?.firstIndex(where: { $0.id == note.id }) {
-                                Button {
+                            Button {
+                                if let index = notesViewModel.notes?.firstIndex(where: { $0.id == note.id }) {
                                     notesViewModel.notes?[index].starred.toggle()
-                                    notesViewModel.sortNotesByStar(notes: &notesViewModel.notes)
-                                } label: {
-                                    Image(systemName: "star")
+                                    NotesViewModel.sortNotesByStar(&notesViewModel.notes)
                                 }
-                                .tint(.yellow)
+                            } label: {
+                                Image(systemName: "star")
                             }
+                            .tint(.yellow)
                         }
                     
-                    Spacer()
-                        .listRowSeparator(.hidden)
-                        .moveDisabled(true)
+                    EmptyListRowView()
                 }
             }
         }
-        .padding(.horizontal)
-        .environment(\.defaultMinListRowHeight, 0)
-        .listStyle(PlainListStyle())
-        .scrollContentBackground(.hidden)
-        .scrollIndicators(.hidden)
-        .navigationTitle("Notes")
+        .modifier(DataListStyle(type: "Notes"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Menu {
                     Picker("Sort", selection: $sortSelection) {
-                        ForEach(sortOptions, id: \.self) {
+                        ForEach(GlobalHelperDataService.sortOptions, id: \.self) {
                             Text($0)
                         }
                     }
@@ -140,14 +118,7 @@ extension NotesView {
                 showAddNoteSheet.toggle()
             } label: {
                 Text("Add Your First Note")
-                    .font(.headline)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.primary)
-                    .background(Color("AccentColor"))
-                    .cornerRadius(10)
-                    .shadow(radius: 4)
-                    .padding()
+                    .modifier(NoDataButtonStyle())
             }
 
             Spacer()

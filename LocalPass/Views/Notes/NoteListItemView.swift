@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NoteListItemView: View {
     
-    @EnvironmentObject private var notesViewModel: NotesViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var note: Note
     @State private var showNoteDetailViewSheet: Bool = false

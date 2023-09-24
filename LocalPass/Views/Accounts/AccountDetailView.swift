@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
@@ -21,6 +20,8 @@ struct AccountDetailView: View {
     @State private var currentOtpSecret: String? = nil
     @State private var otpValue: String = ""
     @State private var otpTimeLeft: Int = 0
+    @State private var otpColor: Color = .green
+    @State private var otpFlashing: Bool = false
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
     @State private var addUrlFieldClicked: Bool = false
@@ -62,9 +63,7 @@ struct AccountDetailView: View {
             }
             
             deleteItem
-            
             Spacer()
-            
             CloseButtonView()
         }
         .padding()
@@ -112,7 +111,7 @@ struct AccountDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var accountsViewModel = AccountsViewModel()
         @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
-        @State var account = Account(name: "default", username: "default", password: "default")
+        @State var account = Account(name: "default", username: "default", password: "default", url: "default", otpSecret: "TESTKEY")
         
         AccountDetailView(account: $account)
             .environmentObject(accountsViewModel)
@@ -169,11 +168,11 @@ extension AccountDetailView {
                     if LocalPassApp.settings.showFavicons {
                         FaviconImageView(url: url)
                     } else {
-                        Image(systemName: "person.circle.fill")
+                        Image(systemName: "at.circle.fill")
                             .ListItemImageStyle()
                     }
                 } else {
-                    Image(systemName: "person.circle.fill")
+                    Image(systemName: "at.circle.fill")
                         .ListItemImageStyle()
                 }
                 
@@ -188,7 +187,7 @@ extension AccountDetailView {
     
     private var editUsernameItem: some View {
         HStack {
-            Image(systemName: "person.circle.fill")
+            Image(systemName: "at.circle.fill")
                 .ListItemImageStyle()
             
             TextField("\(account.username)", text: $newUsername)
@@ -213,7 +212,7 @@ extension AccountDetailView {
                 Image(systemName: "lock.circle.fill")
                     .ListItemImageStyle()
                 
-                Text(showPassword ? account.password : "************")
+                Text(showPassword ? account.password : "********")
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -245,7 +244,7 @@ extension AccountDetailView {
                         }
                     }
             } else {
-                SecureField("************", text: $newPassword)
+                SecureField("********", text: $newPassword)
                     .modifier(RawTextFieldInputStyle())
                     .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
@@ -391,9 +390,38 @@ extension AccountDetailView {
                         generateTOTP()
                     }
                 
-                Text("\(otpTimeLeft)")
-                
                 Spacer()
+                
+                ZStack {
+                    if !otpFlashing {
+                        Circle()
+                            .stroke(.gray, lineWidth: 5)
+                    }
+                    
+                    Circle()
+                        .trim(from: 0, to: CGFloat(otpTimeLeft - 1) / 30)
+                        .stroke(otpColor, lineWidth: 5)
+                        .rotationEffect(.degrees(-90))
+                        .animation(.linear(duration: 1), value: otpTimeLeft)
+                    
+                    Text("\(otpTimeLeft)")
+                }
+                .onChange(of: otpTimeLeft) { newValue in
+                    withAnimation(.easeInOut) {
+                        if newValue <= 5 {
+                            otpColor = .red
+                            otpFlashing.toggle()
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                otpFlashing.toggle()
+                            }
+                        } else if newValue <= 10 {
+                            otpColor = .yellow
+                        } else {
+                            otpColor = .green
+                        }
+                    }
+                }
             }
         }
         .modifier(AccountDetailViewItemStyle())
@@ -496,7 +524,7 @@ extension AccountDetailView {
         Button("Delete") {
             accountsViewModel.accountToDelete = account
             showDeleteAlert.toggle()
-       }
-        .buttonStyle(DeleteButtonStyle())
+        }
+        .buttonStyle(ProminentButtonStyle(.red))
     }
 }

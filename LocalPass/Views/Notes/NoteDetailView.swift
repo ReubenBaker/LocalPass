@@ -9,10 +9,8 @@ import SwiftUI
 
 struct NoteDetailView: View {
     
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
     @EnvironmentObject private var notesViewModel: NotesViewModel
-    @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var note: Note
     @State private var newTitle: String = ""
     @State private var newBody: String = ""
@@ -35,6 +33,7 @@ struct NoteDetailView: View {
             }
             
             deleteItem
+            Spacer()
             CloseButtonView()
         }
         .frame(maxWidth: .infinity)
@@ -71,12 +70,10 @@ struct NoteDetailView: View {
 struct NoteDetailView_Previews: PreviewProvider {
     static var previews: some View {
         @StateObject var notesViewModel = NotesViewModel()
-        @StateObject var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
         @State var note = Note(title: "default", body: "default")
         
         NoteDetailView(note: $note)
             .environmentObject(notesViewModel)
-            .environmentObject(copyPopupOverlayViewModel)
     }
 }
 
@@ -175,6 +172,6 @@ extension NoteDetailView {
             notesViewModel.noteToDelete = note
             showDeleteAlert.toggle()
         }
-        .buttonStyle(DeleteButtonStyle())
+        .buttonStyle(ProminentButtonStyle(.red))
     }
 }

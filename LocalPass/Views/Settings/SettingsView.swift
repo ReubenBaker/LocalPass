@@ -29,39 +29,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("iCloud Sync (Beta)", isOn: $settings.iCloudSync)
-                        .onChange(of: settings.iCloudSync) { newValue in
-                            if let accounts = AccountsDataService.getAccountData(),
-                               let notes = NotesDataService.getNoteData(),
-                               let blob = AccountsDataService.getBlob() {
-                                
-                                let salt = blob.prefix(16)
-                                
-                                LocalPassApp.settings.iCloudSync = newValue
-                                
-                                if let tag = Bundle.main.bundleIdentifier {
-                                    if let currentKey = CryptoDataService.readKey(tag: tag) {
-                                        _ = CryptoDataService.deleteKey(tag: tag, iCloudSync: true)
-                                        _ = CryptoDataService.setkey(key: currentKey, tag: tag, iCloudSync: newValue)
-                                    }
-                                }
-                                
-                                if newValue == true {
-                                    AccountsDataService.saveData(accounts, salt: salt)
-                                    NotesDataService.saveData(notes, salt: salt)
-                                } else {
-                                    AccountsDataService.removeiCloudData()
-                                    NotesDataService.removeiCloudData()
-                                }
-                            }
-                        }
-                    
-                    Toggle("Show Account Icons", isOn: $settings.showFavicons)
-                        .onChange(of: settings.showFavicons) { newValue in
-                            LocalPassApp.settings.showFavicons = newValue
-                        }
-                    
-                    Toggle("Use Biometrics", isOn: $settings.useBiometrics)
+                    Toggle("Use Biometrics \(Image(systemName: "faceid").symbolRenderingMode(LocalPassApp.settings.useBiometrics ? .multicolor : .monochrome))", isOn: $settings.useBiometrics)
                         .onChange(of: Settings.shared.useBiometrics) { newValue in
                             LocalPassApp.settings.useBiometrics = newValue
                             
@@ -87,10 +55,42 @@ struct SettingsView: View {
                         .disabled(!biometricsEnrolled)
                         .foregroundColor(biometricsEnrolled ? .primary : .primary.opacity(0.5))
                     
-                        Toggle("Lock Vault When Inactive", isOn: $settings.lockVaultOnBackground)
-                            .onChange(of: settings.lockVaultOnBackground) { newValue in
-                                LocalPassApp.settings.lockVaultOnBackground = newValue
+                    Toggle("Show Account Icons \(Image(systemName: LocalPassApp.settings.showFavicons ? "paintpalette.fill" : "paintpalette").symbolRenderingMode(LocalPassApp.settings.showFavicons ? .multicolor : .monochrome))", isOn: $settings.showFavicons)
+                        .onChange(of: settings.showFavicons) { newValue in
+                            LocalPassApp.settings.showFavicons = newValue
+                        }
+                
+                    Toggle("Lock Vault When Inactive \(Image(systemName: LocalPassApp.settings.lockVaultOnBackground ? "lock.trianglebadge.exclamationmark" : "lock.open.trianglebadge.exclamationmark").symbolRenderingMode(.multicolor))", isOn: $settings.lockVaultOnBackground)
+                        .onChange(of: settings.lockVaultOnBackground) { newValue in
+                            LocalPassApp.settings.lockVaultOnBackground = newValue
+                        }
+                    
+                    Toggle("iCloud Sync (Beta) \(Image(systemName: LocalPassApp.settings.iCloudSync ? "icloud.fill" : "icloud").symbolRenderingMode(LocalPassApp.settings.iCloudSync ? .multicolor : .monochrome))", isOn: $settings.iCloudSync)
+                        .onChange(of: settings.iCloudSync) { newValue in
+                            if let accounts = AccountsDataService.getAccountData(),
+                               let notes = NotesDataService.getNoteData(),
+                               let blob = AccountsDataService.getBlob() {
+                                
+                                let salt = blob.prefix(16)
+                                
+                                LocalPassApp.settings.iCloudSync = newValue
+                                
+                                if let tag = Bundle.main.bundleIdentifier {
+                                    if let currentKey = CryptoDataService.readKey(tag: tag) {
+                                        _ = CryptoDataService.deleteKey(tag: tag, iCloudSync: true)
+                                        _ = CryptoDataService.setkey(key: currentKey, tag: tag, iCloudSync: newValue)
+                                    }
+                                }
+                                
+                                if newValue == true {
+                                    AccountsDataService.saveData(accounts, salt: salt)
+                                    NotesDataService.saveData(notes, salt: salt)
+                                } else {
+                                    AccountsDataService.removeiCloudData()
+                                    NotesDataService.removeiCloudData()
+                                }
                             }
+                        }
                 }
             }
         }

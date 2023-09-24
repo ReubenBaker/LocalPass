@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AccountListItemView: View {
     
-    @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
     @State private var showAccountDetailViewSheet: Bool = false

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1B42D4232A9E767300763016 /* AccountsDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4222A9E767300763016 /* AccountsDataService.swift */; };
-		1B42D4252A9E78A200763016 /* FileManagerTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4242A9E78A200763016 /* FileManagerTestView.swift */; };
 		1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */; };
 		1B42D4292A9FBE5700763016 /* PasswordGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */; };
 		1B47EB942ABCF70200739463 /* RawTextFieldInputStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */; };
@@ -44,7 +43,7 @@
 		1B8A725C2AA7C77000BB9D13 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8A725B2AA7C77000BB9D13 /* AboutView.swift */; };
 		1B92619B2AB69DDB00EC445D /* TitleTextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B92619A2AB69DDB00EC445D /* TitleTextStyle.swift */; };
 		1B92619D2AB69EE300EC445D /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B92619C2AB69EE300EC445D /* CloseButtonView.swift */; };
-		1B92619F2AB69FF400EC445D /* DeleteButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B92619E2AB69FF400EC445D /* DeleteButtonStyle.swift */; };
+		1B92619F2AB69FF400EC445D /* ProminentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B92619E2AB69FF400EC445D /* ProminentButtonStyle.swift */; };
 		1B9261A12AB6A0F500EC445D /* AccountDetailViewItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9261A02AB6A0F500EC445D /* AccountDetailViewItemStyle.swift */; };
 		1B9261A32AB7CBC100EC445D /* GlobalHelperDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9261A22AB7CBC100EC445D /* GlobalHelperDataService.swift */; };
 		1B9261A52AB7CDAA00EC445D /* ListItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9261A42AB7CDAA00EC445D /* ListItemStyle.swift */; };
@@ -55,6 +54,10 @@
 		1BCAA0062ABFB9F2006CB637 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA0052ABFB9F2006CB637 /* SignUpViewModel.swift */; };
 		1BCAA0082ABFBEE4006CB637 /* SignUpButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA0072ABFBEE4006CB637 /* SignUpButtonStyle.swift */; };
 		1BCAA00A2ABFC100006CB637 /* SignUpViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA0092ABFC100006CB637 /* SignUpViewStyle.swift */; };
+		1BCAA00D2ABFCECB006CB637 /* EmptyListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA00C2ABFCECB006CB637 /* EmptyListRowView.swift */; };
+		1BCAA00F2ABFCF16006CB637 /* ParentViewListItemStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA00E2ABFCF16006CB637 /* ParentViewListItemStyle.swift */; };
+		1BCAA0112ABFCF94006CB637 /* DataListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA0102ABFCF94006CB637 /* DataListStyle.swift */; };
+		1BCAA0132ABFD06D006CB637 /* NoDataButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAA0122ABFD06D006CB637 /* NoDataButtonStyle.swift */; };
 		1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */; };
 		1BEC56BD2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */; };
 		1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */; };
@@ -98,7 +101,6 @@
 
 /* Begin PBXFileReference section */
 		1B42D4222A9E767300763016 /* AccountsDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsDataService.swift; sourceTree = "<group>"; };
-		1B42D4242A9E78A200763016 /* FileManagerTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerTestView.swift; sourceTree = "<group>"; };
 		1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPGeneratorDataService.swift; sourceTree = "<group>"; };
 		1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorDataService.swift; sourceTree = "<group>"; };
 		1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTextFieldInputStyle.swift; sourceTree = "<group>"; };
@@ -135,7 +137,7 @@
 		1B8A725B2AA7C77000BB9D13 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		1B92619A2AB69DDB00EC445D /* TitleTextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTextStyle.swift; sourceTree = "<group>"; };
 		1B92619C2AB69EE300EC445D /* CloseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButtonView.swift; sourceTree = "<group>"; };
-		1B92619E2AB69FF400EC445D /* DeleteButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonStyle.swift; sourceTree = "<group>"; };
+		1B92619E2AB69FF400EC445D /* ProminentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProminentButtonStyle.swift; sourceTree = "<group>"; };
 		1B9261A02AB6A0F500EC445D /* AccountDetailViewItemStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailViewItemStyle.swift; sourceTree = "<group>"; };
 		1B9261A22AB7CBC100EC445D /* GlobalHelperDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHelperDataService.swift; sourceTree = "<group>"; };
 		1B9261A42AB7CDAA00EC445D /* ListItemStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemStyle.swift; sourceTree = "<group>"; };
@@ -148,6 +150,10 @@
 		1BCAA0052ABFB9F2006CB637 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		1BCAA0072ABFBEE4006CB637 /* SignUpButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpButtonStyle.swift; sourceTree = "<group>"; };
 		1BCAA0092ABFC100006CB637 /* SignUpViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewStyle.swift; sourceTree = "<group>"; };
+		1BCAA00C2ABFCECB006CB637 /* EmptyListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyListRowView.swift; sourceTree = "<group>"; };
+		1BCAA00E2ABFCF16006CB637 /* ParentViewListItemStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewListItemStyle.swift; sourceTree = "<group>"; };
+		1BCAA0102ABFCF94006CB637 /* DataListStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataListStyle.swift; sourceTree = "<group>"; };
+		1BCAA0122ABFD06D006CB637 /* NoDataButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataButtonStyle.swift; sourceTree = "<group>"; };
 		1BEC56B82A9D708E009FE9FA /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
 		1BEC56BC2A9E5837009FE9FA /* CopyPopupOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyPopupOverlayViewModel.swift; sourceTree = "<group>"; };
 		1BEC56BE2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyOverlayViewModel.swift; sourceTree = "<group>"; };
@@ -264,6 +270,7 @@
 				1B523DD62AAE9D17002F94EA /* FaviconImageView.swift */,
 				1B92619C2AB69EE300EC445D /* CloseButtonView.swift */,
 				1B8A725B2AA7C77000BB9D13 /* AboutView.swift */,
+				1BCAA00C2ABFCECB006CB637 /* EmptyListRowView.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -284,19 +291,11 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		1B65F2822AA2518200EC2AE8 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				1B42D4242A9E78A200763016 /* FileManagerTestView.swift */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
 		1B9261992AB69D7C00EC445D /* Styles */ = {
 			isa = PBXGroup;
 			children = (
 				1B92619A2AB69DDB00EC445D /* TitleTextStyle.swift */,
-				1B92619E2AB69FF400EC445D /* DeleteButtonStyle.swift */,
+				1B92619E2AB69FF400EC445D /* ProminentButtonStyle.swift */,
 				1B9261A02AB6A0F500EC445D /* AccountDetailViewItemStyle.swift */,
 				1B9261A42AB7CDAA00EC445D /* ListItemStyle.swift */,
 				1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */,
@@ -307,6 +306,9 @@
 				1BCAA0032ABFB8FA006CB637 /* LogoIconStyle.swift */,
 				1BCAA0072ABFBEE4006CB637 /* SignUpButtonStyle.swift */,
 				1BCAA0092ABFC100006CB637 /* SignUpViewStyle.swift */,
+				1BCAA00E2ABFCF16006CB637 /* ParentViewListItemStyle.swift */,
+				1BCAA0102ABFCF94006CB637 /* DataListStyle.swift */,
+				1BCAA0122ABFD06D006CB637 /* NoDataButtonStyle.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -384,7 +386,6 @@
 				1B65F27D2AA250BC00EC2AE8 /* Accounts */,
 				1B65F27E2AA250C700EC2AE8 /* Notes */,
 				1B65F2812AA2514B00EC2AE8 /* Settings */,
-				1B65F2822AA2518200EC2AE8 /* Tests */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -535,7 +536,8 @@
 				1BCAA0062ABFB9F2006CB637 /* SignUpViewModel.swift in Sources */,
 				1BF1A7F22A8E510200663733 /* AccountModel.swift in Sources */,
 				1BCAA0042ABFB8FA006CB637 /* LogoIconStyle.swift in Sources */,
-				1B92619F2AB69FF400EC445D /* DeleteButtonStyle.swift in Sources */,
+				1B92619F2AB69FF400EC445D /* ProminentButtonStyle.swift in Sources */,
+				1BCAA00D2ABFCECB006CB637 /* EmptyListRowView.swift in Sources */,
 				1BF1A7D62A8E4F7C00663733 /* LocalPassApp.swift in Sources */,
 				1B65F2882AA2529B00EC2AE8 /* NoteListItemView.swift in Sources */,
 				1B8A725C2AA7C77000BB9D13 /* AboutView.swift in Sources */,
@@ -543,6 +545,7 @@
 				1BF1A7F62A8E514700663733 /* AccountsViewModel.swift in Sources */,
 				1B5E9C982A9827C000C439CB /* CopyPopupOverlayView.swift in Sources */,
 				1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */,
+				1BCAA0132ABFD06D006CB637 /* NoDataButtonStyle.swift in Sources */,
 				1B65F2862AA2528600EC2AE8 /* AddNoteView.swift in Sources */,
 				1B47EB9C2ABE210500739463 /* AuthenticationTextFieldStyle.swift in Sources */,
 				1B65F2842AA2527A00EC2AE8 /* NotesView.swift in Sources */,
@@ -562,17 +565,18 @@
 				1BCAA00A2ABFC100006CB637 /* SignUpViewStyle.swift in Sources */,
 				1B65F28C2AA25B6F00EC2AE8 /* NoteTestDataService.swift in Sources */,
 				1BF1A7EA2A8E505300663733 /* AccountListItemView.swift in Sources */,
+				1BCAA0112ABFCF94006CB637 /* DataListStyle.swift in Sources */,
 				1B92619D2AB69EE300EC445D /* CloseButtonView.swift in Sources */,
 				1BF1A7F42A8E511600663733 /* AccountTestDataService.swift in Sources */,
 				1B42D4232A9E767300763016 /* AccountsDataService.swift in Sources */,
 				1BF94E482ABA6AC300B51BD6 /* SignUpRootView.swift in Sources */,
 				1B590E912A95888300FFFEE6 /* AddAccountView.swift in Sources */,
+				1BCAA00F2ABFCF16006CB637 /* ParentViewListItemStyle.swift in Sources */,
 				1BCAA0022ABFB795006CB637 /* TextEditorStyle.swift in Sources */,
 				1B523DD72AAE9D17002F94EA /* FaviconImageView.swift in Sources */,
 				1B58B9D22AA800ED0095A62E /* CryptoDataService.swift in Sources */,
 				1B6A622F2AAFE3D3007655F7 /* FaviconImageViewModel.swift in Sources */,
 				1B9261A52AB7CDAA00EC445D /* ListItemStyle.swift in Sources */,
-				1B42D4252A9E78A200763016 /* FileManagerTestView.swift in Sources */,
 				1BCAA0082ABFBEE4006CB637 /* SignUpButtonStyle.swift in Sources */,
 				1B65F28E2AA25C6600EC2AE8 /* NotesDataService.swift in Sources */,
 				1B523DCF2AAD381F002F94EA /* SignUpView.swift in Sources */,
