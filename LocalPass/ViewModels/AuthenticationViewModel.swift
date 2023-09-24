@@ -15,20 +15,8 @@ class AuthenticationViewModel: ObservableObject {
     @Published var authenticated: Bool = false
     @Published var authenticatedWithBiometrics: Bool = false
     
-    func getIncorrectPasswordAlert() -> Alert {
-        let title: Text = Text("Your password was incorrect!")
-        let message: Text = Text("Please try again")
-        let dismissButton: Alert.Button = .default(Text("😢"))
-        
-        return Alert(
-            title: title,
-            message: message,
-            dismissButton: dismissButton
-        )
-    }
-    
-    func rotateKey() {
-        if let password = self.password {
+    static func rotateKey(_ password: String?) {
+        if let password = password {
             let accounts = AccountsDataService.getAccountData()
             let notes = NotesDataService.getNoteData()
          
@@ -46,5 +34,17 @@ class AuthenticationViewModel: ObservableObject {
                     }
             }
         }
+    }
+    
+    static func getIncorrectPasswordAlert() -> Alert {
+        let title: Text = Text("Your password was incorrect!")
+        let message: Text = Text("Please try again")
+        let dismissButton: Alert.Button = .default(Text("😢"))
+        
+        return Alert(
+            title: title,
+            message: message,
+            dismissButton: dismissButton
+        )
     }
 }

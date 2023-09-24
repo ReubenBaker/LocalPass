@@ -261,7 +261,6 @@
 				1BA317DE2A96DDBD00368EDB /* LaunchScreen.storyboard */,
 				1B5E9C972A9827C000C439CB /* CopyPopupOverlayView.swift */,
 				1B5543422A99252300F0B703 /* PrivacyOverlayView.swift */,
-				1B523DD02AAD384B002F94EA /* AuthenticationView.swift */,
 				1B523DD62AAE9D17002F94EA /* FaviconImageView.swift */,
 				1B92619C2AB69EE300EC445D /* CloseButtonView.swift */,
 				1B8A725B2AA7C77000BB9D13 /* AboutView.swift */,
@@ -310,6 +309,14 @@
 				1BCAA0092ABFC100006CB637 /* SignUpViewStyle.swift */,
 			);
 			path = Styles;
+			sourceTree = "<group>";
+		};
+		1BCAA00B2ABFC385006CB637 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				1B523DD02AAD384B002F94EA /* AuthenticationView.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		1BF1A7C92A8E4F7C00663733 = {
@@ -372,6 +379,7 @@
 			children = (
 				1B65F27F2AA2510E00EC2AE8 /* Global */,
 				1B523DCD2AAD37E3002F94EA /* SignUp */,
+				1BCAA00B2ABFC385006CB637 /* Authentication */,
 				1B65F2802AA2512600EC2AE8 /* Main */,
 				1B65F27D2AA250BC00EC2AE8 /* Accounts */,
 				1B65F27E2AA250C700EC2AE8 /* Notes */,

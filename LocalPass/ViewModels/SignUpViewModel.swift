@@ -40,7 +40,7 @@ class SignUpViewModel: ObservableObject {
                 return true
             } catch {
                 print("Error creating files: \(error)")
-            }
+                }
         }
         
         return false
