@@ -13,8 +13,8 @@ struct AboutView: View {
             ["🔐 Data Encryption:\n", "All of your data is always encrypted, using strong AES encryption. Your sensitive information remains indecipherable to anyone without the encryption key\n"],
             ["🔑 PBKDF2 Hashing:\n", "LocalPass employs industry-standard PBKDF2 password hashing with 100k iterations, to ensure that your master password is securely transformed into the encryption key, making it virtually impossible for anyone to reverse engineer. The encryption key is also rotated every time you enter your password.\n"],
             ["🗒️ Secure Notes:\n", "In addition to password management, LocalPass allows you to store secure notes. Personal information, and other sensitive data are all encrypted, giving you peace of mind.\n"],
-            ["🔒 Biometric Authentication:\n", "Access your data with ease using biometric authentication, ensuring a seamless and secure experience.\n",
-            "🤖 Autofill Support:\n", "LocalPass supports credential autofilling in safari and your favourite apps! Just make sure to enable it in your device's settings under:\n'Passwords'>'Password Options'>Allow Filling From: LocalPass!\n"],
+            ["🔒 Biometric Authentication:\n", "Access your data with ease using biometric authentication, ensuring a seamless and secure experience.\n"],
+            ["🤖 Autofill Support:\n", "LocalPass supports credential autofilling in safari and your favourite apps! Just make sure to enable it in your device's settings under:\n>'Passwords'\n>'Password Options'\n>'Allow Filling From:' LocalPass!\n"],
             ["🔄 TOTP Support:\n", "LocalPass supports Time-Based One-Time Passwords (TOTP) for multifactor authentication.\n"],
             ["🌐 iCloud Sync - Beta (Optional):\n", "While your data is protected by encryption on your device, LocalPass provides the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data is ever stored in iCloud, just like on your device. iCloud sync is currently in beta and may produce unexpected results, including total data loss!\n"],
             ["📊 No User Data Collection:\n", "LocalPass is built with a committment to privacy. LocalPass does not collect any personal data whatsoever, and does not talk to any external data servers. It only ever talks to the internet if you have accounts icons or iCloud sync enabled.\n"],
@@ -23,8 +23,8 @@ struct AboutView: View {
         
         let plannedFeatures: [[String]] = [
             ["♻️ Recycle Bin (Optional):\n", "Mistakenly delete something? The recycle bin will help you recover that data securely.\n"],
-            ["📁 Folders:\n", "Help organize your passwords and secure notes with customizable folders.\n"],
             ["🔔 Password Change Reminders (Optional):\n", "Stay secure with password change reminders at your chosen frequency.\n"],
+            ["📁 Folders:\n", "Help organize your passwords and secure notes with customizable folders.\n"],
             ["💳 Secure Storage for Credit Cards and IDs:\n", "Store credit cards, ID numbers, or whatever you'd like! This will also include support for autofilling credit card details.\n"],
             ["📱 Enhanced iPad Support:\n", "LocalPass v1.0 has been designed with the iPhone in mind, however better support for iPad (and Mac running as an iPad app) is coming! No native MacOS app is currently planned.\n"]
         ]
