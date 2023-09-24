@@ -40,11 +40,11 @@ LocalPass is a forever free, ad-free, and open-source solution for managing your
 - **Recycle Bin (Optional):**
   Mistakenly delete something? The recycle bin will help you recover that data securely.
 
-- **Folders:**
-  Help organize your passwords and secure notes with customizable folders.
-
 - **Password Change Reminders (Optional):**
   Stay secure with password change reminders at your chosen frequency.
+
+- **Folders:**
+  Help organize your passwords and secure notes with customizable folders.
 
 - **Secure Storage for Credit Cards and IDs:**
   Store credit cards, ID numbers, or whatever you'd like! This will also include support for autofilling credit card details.
