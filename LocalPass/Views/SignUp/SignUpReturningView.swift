@@ -53,7 +53,7 @@ extension SignUpReturningView {
             Label("Make sure you enter the same password used for LocalPass on your other devices!", systemImage: "exclamationmark.circle.fill")
                 .foregroundColor(.yellow)
             
-            Label("iCloud sync is currently in beta and may produce unexpected results!", systemImage: "exclamationmark.circle.fill")
+            Label("iCloud sync is currently in beta and may produce unexpected results, including total data loss!", systemImage: "exclamationmark.circle.fill")
                 .foregroundColor(.yellow)
         }
         .padding(.vertical)

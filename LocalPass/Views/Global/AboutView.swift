@@ -9,24 +9,24 @@ import SwiftUI
 
 struct AboutView: View {
     var body: some View {
-        let features: [String] = [
-            "🔐 Data Encryption:\nAll of your data is always encrypted, using strong AES encryption. Your sensitive information remains indecipherable to anyone without the encryption key",
-            "🔑 PBKDF2 Hashing:\nLocalPass employs industry-standard PBKDF2 password hashing algorithms to ensure that your master password is securely transformed into the encryption key, making it virtually impossible for anyone to reverse engineer. The encryption key is also rotated every time you enter your password.",
-            "🗒️ Secure Notes:\nIn addition to password management, LocalPass allows you to store secure notes. Personal information, and other sensitive data are all encrypted, giving you peace of mind.",
-            "🔒 Biometric Authentication:\nAccess your data with ease using biometric authentication, ensuring a seamless and secure experience.",
-            "🔄 TOTP Support:\nLocalPass supports Time-Based One-Time Passwords (TOTP) for multifactor authentication.",
-            "🌐 iCloud Sync - Beta (Optional):\nWhile your data is protected by encryption on your device, LocalPass provides the option to sync your data with iCloud between devices for convenience. Only encrypted data is ever stored in iCloud, just like on your device. iCloud sync is currently in beta and may produce unexpected results!",
-            "📊 No User Data Collection:\nLocalPass is built with a committment to privacy. LocalPass does not collect any personal data whatsoever, and does not talk to any external data servers.",
-            "📲 iOS Development Enthusiasts:\nLocalPass is an open-source personal project, created by a Computer Science student. If you are an iOS developer and enjoy using LocalPass, consider exploring the codebase, and submit a pull request to enhance the security and features of LocalPass."
+        let features: [[String]] = [
+            ["🔐 Data Encryption:\n", "All of your data is always encrypted, using strong AES encryption. Your sensitive information remains indecipherable to anyone without the encryption key\n"],
+            ["🔑 PBKDF2 Hashing:\n", "LocalPass employs industry-standard PBKDF2 password hashing with 100k iterations, to ensure that your master password is securely transformed into the encryption key, making it virtually impossible for anyone to reverse engineer. The encryption key is also rotated every time you enter your password.\n"],
+            ["🗒️ Secure Notes:\n", "In addition to password management, LocalPass allows you to store secure notes. Personal information, and other sensitive data are all encrypted, giving you peace of mind.\n"],
+            ["🔒 Biometric Authentication:\n", "Access your data with ease using biometric authentication, ensuring a seamless and secure experience.\n",
+            "🤖 Autofill Support:\n", "LocalPass supports credential autofilling in safari and your favourite apps! Just make sure to enable it in your device's settings under:\n'Passwords'>'Password Options'>Allow Filling From: LocalPass!\n"],
+            ["🔄 TOTP Support:\n", "LocalPass supports Time-Based One-Time Passwords (TOTP) for multifactor authentication.\n"],
+            ["🌐 iCloud Sync - Beta (Optional):\n", "While your data is protected by encryption on your device, LocalPass provides the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data is ever stored in iCloud, just like on your device. iCloud sync is currently in beta and may produce unexpected results, including total data loss!\n"],
+            ["📊 No User Data Collection:\n", "LocalPass is built with a committment to privacy. LocalPass does not collect any personal data whatsoever, and does not talk to any external data servers. It only ever talks to the internet if you have accounts icons or iCloud sync enabled.\n"],
+            ["📲 iOS Development Enthusiasts:\n", "LocalPass is an open-source personal project, created by a Computer Science student. If you are an iOS developer and enjoy using LocalPass, consider exploring the codebase, and submit a pull request to enhance the security and features of LocalPass.\n"]
         ]
         
-        let plannedFeatures: [String] = [
-            "🤖 Password Autofill:\nThis will make logging in to your favourite apps and websites even more convenient!",
-            "♻️ Recycle Bin (Optional):\nMistakenly delete something? The recycle bin will help you recover that data securely.",
-            "🔔 Password Change Reminders (Optional):\nStay secure with password change reminders at your chosen frequency.",
-            "📁 Folders:\nHelp organize your passwords and secure notes with customizable folders.",
-            "💳 Secure Storage for Cards and IDs",
-            "📱 Enhanced iPad Support"
+        let plannedFeatures: [[String]] = [
+            ["♻️ Recycle Bin (Optional):\n", "Mistakenly delete something? The recycle bin will help you recover that data securely.\n"],
+            ["📁 Folders:\n", "Help organize your passwords and secure notes with customizable folders.\n"],
+            ["🔔 Password Change Reminders (Optional):\n", "Stay secure with password change reminders at your chosen frequency.\n"],
+            ["💳 Secure Storage for Credit Cards and IDs:\n", "Store credit cards, ID numbers, or whatever you'd like! This will also include support for autofilling credit card details.\n"],
+            ["📱 Enhanced iPad Support:\n", "LocalPass v1.0 has been designed with the iPhone in mind, however better support for iPad (and Mac running as an iPad app) is coming! No native MacOS app is currently planned.\n"]
         ]
         
         ScrollView {
@@ -38,7 +38,7 @@ struct AboutView: View {
                 
                 VStack(alignment: .leading) {
                     Text("LocalPass is a forever free, ad free, and open-source solution for managing your passwords, secure notes, and more, with an unwaivering emphasis on data encryption and security. With a range of useful features, LocalPass simplifies your digital life while ensuring your information is kept private and secure.")
-                        .font(.headline)
+                        .font(.callout)
                         .padding(.bottom)
                 }
                 
@@ -48,10 +48,17 @@ struct AboutView: View {
                     .padding(.bottom)
                 
                 VStack(alignment: .leading) {
-                    ForEach(features, id: \.self) {feature in
-                        Text(feature)
-                            .padding(.bottom, 4)
-                            .font(.headline)
+                    ForEach(features, id: \.self) { innerArray in
+                        VStack(alignment: .leading) {
+                            Text(innerArray[0])
+                                .font(.callout)
+                                .fontWeight(.heavy)
+                            
+                            if innerArray[1] != "" {
+                                Text(innerArray[1])
+                                    .font(.subheadline)
+                            }
+                        }
                     }
                 }
                 
@@ -61,13 +68,19 @@ struct AboutView: View {
                     .padding(.bottom)
                 
                 VStack(alignment: .leading) {
-                    ForEach(plannedFeatures, id: \.self) { feature in
-                        Text(feature)
-                            .padding(.bottom, 4)
-                            .font(.headline)
+                    ForEach(plannedFeatures, id: \.self) { innerArray in
+                        VStack(alignment: .leading) {
+                            Text(innerArray[0])
+                                .font(.callout)
+                                .fontWeight(.heavy)
+                            
+                            if innerArray[1] != "" {
+                                Text(innerArray[1])
+                                    .font(.subheadline)
+                            }
+                        }
                     }
                 }
-                .frame(maxWidth: .infinity)
                 
                 Text("Thank you for using LocalPass! 🤩")
                     .font(.title3)
@@ -80,11 +93,14 @@ struct AboutView: View {
                             .resizable()
                             .scaledToFit()
                         
+                        Spacer()
+                        
                         Text("GitHub")
                             .foregroundColor(.white)
+                        
+                        Spacer()
                     }
-                    .frame(maxHeight: 25)
-                    .frame(minWidth: 155)
+                    .frame(maxWidth: 170, maxHeight: 25)
                     .padding()
                     .background(.thinMaterial)
                     .cornerRadius(10)
@@ -99,11 +115,14 @@ struct AboutView: View {
                             .resizable()
                             .scaledToFit()
                         
+                        Spacer()
+                        
                         Text("Buy Me A Coffee")
                             .foregroundColor(.white)
+                        
+                        Spacer()
                     }
-                    .frame(maxHeight: 25)
-                    .frame(minWidth: 155)
+                    .frame(maxWidth: 170, maxHeight: 25)
                     .padding()
                     .background(.thinMaterial)
                     .cornerRadius(10)
@@ -118,11 +137,14 @@ struct AboutView: View {
                             .resizable()
                             .scaledToFit()
                         
+                        Spacer()
+                        
                         Text("X")
                             .foregroundColor(.white)
+                        
+                        Spacer()
                     }
-                    .frame(maxHeight: 25)
-                    .frame(minWidth: 155)
+                    .frame(maxWidth: 170, maxHeight: 25)
                     .padding()
                     .background(.thinMaterial)
                     .cornerRadius(10)
@@ -137,11 +159,14 @@ struct AboutView: View {
                             .resizable()
                             .scaledToFit()
                         
+                        Spacer()
+                        
                         Text("License")
                             .foregroundColor(.white)
+                        
+                        Spacer()
                     }
-                    .frame(maxHeight: 25)
-                    .frame(minWidth: 155)
+                    .frame(maxWidth: 170, maxHeight: 25)
                     .padding()
                     .background(.thinMaterial)
                     .cornerRadius(10)
@@ -152,8 +177,11 @@ struct AboutView: View {
                     }
                 }
                 
+                Text("Version: LocalPass v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                    .opacity(0.25)
+                
                 Spacer()
-                    .frame(height: 75)
+                    .frame(height: 70)
             }
             .frame(maxWidth: .infinity)
             .padding()

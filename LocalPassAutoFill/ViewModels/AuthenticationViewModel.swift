@@ -16,7 +16,7 @@ class AuthenticationViewModel: ObservableObject {
     @Published var authenticatedWithBiometrics: Bool = false
     
     static func getIncorrectPasswordAlert() -> Alert {
-        let title: Text = Text("Your password was incorrect!")
+        let title: Text = Text("Your vault password was incorrect!")
         let message: Text = Text("Please try again")
         let dismissButton: Alert.Button = .default(Text("😢"))
         

@@ -84,7 +84,7 @@ class SignUpViewModel: ObservableObject {
     }
     
     static func getPasswordMismatchAlert() -> Alert {
-        let title = Text("Passwords do not match!")
+        let title = Text("Your passwords do not match!")
         let message = Text("Please try again")
         let dismissButton: Alert.Button = .default(Text("😢"))
         

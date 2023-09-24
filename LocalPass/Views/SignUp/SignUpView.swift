@@ -41,7 +41,7 @@ struct SignUpView_Previews: PreviewProvider {
 // Views
 extension SignUpView {
     private var titleItem: some View {
-        Text("Choose Your Password")
+        Text("Choose Your Vault Password")
             .font(.largeTitle)
     }
     
@@ -94,7 +94,7 @@ extension SignUpView {
             .padding(.bottom)
             
             if SignUpViewModel.isValidPassword(password) {
-                Label("If you forget your password, your LocalPass data will not be recoverable!", systemImage: "exclamationmark.circle.fill")
+                Label("If you forget your vault password, your LocalPass data will not be recoverable!", systemImage: "exclamationmark.circle.fill")
                     .foregroundColor(.yellow)
             }
         }
