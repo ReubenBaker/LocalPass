@@ -15,24 +15,21 @@ struct AddNoteView: View {
     @State private var newBody: String = ""
     @State private var noteSuccess: Bool = false
     @State private var showNoteSuccessAlert: Bool = false
-    @FocusState private var titleTextFieldFocused: Bool
-    @FocusState private var bodyTextFieldFocused: Bool
+    @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
-        ScrollView {
             VStack {
                 titleItem
                 bodyItem
                 addItem
+                CloseButtonView()
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical)
-        }
-        .background(.ultraThinMaterial)
-        .overlay(CloseButtonView(), alignment: .bottom)
-        .alert(isPresented: $showNoteSuccessAlert) {
-            getNoteSuccessAlert(noteSuccess: noteSuccess)
-        }
+            .background(.ultraThinMaterial)
+            .alert(isPresented: $showNoteSuccessAlert) {
+                getNoteSuccessAlert(noteSuccess: noteSuccess)
+            }
     }
 }
 
@@ -77,27 +74,30 @@ extension AddNoteView {
             .modifier(TitleTextStyle())
             .tint(.primary)
             .multilineTextAlignment(.center)
-            .focused($titleTextFieldFocused)
+            .focused($focusedTextField, equals: .title)
             .onTapGesture {
                 DispatchQueue.main.async {
-                    titleTextFieldFocused = true
+                    focusedTextField = .title
                 }
             }
     }
     
     private var bodyItem: some View {
-        TextField("Note...", text: $newBody, axis: .vertical)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.headline)
-            .padding()
-            .padding(.top, 4)
-            .tint(.primary)
-            .lineLimit(23...23)
-            .scrollContentBackground(.hidden)
-            .focused($bodyTextFieldFocused)
+        TextEditor(text: $newBody)
+            .modifier(TextEditorStyle())
+            .focused($focusedTextField, equals: .body)
             .onTapGesture {
                 DispatchQueue.main.async {
-                    bodyTextFieldFocused = true
+                    focusedTextField = .body
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                if newBody == "" {
+                    Text("Enter Note...")
+                        .font(.headline)
+                        .padding()
+                        .padding(8)
+                        .opacity(0.25)
                 }
             }
     }
@@ -119,7 +119,6 @@ extension AddNoteView {
                 .background(.cyan)
                 .cornerRadius(10)
                 .shadow(radius: 4)
-                .padding()
         }
     }
 }

@@ -27,18 +27,6 @@ class AuthenticationViewModel: ObservableObject {
         )
     }
     
-    func getBiometricsNotAllowedAlert() -> Alert {
-        let title: Text = Text("Biometrics is currently not allowed!")
-        let message: Text = Text("Please use your password to authenticate instead")
-        let dismissButton: Alert.Button = .default(Text("OK"))
-        
-        return Alert(
-            title: title,
-            message: message,
-            dismissButton: dismissButton
-        )
-    }
-    
     func rotateKey() {
         if let password = self.password {
             let accounts = AccountsDataService.getAccountData()

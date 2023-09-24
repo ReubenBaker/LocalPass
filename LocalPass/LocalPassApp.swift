@@ -56,6 +56,7 @@ struct LocalPassApp: App {
                 }
             }
             .animation(.easeInOut, value: LocalPassApp.settings.signedUp)
+            .overlay(PrivacyOverlayView().environmentObject(privacyOverlayViewModel))
         }
         .onChange(of: authenticationViewModel.authenticated) { authenticatedStatus in
             authenticationStatus = authenticatedStatus
@@ -64,6 +65,11 @@ struct LocalPassApp: App {
             withAnimation(.easeOut) {
                 if phase != .active {
                     privacyOverlayViewModel.showPrivacyOverlay = true
+                    
+                    if LocalPassApp.settings.lockVaultOnBackground {
+                        authenticationViewModel.authenticated = false
+                        authenticationViewModel.authenticatedWithBiometrics = false
+                    }
                 } else {
                     privacyOverlayViewModel.showPrivacyOverlay = false
                 }

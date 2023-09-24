@@ -11,12 +11,11 @@ struct AuthenticationView: View {
     
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     @State private var showIncorrectPasswordAlert: Bool = false
-    @State private var showBiometricsNotAllowedAlert: Bool = false
     @FocusState private var passwordFieldFocused: Bool
     
     var body: some View {
         VStack {
-            Text("Unlock")
+            Text("Unlock Vault")
                 .font(.largeTitle)
                 .foregroundColor(.white)
             
@@ -64,9 +63,6 @@ struct AuthenticationView: View {
                                     AuthenticationViewModel.shared.authenticated = true
                                     authenticationViewModel.authenticatedWithBiometrics = true
                                     authenticationViewModel.authenticated = true
-                                } else {
-                                    showBiometricsNotAllowedAlert.toggle()
-                                    LocalPassApp.settings.biometricsAllowed = false
                             }
                         }
                     }
@@ -75,16 +71,6 @@ struct AuthenticationView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: UIScreen.main.bounds.width / 6)
-                        .opacity(LocalPassApp.settings.biometricsAllowed ? 1.0 : 0.5)
-                }
-                .disabled(!LocalPassApp.settings.biometricsAllowed)
-                .onTapGesture {
-                    if !LocalPassApp.settings.biometricsAllowed {
-                        showBiometricsNotAllowedAlert.toggle()
-                    }
-                }
-                .alert(isPresented: $showBiometricsNotAllowedAlert) {
-                    authenticationViewModel.getBiometricsNotAllowedAlert()
                 }
             }
             

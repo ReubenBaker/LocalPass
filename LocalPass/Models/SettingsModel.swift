@@ -33,18 +33,12 @@ class Settings: ObservableObject {
     @Published var useBiometrics: Bool {
         didSet {
             UserDefaults.standard.set(useBiometrics, forKey: "useBiometrics")
-            
-            if useBiometrics == true && LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-                biometricsAllowed = true
-            } else {
-                biometricsAllowed = false
-            }
         }
     }
     
-    @Published var biometricsAllowed: Bool {
+    @Published var lockVaultOnBackground: Bool {
         didSet {
-            UserDefaults.standard.set(biometricsAllowed, forKey: "biometricsAllowed")
+            UserDefaults.standard.set(lockVaultOnBackground, forKey: "lockVaultOnBackground")
         }
     }
     
@@ -53,6 +47,6 @@ class Settings: ObservableObject {
         self.iCloudSync = UserDefaults.standard.bool(forKey: "iCloudSync")
         self.showFavicons = UserDefaults.standard.bool(forKey: "showFavicons")
         self.useBiometrics = UserDefaults.standard.bool(forKey: "useBiometrics")
-        self.biometricsAllowed = UserDefaults.standard.bool(forKey: "biometricsAllowed")
+        self.lockVaultOnBackground = UserDefaults.standard.bool(forKey: "lockVaultOnBackground")
     }
 }

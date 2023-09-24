@@ -14,9 +14,9 @@ struct DeleteButtonStyle: ButtonStyle {
             .font(.headline)
             .padding()
             .foregroundColor(.primary)
+            .frame(minWidth: 150)
             .background(.red)
             .cornerRadius(10)
             .shadow(radius: 4)
-            .padding()
     }
 }

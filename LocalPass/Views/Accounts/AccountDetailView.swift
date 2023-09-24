@@ -29,42 +29,46 @@ struct AccountDetailView: View {
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
-        ScrollView {
-            VStack {
-                titleItem
+        VStack {
+            titleItem
 
-                if editMode?.wrappedValue != .active {
-                    usernameItem
-                    passwordItem
-                    
-                    if account.url != nil && account.otpSecret != nil {
-                        urlItem
-                        otpItem
-                    } else if account.url != nil && account.otpSecret == nil {
-                        urlItem
-                        noOtpItem
-                    } else if account.url == nil && account.otpSecret != nil {
-                        otpItem
-                        noUrlItem
-                    } else {
-                        noUrlItem
-                        noOtpItem
-                    }
-                } else {
-                    editUsernameItem
-                    editPasswordItem
-                    editUrlItem
-                    editOtpItem
-                }
+            if editMode?.wrappedValue != .active {
+                usernameItem
+                passwordItem
                 
+                if account.url != nil && account.otpSecret != nil {
+                    urlItem
+                    otpItem
+                } else if account.url != nil && account.otpSecret == nil {
+                    urlItem
+                    noOtpItem
+                } else if account.url == nil && account.otpSecret != nil {
+                    otpItem
+                    noUrlItem
+                } else {
+                    noUrlItem
+                    noOtpItem
+                }
+            } else {
+                editUsernameItem
+                editPasswordItem
+                editUrlItem
+                editOtpItem
+            }
+            
+            VStack(alignment: .leading) {
                 creationDateTimeItem
                 updatedDateTimeItem
-                deleteItem
             }
+            
+            deleteItem
+            
+            Spacer()
+            
+            CloseButtonView()
         }
         .padding()
         .background(.ultraThinMaterial)
-        .overlay(CloseButtonView(), alignment: .bottom)
         .overlay(alignment: .top) {
             CopyPopupOverlayView()
         }
@@ -73,7 +77,7 @@ struct AccountDetailView: View {
         }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: $newPassword)
-                .presentationDetents([.fraction(0.45)])
+                .presentationDetents([.fraction(0.5)])
                 .overlay(PrivacyOverlayView())
         }
         .onChange(of: editMode?.wrappedValue) { mode in
@@ -472,7 +476,7 @@ extension AccountDetailView {
         ZStack {
             let createdText = Text("\(GlobalHelperDataService.dateFormatter.string(from: account.creationDateTime))")
             
-            return Text("Time Created: \(createdText)")
+            return Label("Time Created: \(createdText)", systemImage: "plus.circle")
         }
     }
     
@@ -484,7 +488,7 @@ extension AccountDetailView {
                 lastUpdatedText = Text("\(GlobalHelperDataService.dateFormatter.string(from: lastUpdated))")
             }
             
-            return Text("Last Updated: \(lastUpdatedText)")
+            return Label("Last Updated: \(lastUpdatedText)", systemImage: "pencil.circle")
         }
     }
     

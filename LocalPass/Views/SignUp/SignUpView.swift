@@ -65,7 +65,7 @@ struct SignUpView: View {
                     }
                 }
                 .padding()
-                .background(.ultraThinMaterial.opacity(0.5))
+                .background(.ultraThickMaterial.opacity(0.5))
                 .cornerRadius(10)
                 .padding(.bottom)
                 
@@ -75,7 +75,7 @@ struct SignUpView: View {
                 }
             }
             .animation(.easeInOut, value: password)
-            .frame(minHeight: 150)
+            .frame(minHeight: 155)
             .alert(isPresented: $showInvalidPasswordAlert) {
                 getInvalidPasswordAlert()
             }

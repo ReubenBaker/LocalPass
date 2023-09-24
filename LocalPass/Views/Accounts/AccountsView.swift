@@ -131,7 +131,7 @@ extension AccountsView {
     }
     
     private var noAccountItem: some View {
-        VStack {
+        VStack(alignment: .leading) {
             Text("You have no accounts setup yet, time to add your first one! 🤩")
                 .font(.title2)
                 .padding()

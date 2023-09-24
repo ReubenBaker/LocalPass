@@ -20,30 +20,31 @@ struct NoteDetailView: View {
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
-        ScrollView {
-            VStack {
-                if editMode?.wrappedValue != .active {
-                    titleItem
-                    bodyItem
-                } else {
-                    editTitleItem
-                    editBodyItem
-                }
-                
+        VStack {
+            if editMode?.wrappedValue != .active {
+                titleItem
+                bodyItem
+            } else {
+                editTitleItem
+                editBodyItem
+            }
+            
+            VStack(alignment: .leading) {
                 creationDateTimeItem
                 updatedDateTimeItem
-                deleteItem
-                CloseButtonView()
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical)
+            
+            deleteItem
+            CloseButtonView()
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical)
         .background(.ultraThinMaterial)
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
         }
         .onChange(of: editMode?.wrappedValue) { mode in
-            if mode != .active {           
+            if mode != .active {
                 if newTitle != "" || newBody != "" {
                     let updatedNote = Note(
                         title: newTitle != "" ? newTitle : note.title,
@@ -120,25 +121,28 @@ extension NoteDetailView {
     
     private var bodyItem: some View {
         Text(note.body)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .font(.headline)
-            .lineLimit(20...20)
             .padding()
+            .padding(4)
     }
     
     private var editBodyItem: some View {
-        TextField("", text: $newBody, axis: .vertical)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.headline)
-            .padding()
-            .padding(.top, 4)
-            .tint(.primary)
-            .lineLimit(20...20)
-            .scrollContentBackground(.hidden)
+        TextEditor(text: $newBody)
+            .modifier(TextEditorStyle())
             .focused($focusedTextField, equals: .body)
             .onTapGesture {
                 DispatchQueue.main.async {
                     focusedTextField = .body
+                }
+            }
+            .overlay(alignment: .topLeading) {
+                if newBody == "" {
+                    Text("Enter Note...")
+                        .font(.headline)
+                        .padding()
+                        .padding(8)
+                        .opacity(0.25)
                 }
             }
             .onAppear {
@@ -150,7 +154,7 @@ extension NoteDetailView {
         ZStack {
             let createdText = Text("\(GlobalHelperDataService.dateFormatter.string(from: note.creationDateTime))")
             
-            return Text("Time Created: \(createdText)")
+            return Label("Time Created: \(createdText)", systemImage: "plus.circle")
         }
     }
     
@@ -162,7 +166,7 @@ extension NoteDetailView {
                 lastUpdatedText = Text("\(GlobalHelperDataService.dateFormatter.string(from: lastUpdated))")
             }
             
-            return Text("Last Updated: \(lastUpdatedText)")
+            return Label("Last Updated: \(lastUpdatedText)", systemImage: "pencil.circle")
         }
     }
     

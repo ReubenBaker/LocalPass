@@ -25,26 +25,27 @@ struct AddAccountView: View {
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
-        ScrollView {
-            VStack {
-                titleItem
-                nameItem
-                usernameItem
-                passwordItem
-                urlItem
-                otpItem
-                addItem
-            }
+        VStack {
+            titleItem
+            nameItem
+            usernameItem
+            passwordItem
+            urlItem
+            otpItem
+            addItem
+            
+            Spacer()
+            
+            CloseButtonView()
         }
         .padding()
         .background(.ultraThinMaterial)
-        .overlay(CloseButtonView(), alignment: .bottom)
         .alert(isPresented: $showAccountSuccessAlert) {
             getAccountSuccessAlert(accountSuccess: accountSuccess)
         }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: $newPassword)
-                .presentationDetents([.fraction(0.53)])
+                .presentationDetents([.fraction(0.5)])
         }
     }
 }
@@ -268,7 +269,6 @@ extension AddAccountView {
                .background(.cyan)
                .cornerRadius(10)
                .shadow(radius: 4)
-               .padding()
        }
     }
 }

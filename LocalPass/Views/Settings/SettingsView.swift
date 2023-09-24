@@ -12,6 +12,7 @@ struct SettingsView: View {
     
     @StateObject private var settings = LocalPassApp.settings
     @State private var showAboutView: Bool = false
+    let biometricsEnrolled = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     
     var body: some View {
         NavigationStack {
@@ -64,8 +65,6 @@ struct SettingsView: View {
                             LocalPassApp.settings.showFavicons = newValue
                         }
                     
-                    let biometricsEnrolled = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-                    
                     Toggle("Use Biometrics", isOn: $settings.useBiometrics)
                         .onChange(of: Settings.shared.useBiometrics) { newValue in
                             LocalPassApp.settings.useBiometrics = newValue
@@ -91,6 +90,11 @@ struct SettingsView: View {
                         }
                         .disabled(!biometricsEnrolled)
                         .foregroundColor(biometricsEnrolled ? .primary : .primary.opacity(0.5))
+                    
+                        Toggle("Lock Vault When Inactive", isOn: $settings.lockVaultOnBackground)
+                            .onChange(of: settings.lockVaultOnBackground) { newValue in
+                                LocalPassApp.settings.lockVaultOnBackground = newValue
+                            }
                 }
             }
         }
