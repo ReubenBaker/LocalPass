@@ -44,7 +44,7 @@ struct NoteDetailView: View {
         }
         .onChange(of: editMode?.wrappedValue) { mode in
             if mode != .active {
-                if newTitle != "" || newBody != "" {
+                if (newTitle != "" && newTitle != note.title) || (newBody != "" && newBody != note.body) {
                     let updatedNote = Note(
                         title: newTitle != "" ? newTitle : note.title,
                         body: newBody != "" ? newBody : note.body,

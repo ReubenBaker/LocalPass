@@ -40,8 +40,8 @@ class NotesDataService {
             for note in notes {
                 formattedString += "\(String(describing: note.title));;;"
                 formattedString += "\(String(describing: note.body));;;"
-                formattedString += "\(String(describing: note.creationDateTime));;;"
-                formattedString += "\(String(describing: note.updatedDateTime));;;"
+                formattedString += "\(GlobalHelperDataService.dateFormatter.string(from: note.creationDateTime));;;"
+                formattedString += "\(note.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: note.updatedDateTime!) : String(describing: note.updatedDateTime));;;"
                 formattedString += "\(String(describing: note.starred));;;"
                 formattedString += "\(String(describing: note.id));;;"
                 formattedString += "~~~"
@@ -107,6 +107,7 @@ class NotesDataService {
                 
                 if let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt),
                    let path = localPath {
+                    
                     try encryptedBlob.write(to: path, options: .atomic)
                     
                     if LocalPassApp.settings.iCloudSync {

@@ -14,7 +14,7 @@ struct CopyPopupOverlayView: View {
     var body: some View {
         VStack {
             Spacer()
-                .frame(height: copyPopupOverlayViewModel.showCopyPopupOverlay ? 55 : 15)
+                .frame(height: copyPopupOverlayViewModel.showCopyPopupOverlay ? 57.5 : 15)
             
             ZStack {
                 Capsule()

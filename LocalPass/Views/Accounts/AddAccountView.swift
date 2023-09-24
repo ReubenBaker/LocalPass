@@ -175,6 +175,7 @@ extension AddAccountView {
         Button {
             withAnimation() {
                 urlFieldClicked = true
+                focusedTextField = .url
             }
         } label: {
             if urlFieldClicked {
@@ -213,6 +214,7 @@ extension AddAccountView {
         Button {
             withAnimation() {
                 TOTPFieldClicked = true
+                focusedTextField = .otpSecret
             }
         } label: {
             if TOTPFieldClicked {

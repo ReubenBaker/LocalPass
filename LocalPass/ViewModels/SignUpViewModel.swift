@@ -29,7 +29,7 @@ class SignUpViewModel: ObservableObject {
         let blob: String = "empty"
         
         let accountsPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassaccounts.txt")
-        let notesPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassaccounts.txt")
+        let notesPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassnotes.txt")
         
         if let tag = Bundle.main.bundleIdentifier,
            let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),

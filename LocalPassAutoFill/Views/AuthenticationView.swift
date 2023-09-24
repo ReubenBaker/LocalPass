@@ -78,7 +78,7 @@ extension AuthenticationView {
             CryptoDataService.authenticateWithBiometrics { success in
                 if success {
                     if let blob = AccountsDataService.getBlob(),
-                       let tag = Bundle.main.bundleIdentifier,
+                       let tag = Bundle.main.bundleIdentifier?.components(separatedBy: ".").dropLast().joined(separator: "."),
                        let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass"),
                        let key = CryptoDataService.readKey(tag: tag, iCloudSync: sharedUserDefaults.bool(forKey: "iCloudSync")),
                        let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {

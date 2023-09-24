@@ -41,7 +41,7 @@ struct SignUpView_Previews: PreviewProvider {
 // Views
 extension SignUpView {
     private var titleItem: some View {
-        Text("Choose Your Vault Password")
+        Text("Choose Vault Password")
             .font(.largeTitle)
     }
     
