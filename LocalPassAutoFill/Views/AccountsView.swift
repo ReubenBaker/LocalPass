@@ -41,6 +41,7 @@ extension AccountsView {
         }
         .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
+        .padding(.bottom)
     }
     
     private var noAccountItem: some View {
