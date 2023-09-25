@@ -43,7 +43,7 @@ struct AddAccountView: View {
         }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: $newPassword)
-                .presentationDetents([.fraction(0.5)])
+                .presentationDetents([.fraction(0.45)])
         }
     }
 }

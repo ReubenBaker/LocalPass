@@ -11,7 +11,7 @@ struct AboutView: View {
     var body: some View {
         let features: [[String]] = [
             ["🔐 Data Encryption:\n", "All of your data is always encrypted, using strong AES encryption. Your sensitive information remains indecipherable to anyone without the encryption key\n"],
-            ["🔑 PBKDF2 Hashing:\n", "LocalPass employs industry-standard PBKDF2 password hashing with 100k iterations, to ensure that your master password is securely transformed into the encryption key, making it virtually impossible for anyone to reverse engineer. The encryption key is also rotated every time you enter your password.\n"],
+            ["🔑 PBKDF2 Key Derivation:\n", "LocalPass employs industry-standard PBKDF2 key derivation with 100k iterations, to ensure that your master password is securely transformed into the encryption key, making it virtually impossible for anyone to reverse engineer. The encryption key is also rotated every time you enter your password.\n"],
             ["🗒️ Secure Notes:\n", "In addition to password management, LocalPass allows you to store secure notes. Personal information, and other sensitive data are all encrypted, giving you peace of mind.\n"],
             ["🔒 Biometric Authentication:\n", "Access your data with ease using biometric authentication, ensuring a seamless and secure experience.\n"],
             ["🤖 Autofill Support:\n", "LocalPass supports credential autofilling in safari and your favourite apps! Just make sure to enable it in your device's settings under:\n>'Passwords'\n>'Password Options'\n>'Allow Filling From:' LocalPass!\n"],
