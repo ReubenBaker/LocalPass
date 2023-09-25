@@ -21,9 +21,9 @@ class AccountsViewModel: ObservableObject {
         let accounts = AccountsDataService.getAccountData()
         self.accounts = accounts
         
-        if accounts == nil {
-            self.accounts = AccountTestDataService.accounts // REMOVE!
-        }
+//        if accounts == nil {
+//            self.accounts = AccountTestDataService.accounts // REMOVE!
+//        }
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) -> Bool {
