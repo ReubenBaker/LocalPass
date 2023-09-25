@@ -21,9 +21,9 @@ class NotesViewModel: ObservableObject {
         let notes = NotesDataService.getNoteData()
         self.notes = notes
         
-//        if notes == nil {
-//            self.notes = NoteTestDataService.notes // REMOVE!
-//        }
+        if notes == nil {
+            self.notes = NoteTestDataService.notes // REMOVE!
+        }
     }
     
     func addNote(title: String, body: String) -> Bool {
@@ -61,14 +61,7 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    func sortNotes(_ sortSelection: String) {
-        if self.notes != nil {
-            NotesViewModel.sortNotes(&self.notes, sortOption: sortSelection)
-            NotesViewModel.sortNotesByStar(&self.notes)
-        }
-    }
-    
-    static func sortNotes(_ notes: inout [Note]?, sortOption: String) {
+    func sortNotesByOption(_ notes: inout [Note]?, sortOption: String) {
         if let unsortedNotes = notes {
             var sortedNotes: [Note]? = nil
             
@@ -84,10 +77,10 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    static func sortNotesByStar(_ notes: inout [Note]?) {
+    func sortNotesByStar(_ notes: inout [Note]?) {
         if let unsortedNotes = notes {
             let starredNotes: [Note] = unsortedNotes.filter({ $0.starred })
-            let unstarredNotes: [Note] = unsortedNotes.filter({ $0.starred })
+            let unstarredNotes: [Note] = unsortedNotes.filter({ !$0.starred })
             
             notes = starredNotes + unstarredNotes
         }

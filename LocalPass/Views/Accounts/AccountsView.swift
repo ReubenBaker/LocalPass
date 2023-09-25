@@ -33,7 +33,8 @@ struct AccountsView: View {
             accountsViewModel.getDeleteAlert()
         }
         .onChange(of: sortOption) { newValue in
-            accountsViewModel.sortAccounts(newValue)
+            accountsViewModel.sortAccountsByOption(&accountsViewModel.accounts, sortOption: newValue)
+            accountsViewModel.sortAccountsByStar(&accountsViewModel.accounts)
         }
     }
 }
@@ -72,7 +73,7 @@ extension AccountsView {
                              Button {
                                  if let index = accountsViewModel.accounts?.firstIndex(where: { $0.id == account.id }) {
                                      accountsViewModel.accounts?[index].starred.toggle()
-                                     AccountsViewModel.sortAccountsByStar(&accountsViewModel.accounts)
+                                     accountsViewModel.sortAccountsByStar(&accountsViewModel.accounts)
                                  }
                              } label: {
                                  Image(systemName: "star")

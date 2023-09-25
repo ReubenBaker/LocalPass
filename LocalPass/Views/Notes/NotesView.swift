@@ -33,7 +33,8 @@ struct NotesView: View {
             notesViewModel.getDeleteAlert()
         }
         .onChange(of: sortSelection) { newValue in
-            notesViewModel.sortNotes(newValue)
+            notesViewModel.sortNotesByOption(&notesViewModel.notes, sortOption: newValue)
+            notesViewModel.sortNotesByStar(&notesViewModel.notes)
         }
     }
 }
@@ -72,7 +73,7 @@ extension NotesView {
                             Button {
                                 if let index = notesViewModel.notes?.firstIndex(where: { $0.id == note.id }) {
                                     notesViewModel.notes?[index].starred.toggle()
-                                    NotesViewModel.sortNotesByStar(&notesViewModel.notes)
+                                    notesViewModel.sortNotesByStar(&notesViewModel.notes)
                                 }
                             } label: {
                                 Image(systemName: "star")

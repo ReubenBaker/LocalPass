@@ -21,9 +21,9 @@ class AccountsViewModel: ObservableObject {
         let accounts = AccountsDataService.getAccountData()
         self.accounts = accounts
         
-//        if accounts == nil {
-//            self.accounts = AccountTestDataService.accounts // REMOVE!
-//        }
+        if accounts == nil {
+            self.accounts = AccountTestDataService.accounts // REMOVE!
+        }
     }
     
     func addAccount(name: String, username: String, password: String, url: String? = nil, otpSecret: String? = nil) -> Bool {
@@ -64,14 +64,7 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func sortAccounts(_ sortOption: String) {
-        if self.accounts != nil {
-            AccountsViewModel.sortAccountsByOption(&self.accounts, sortOption: sortOption)
-            AccountsViewModel.sortAccountsByStar(&self.accounts)
-        }
-    }
-    
-    static func sortAccountsByOption(_ accounts: inout [Account]?, sortOption: String) {
+    func sortAccountsByOption(_ accounts: inout [Account]?, sortOption: String) {
         if let unsortedAccounts = accounts {
             var sortedAccounts: [Account]? = nil
             
@@ -87,10 +80,10 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    static func sortAccountsByStar(_ accounts: inout [Account]?) {
+    func sortAccountsByStar(_ accounts: inout [Account]?) {
         if let unsortedAccounts = accounts {
             let starredAccounts: [Account] = unsortedAccounts.filter({ $0.starred })
-            let unstarredAccounts: [Account] = unsortedAccounts.filter({ $0.starred })
+            let unstarredAccounts: [Account] = unsortedAccounts.filter({ !$0.starred })
             
             accounts = starredAccounts + unstarredAccounts
         }
