@@ -19,21 +19,19 @@ struct FaviconImageView: View {
         Group {
             if isLoading {
                 ZStack {
-//                    Image(systemName: "circle.dashed")
-//                        .resizable()
-//                        .scaledToFit()
-//                    
-//                    ProgressView()
-                    
-                    Circle()
-                        .stroke(Color("AccentColor"), lineWidth: 5)
-                        .rotationEffect(.degrees(rotation))
-//                        .onAppear {
-//                            withAnimation(Animation.linear(duration: 1).repeatForever(autoreverses: false)) {
-//                                rotation += 360
-//                            }
-//                        }
+                    ForEach(1..<6) { x in
+                        Circle()
+                            .trim(from: 0, to: 0.1)
+                            .stroke(Color("AccentColor"), lineWidth: 3)
+                            .rotationEffect(.degrees(rotation + (72 * Double(x))))
+                            .onAppear {
+                                withAnimation(Animation.linear(duration: 5).repeatForever(autoreverses: false)) {
+                                    rotation += 360
+                                }
+                            }
+                    }
                 }
+                .scaledToFit()
             } else if let image = image {
                 Image(uiImage: image)
                     .resizable()
