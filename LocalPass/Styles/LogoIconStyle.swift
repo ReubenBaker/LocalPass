@@ -13,7 +13,7 @@ extension Image {
         self
             .resizable()
             .scaledToFit()
-            .frame(maxWidth: large ? UIScreen.main.bounds.width / 2 : 75, maxHeight: large ? UIScreen.main.bounds.width / 2 : 75)
+            .frame(maxWidth: large ? 250 : 75, maxHeight: large ? 250 : 75)
             .padding()
     }
 }
