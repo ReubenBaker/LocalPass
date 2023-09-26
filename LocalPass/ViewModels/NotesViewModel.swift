@@ -43,7 +43,7 @@ class NotesViewModel: ObservableObject {
     
     func updateNote(id: UUID, note: Note) {
         if let index = notes?.firstIndex(where: { $0.id == id }) {
-            notes?[index] = note
+            self.notes?[index] = note
         }
     }
     

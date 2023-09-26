@@ -85,6 +85,7 @@ extension AccountsView {
                  }
              }
         }
+        .animation(.easeOut, value: accountsViewModel.accounts)
         .modifier(DataListStyle(type: "Accounts"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

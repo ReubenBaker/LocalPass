@@ -38,8 +38,8 @@ class NotesDataService {
             var formattedString: String = ""
             
             for note in notes {
-                formattedString += "\(String(describing: note.title));;;"
-                formattedString += "\(String(describing: note.body));;;"
+                formattedString += "\(note.title != "" ? String(describing: note.title) : "?");;;"
+                formattedString += "\(note.body != "" ? String(describing: note.body) : "?");;;"
                 formattedString += "\(GlobalHelperDataService.dateFormatter.string(from: note.creationDateTime));;;"
                 formattedString += "\(note.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: note.updatedDateTime ?? Date(timeIntervalSince1970: 0)) : String(describing: note.updatedDateTime));;;"
                 formattedString += "\(String(describing: note.starred));;;"

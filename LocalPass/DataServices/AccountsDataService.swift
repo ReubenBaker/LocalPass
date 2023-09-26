@@ -38,14 +38,14 @@ class AccountsDataService {
             var formattedString: String = ""
             
             for account in accounts {
-                formattedString += "\(String(describing: account.name));;;"
-                formattedString += "\(String(describing: account.username));;;"
-                formattedString += "\(String(describing: account.password));;;"
-                formattedString += "\(account.url ?? String(describing: account.url));;;"
+                formattedString += "\(account.name != "" ? String(describing: account.name) : "?");;;"
+                formattedString += "\(account.username != "" ? String(describing: account.username) : "?");;;"
+                formattedString += "\(account.password != "" ? String(describing: account.password) : "?");;;"
+                formattedString += "\(account.url ?? (account.url != "" ? String(describing: account.url) : "?"));;;"
                 formattedString += "\(GlobalHelperDataService.dateFormatter.string(from: account.creationDateTime));;;"
                 formattedString += "\(account.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: account.updatedDateTime ?? Date(timeIntervalSince1970: 0)) : String(describing: account.updatedDateTime));;;"
                 formattedString += "\(String(describing: account.starred));;;"
-                formattedString += "\(account.otpSecret ?? String(describing: account.otpSecret));;;"
+                formattedString += "\(account.otpSecret ?? (account.otpSecret != "" ? String(describing: account.otpSecret) : "?"));;;"
                 formattedString += "\(String(describing: account.id));;;"
                 formattedString += "~~~"
             }

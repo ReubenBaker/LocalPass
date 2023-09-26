@@ -12,8 +12,9 @@ struct NoteDetailView: View {
     @Environment(\.editMode) private var editMode
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @Binding var note: Note
-    @State private var newTitle: String = ""
-    @State private var newBody: String = ""
+    @State private var newTitle: String?
+    @State private var newBody: String?
+    @State private var newUpdatedDateTime: Date?
     @State private var showDeleteAlert: Bool = false
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
@@ -44,24 +45,21 @@ struct NoteDetailView: View {
         }
         .onChange(of: editMode?.wrappedValue) { mode in
             if mode != .active {
-                if (newTitle != "" && newTitle != note.title) || (newBody != "" && newBody != note.body) {
+                if (newTitle != nil && newTitle != note.title) || (newBody != nil && newBody != note.body) {
                     let updatedNote = Note(
-                        title: newTitle != "" ? newTitle : note.title,
-                        body: newBody != "" ? newBody : note.body,
+                        title: newTitle ?? note.title,
+                        body: newBody ?? note.body,
                         creationDateTime: note.creationDateTime,
                         updatedDateTime: Date(),
                         starred: note.starred,
                         id: note.id
                     )
                     
-                    notesViewModel.updateNote(id: note.id, note: updatedNote)
+                    newUpdatedDateTime = Date()
                     
-                    (newTitle, newBody) = ("", "")
+                    notesViewModel.updateNote(id: note.id, note: updatedNote)
                 }
             }
-        }
-        .onDisappear {
-            notesViewModel.updateNote(id: note.id, note: note)
         }
     }
 }
@@ -81,7 +79,7 @@ struct NoteDetailView_Previews: PreviewProvider {
 extension NoteDetailView {
     private var titleItem: some View {
         ZStack {
-            Text(note.title)
+            Text(newTitle ?? note.title)
                 .modifier(TitleTextStyle())
             
             HStack {
@@ -94,7 +92,10 @@ extension NoteDetailView {
     
     private var editTitleItem: some View {
         ZStack {
-            TextField("\(note.title)", text: $newTitle)
+            TextField("\(newTitle ?? note.title)", text: Binding(
+                get: { newTitle ?? "" },
+                set: { newTitle = $0 }
+            ))
                 .modifier(TitleTextStyle())
                 .tint(.primary)
                 .multilineTextAlignment(.center)
@@ -105,7 +106,9 @@ extension NoteDetailView {
                     }
                 }
                 .onAppear {
-                    newTitle = note.title
+                    if newTitle == nil {
+                        newTitle = note.title
+                    }
                 }
             
             HStack {
@@ -117,7 +120,7 @@ extension NoteDetailView {
     }
     
     private var bodyItem: some View {
-        Text(note.body)
+        Text(newBody ?? note.body)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .font(.headline)
             .padding()
@@ -125,7 +128,10 @@ extension NoteDetailView {
     }
     
     private var editBodyItem: some View {
-        TextEditor(text: $newBody)
+        TextEditor(text: Binding(
+            get: { newBody ?? "" },
+            set: { newBody = $0 }
+        ))
             .modifier(TextEditorStyle())
             .focused($focusedTextField, equals: .body)
             .onTapGesture {
@@ -143,7 +149,9 @@ extension NoteDetailView {
                 }
             }
             .onAppear {
-                newBody = note.body
+                if newBody == nil {
+                    newBody = note.body
+                }
             }
     }
     
@@ -159,7 +167,7 @@ extension NoteDetailView {
         ZStack {
             var lastUpdatedText = Text("Never")
 
-            if let lastUpdated = note.updatedDateTime {
+            if let lastUpdated = newUpdatedDateTime ?? note.updatedDateTime {
                 lastUpdatedText = Text("\(GlobalHelperDataService.dateFormatter.string(from: lastUpdated))")
             }
             

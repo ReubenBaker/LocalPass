@@ -67,9 +67,10 @@ struct SettingsView: View {
                     
                     Toggle("iCloud Sync (Beta) \(Image(systemName: LocalPassApp.settings.iCloudSync ? "icloud.fill" : "icloud").symbolRenderingMode(LocalPassApp.settings.iCloudSync ? .multicolor : .monochrome))", isOn: $settings.iCloudSync)
                         .onChange(of: settings.iCloudSync) { newValue in
-                            if let accounts = AccountsDataService.getAccountData(),
-                               let notes = NotesDataService.getNoteData(),
-                               let blob = AccountsDataService.getBlob() {
+                            let accounts = AccountsDataService.getAccountData()
+                            let notes = NotesDataService.getNoteData()
+                            
+                            if let blob = AccountsDataService.getBlob() {
                                 
                                 let salt = blob.prefix(16)
                                 

@@ -13,10 +13,11 @@ struct AccountDetailView: View {
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
-    @State private var newUsername: String = ""
-    @State private var newPassword: String = ""
-    @State private var newUrl: String = ""
-    @State private var newOtpSecret: String = ""
+    @State private var newUsername: String?
+    @State private var newPassword: String?
+    @State private var newUrl: String?
+    @State private var newOtpSecret: String?
+    @State private var newUpdatedDateTime: Date?
     @State private var currentOtpSecret: String? = nil
     @State private var otpValue: String = ""
     @State private var otpTimeLeft: Int = 0
@@ -24,6 +25,8 @@ struct AccountDetailView: View {
     @State private var otpFlashing: Bool = false
     @State private var showDeleteAlert: Bool = false
     @State private var showPassword: Bool = false
+    @State private var showUrl: Bool = false
+    @State private var showTOTP: Bool = false
     @State private var addUrlFieldClicked: Bool = false
     @State private var addTOTPFieldClicked: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
@@ -37,13 +40,13 @@ struct AccountDetailView: View {
                 usernameItem
                 passwordItem
                 
-                if account.url != nil && account.otpSecret != nil {
+                if showUrl && showTOTP {
                     urlItem
                     otpItem
-                } else if account.url != nil && account.otpSecret == nil {
+                } else if showUrl && !showTOTP {
                     urlItem
                     noOtpItem
-                } else if account.url == nil && account.otpSecret != nil {
+                } else if !showUrl && showTOTP {
                     otpItem
                     noUrlItem
                 } else {
@@ -75,33 +78,53 @@ struct AccountDetailView: View {
             accountsViewModel.getDeleteAlert()
         }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
-            PasswordGeneratorView(password: $newPassword)
+            PasswordGeneratorView(password: Binding(
+                get: { newPassword ?? "" },
+                set: { newPassword = $0 }
+            ))
                 .presentationDetents([.fraction(0.45)])
                 .overlay(PrivacyOverlayView())
         }
         .onChange(of: editMode?.wrappedValue) { mode in
             if mode != .active {
-                if newUsername != "" || newPassword != "" || newUrl != "" || newOtpSecret != "" {
+                if (newUsername != nil && newUsername != account.username)
+                    || (newPassword != nil && newPassword != account.password)
+                    || (newUrl != nil && newUrl != account.url)
+                    || (newOtpSecret != nil && newOtpSecret != account.otpSecret) {
                     let updatedAccount = Account(
                         name: account.name,
-                        username: newUsername != "" ? newUsername : account.username,
-                        password: newPassword != "" ? newPassword : account.password,
-                        url: newUrl != "" ? newUrl : account.url,
+                        username: newUsername ?? account.username,
+                        password: newPassword ?? account.password,
+                        url: newUrl ?? account.url,
                         creationDateTime: account.creationDateTime,
                         updatedDateTime: Date(),
                         starred: account.starred,
-                        otpSecret: newOtpSecret != "" ? newOtpSecret : account.otpSecret,
+                        otpSecret: newOtpSecret ?? account.otpSecret,
                         id: account.id
                     )
                     
-                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
+                    if newUrl != nil {
+                        showUrl = true
+                    }
                     
-                    (newUsername, newPassword, newUrl, newOtpSecret) = ("", "", "", "")
+                    if newOtpSecret != nil {
+                        showTOTP = true
+                    }
+                    
+                    newUpdatedDateTime = Date()
+                    
+                    accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                 }
             }
         }
-        .onDisappear {
-            accountsViewModel.updateAccount(id: account.id, account: account)
+        .onAppear {
+            if account.url != nil {
+                showUrl = true
+            }
+            
+            if account.otpSecret != nil {
+                showTOTP = true
+            }
         }
     }
 }
@@ -160,11 +183,11 @@ extension AccountDetailView {
     
     private var usernameItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(account.username)
+            GlobalHelperDataService.copyToClipboard(newUsername ?? account.username)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
-                if let url = account.url {
+                if let url = newUrl ?? account.url {
                     if LocalPassApp.settings.showFavicons {
                         FaviconImageView(url: url)
                     } else {
@@ -176,7 +199,7 @@ extension AccountDetailView {
                         .ListItemImageStyle()
                 }
                 
-                Text(account.username)
+                Text(newUsername ?? account.username)
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -190,7 +213,10 @@ extension AccountDetailView {
             Image(systemName: "at.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("\(account.username)", text: $newUsername)
+            TextField("\(newUsername ?? account.username)", text: Binding(
+                get: { newUsername ?? account.username },
+                set: { newUsername = $0 }
+            ))
                 .modifier(RawTextFieldInputStyle())
                 .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .username)
@@ -205,15 +231,24 @@ extension AccountDetailView {
     
     private var passwordItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(account.password)
+            GlobalHelperDataService.copyToClipboard(newPassword ?? account.password)
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "lock.circle.fill")
                     .ListItemImageStyle()
                 
-                Text(showPassword ? account.password : "********")
-                    .fontWeight(.semibold)
+//                Text(showPassword ? newPassword ?? account.password : "....")
+//                    .fontWeight(.semibold)
+                
+                if showPassword {
+                    Text(newPassword ?? account.password)
+                        .fontWeight(.semibold)
+                } else {
+                    SecureField("", text: Binding.constant(String(repeating: "¿", count: account.password.count)))
+                        .modifier(ListItemTextFieldStyle())
+                        .disabled(true)
+                }
                 
                 Spacer()
                 
@@ -234,7 +269,10 @@ extension AccountDetailView {
                 .ListItemImageStyle()
             
             if showPassword {
-                TextField("\(account.password)", text: $newPassword)
+                TextField("\(newPassword ?? account.password)", text: Binding(
+                    get: { newPassword ?? account.password },
+                    set: { newPassword = $0 }
+                ))
                     .modifier(RawTextFieldInputStyle())
                     .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
@@ -244,7 +282,10 @@ extension AccountDetailView {
                         }
                     }
             } else {
-                SecureField("********", text: $newPassword)
+                SecureField("", text: Binding(
+                    get: { newPassword ?? account.password },
+                    set: { newPassword = $0 }
+                ))
                     .modifier(RawTextFieldInputStyle())
                     .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
@@ -276,14 +317,14 @@ extension AccountDetailView {
     
     private var urlItem: some View {
         Button {
-            GlobalHelperDataService.copyToClipboard(account.url ?? "")
+            GlobalHelperDataService.copyToClipboard(newUrl ?? (account.url ?? ""))
             copyPopupOverlayViewModel.displayCopyPopupOverlay()
         } label: {
             HStack {
                 Image(systemName: "link.circle.fill")
                     .ListItemImageStyle()
                 
-                Text(account.url ?? "")
+                Text(newUrl ?? (account.url ?? ""))
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -304,7 +345,10 @@ extension AccountDetailView {
                     Image(systemName: "link.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("Enter url...", text: $newUrl)
+                    TextField("Enter url...", text: Binding(
+                        get: { newUrl ?? "" },
+                        set: { newUrl = $0 }
+                    ))
                         .modifier(RawTextFieldInputStyle())
                         .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .url)
@@ -328,13 +372,14 @@ extension AccountDetailView {
                             
                             accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                             
-                            newUrl = ""
+                            if newUrl != nil {
+                                showUrl = true
+                            }
                         }
                     
                     Button {
                         withAnimation() {
                             addUrlFieldClicked = false
-                            newUrl = ""
                         }
                     } label: {
                         Image(systemName: "xmark")
@@ -353,7 +398,10 @@ extension AccountDetailView {
             Image(systemName: "link.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("\(account.url ?? "Enter url...")", text: $newUrl)
+            TextField("\(newUrl ?? (account.url ?? "Enter url..."))", text: Binding(
+                get: { newUrl ?? (account.url ?? "") },
+                set: { newUrl = $0 }
+            ))
                 .modifier(RawTextFieldInputStyle())
                 .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .url)
@@ -381,12 +429,12 @@ extension AccountDetailView {
                         updateTimeLeft()
                         startTOTPTimer()
                         
-                        if let secret = account.otpSecret {
+                        if let secret = newOtpSecret ?? account.otpSecret {
                             currentOtpSecret = secret
                             generateTOTP()
                         }
                     }
-                    .onChange(of: account.otpSecret ?? "") { newSecret in
+                    .onChange(of: newOtpSecret ?? (account.otpSecret ?? "")) { newSecret in
                         currentOtpSecret = newSecret
                         generateTOTP()
                     }
@@ -440,7 +488,10 @@ extension AccountDetailView {
                     Image(systemName: "repeat.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("Enter TOTP key...", text: $newOtpSecret)
+                    TextField("Enter TOTP key...", text: Binding(
+                        get: { newOtpSecret ?? "" },
+                        set: { newOtpSecret = $0 }
+                    ))
                         .modifier(RawTextFieldInputStyle())
                         .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .otpSecret)
@@ -464,13 +515,14 @@ extension AccountDetailView {
                             
                             accountsViewModel.updateAccount(id: account.id, account: updatedAccount)
                             
-                            newOtpSecret = ""
+                            if newOtpSecret != nil {
+                                showTOTP = true
+                            }
                         }
                     
                     Button {
                         withAnimation() {
                             addTOTPFieldClicked = false
-                            newOtpSecret = ""
                         }
                     } label: {
                         Image(systemName: "xmark")
@@ -489,7 +541,10 @@ extension AccountDetailView {
             Image(systemName: "repeat.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("\(account.otpSecret ?? "Enter TOTP key...")", text: $newOtpSecret)
+            TextField("\(newOtpSecret ?? (account.otpSecret ?? "Enter TOTP key..."))", text: Binding(
+                get: { newOtpSecret ?? (account.otpSecret ?? "") },
+                set: { newOtpSecret = $0 }
+            ))
                 .modifier(RawTextFieldInputStyle())
                 .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .otpSecret)
@@ -514,7 +569,7 @@ extension AccountDetailView {
         ZStack {
             var lastUpdatedText = Text("Never")
 
-            if let lastUpdated = account.updatedDateTime {
+            if let lastUpdated = newUpdatedDateTime ?? account.updatedDateTime {
                 lastUpdatedText = Text("\(GlobalHelperDataService.dateFormatter.string(from: lastUpdated))")
             }
             

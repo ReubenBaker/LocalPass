@@ -85,6 +85,7 @@ extension NotesView {
                 }
             }
         }
+        .animation(.easeOut, value: notesViewModel.notes)
         .modifier(DataListStyle(type: "Notes"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {

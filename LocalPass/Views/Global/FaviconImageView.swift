@@ -12,12 +12,28 @@ struct FaviconImageView: View {
     @StateObject private var faviconImageViewModel = FaviconImageViewModel()
     @State private var image: UIImage?
     @State private var isLoading: Bool = false
+    @State private var rotation: Double = 0.0
     let url: String
     
     var body: some View {
         Group {
             if isLoading {
-                ProgressView()
+                ZStack {
+//                    Image(systemName: "circle.dashed")
+//                        .resizable()
+//                        .scaledToFit()
+//                    
+//                    ProgressView()
+                    
+                    Circle()
+                        .stroke(Color("AccentColor"), lineWidth: 5)
+                        .rotationEffect(.degrees(rotation))
+//                        .onAppear {
+//                            withAnimation(Animation.linear(duration: 1).repeatForever(autoreverses: false)) {
+//                                rotation += 360
+//                            }
+//                        }
+                }
             } else if let image = image {
                 Image(uiImage: image)
                     .resizable()

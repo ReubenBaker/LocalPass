@@ -49,7 +49,7 @@ struct LocalPassApp: App {
                                 .environmentObject(authenticationViewModel)
                         }
                     }
-                    .animation(.easeInOut, value: authenticationStatus)
+                    .animation(.easeInOut, value: authenticationViewModel.authenticated)
                 } else {
                     SignUpRootView()
                         .environmentObject(authenticationViewModel)

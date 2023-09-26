@@ -46,7 +46,7 @@ class AccountsViewModel: ObservableObject {
     
     func updateAccount(id: UUID, account: Account) {
         if let index = accounts?.firstIndex(where: { $0.id == id }) {
-            accounts?[index] = account
+            self.accounts?[index] = account
         }
     }
     
