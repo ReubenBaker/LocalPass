@@ -1,0 +1,33 @@
+Privacy Policy for LocalPass
+
+LocalPass is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information in our app.
+
+Information We Collect:
+
+LocalPass does not collect any information or data!
+
+Information We Don't Collect:
+
+Personal Data: LocalPass does not collect any personal information such as your name, email address, or phone number.
+
+Location Data: We do not track your location or use any location-based services.
+
+Device Information: LocalPass does not gather any information about your device.
+
+Data Encryption:
+
+LocalPass employs strong AES encryption to secure your data, and we never have access to your passwords, notes, or any other sensitive information.
+
+Third-Party Services:
+
+LocalPass does not integrate with or share data with any third-party services, social media platforms, or analytics tools.
+
+Contact Us:
+
+If you have any questions or concerns about your privacy while using LocalPass, please feel free to contact us at app.localpass@gmail.com
+
+Changes to this Policy:
+
+We may update our Privacy Policy from time to time. Any changes will be reflected on this page.
+
+Last Updated: 26/09/2023
