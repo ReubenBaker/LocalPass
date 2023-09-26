@@ -43,7 +43,7 @@ class AccountsDataService {
                 formattedString += "\(String(describing: account.password));;;"
                 formattedString += "\(account.url ?? String(describing: account.url));;;"
                 formattedString += "\(GlobalHelperDataService.dateFormatter.string(from: account.creationDateTime));;;"
-                formattedString += "\(account.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: account.updatedDateTime!) : String(describing: account.updatedDateTime));;;"
+                formattedString += "\(account.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: account.updatedDateTime ?? Date(timeIntervalSince1970: 0)) : String(describing: account.updatedDateTime));;;"
                 formattedString += "\(String(describing: account.starred));;;"
                 formattedString += "\(account.otpSecret ?? String(describing: account.otpSecret));;;"
                 formattedString += "\(String(describing: account.id));;;"
@@ -77,8 +77,8 @@ class AccountsDataService {
                         username: String(blobEntryData[1]),
                         password: String(blobEntryData[2]),
                         url: blobEntryData[3] != "nil" ? String(blobEntryData[3]) : nil,
-                        creationDateTime: GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[4])) ?? Date(),
-                        updatedDateTime: blobEntryData[5] != "nil" ? GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[5])) ?? Date() : nil,
+                        creationDateTime: GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[4])) ?? Date(timeIntervalSince1970: 0),
+                        updatedDateTime: blobEntryData[5] != "nil" ? GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[5])) ?? Date(timeIntervalSince1970: 0) : nil,
                         starred: blobEntryData[6] == "true" ? true : false,
                         otpSecret: blobEntryData[7] != "nil" ? String(blobEntryData[7]) : nil,
                         id: UUID(uuidString: String(blobEntryData[8])) ?? UUID()

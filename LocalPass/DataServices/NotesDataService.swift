@@ -41,7 +41,7 @@ class NotesDataService {
                 formattedString += "\(String(describing: note.title));;;"
                 formattedString += "\(String(describing: note.body));;;"
                 formattedString += "\(GlobalHelperDataService.dateFormatter.string(from: note.creationDateTime));;;"
-                formattedString += "\(note.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: note.updatedDateTime!) : String(describing: note.updatedDateTime));;;"
+                formattedString += "\(note.updatedDateTime != nil ? GlobalHelperDataService.dateFormatter.string(from: note.updatedDateTime ?? Date(timeIntervalSince1970: 0)) : String(describing: note.updatedDateTime));;;"
                 formattedString += "\(String(describing: note.starred));;;"
                 formattedString += "\(String(describing: note.id));;;"
                 formattedString += "~~~"
@@ -72,8 +72,8 @@ class NotesDataService {
                     Note(
                         title: String(blobEntryData[0]),
                         body: String(blobEntryData[1]),
-                        creationDateTime: GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[2])) ?? Date(),
-                        updatedDateTime: blobEntryData[3] != "nil" ? GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[3])) ?? Date() : nil,
+                        creationDateTime: GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[2])) ?? Date(timeIntervalSince1970: 0),
+                        updatedDateTime: blobEntryData[3] != "nil" ? GlobalHelperDataService.dateFormatter.date(from: String(blobEntryData[3])) ?? Date(timeIntervalSince1970: 0) : nil,
                         starred: blobEntryData[4] == "true" ? true : false,
                         id: UUID(uuidString: String(blobEntryData[5])) ?? UUID()
                     )
