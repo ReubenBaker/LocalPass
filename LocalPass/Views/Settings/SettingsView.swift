@@ -64,8 +64,10 @@ struct SettingsView: View {
                         .onChange(of: settings.lockVaultOnBackground) { newValue in
                             LocalPassApp.settings.lockVaultOnBackground = newValue
                         }
-                    
-                    Toggle("iCloud Sync (Beta) \(Image(systemName: LocalPassApp.settings.iCloudSync ? "icloud.fill" : "icloud").symbolRenderingMode(LocalPassApp.settings.iCloudSync ? .multicolor : .monochrome))", isOn: $settings.iCloudSync)
+                }
+                
+                Section(header: Text("Coming Soon")) {
+                    Toggle("iCloud Sync \(Image(systemName: LocalPassApp.settings.iCloudSync ? "icloud.fill" : "icloud").symbolRenderingMode(LocalPassApp.settings.iCloudSync ? .multicolor : .monochrome))", isOn: $settings.iCloudSync)
                         .onChange(of: settings.iCloudSync) { newValue in
                             let accounts = AccountsDataService.getAccountData()
                             let notes = NotesDataService.getNoteData()
@@ -92,6 +94,23 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                        .disabled(true) // Not ready
+                        .foregroundColor(.primary.opacity(0.5))
+                    
+                    
+                    Toggle("Recycle Bin \(Image(systemName: LocalPassApp.settings.recycleBin ? "trash.fill" : "trash").symbolRenderingMode(LocalPassApp.settings.recycleBin ? .multicolor : .monochrome))", isOn: $settings.recycleBin)
+                        .onChange(of: settings.recycleBin) { newValue in
+                            LocalPassApp.settings.recycleBin = newValue
+                        }
+                        .disabled(true) // Not ready
+                        .foregroundColor(.primary.opacity(0.5))
+                    
+                    Toggle("Password Change Reminders \(Image(systemName: LocalPassApp.settings.passwordChangeReminders ? "bell.badge.fill" : "bell.badge").symbolRenderingMode(LocalPassApp.settings.passwordChangeReminders ? .multicolor : .monochrome))", isOn: $settings.passwordChangeReminders)
+                        .onChange(of: settings.passwordChangeReminders) { newValue in
+                            LocalPassApp.settings.passwordChangeReminders = newValue
+                        }
+                        .disabled(true) // Not ready
+                        .foregroundColor(.primary.opacity(0.5))
                 }
             }
         }

@@ -16,12 +16,12 @@ struct AboutView: View {
             ["🔒 Biometric Authentication:\n", "Access your data with ease using biometric authentication, ensuring a seamless and secure experience.\n"],
             ["🤖 Autofill Support:\n", "LocalPass supports credential autofilling in safari and your favourite apps! Just make sure to enable it in your device's settings under:\n>'Passwords'\n>'Password Options'\n>'Allow Filling From:' LocalPass!\n"],
             ["🔄 TOTP Support:\n", "LocalPass supports Time-Based One-Time Passwords (TOTP) for multifactor authentication.\n"],
-            ["🌐 iCloud Sync - Beta (Optional):\n", "While your data is protected by encryption on your device, LocalPass provides the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data is ever stored in iCloud, just like on your device. iCloud sync is currently in beta and may produce unexpected results, including total data loss!\n"],
             ["📊 No User Data Collection:\n", "LocalPass is built with a committment to privacy. LocalPass does not collect any personal data whatsoever, and does not talk to any external data servers. It only ever talks to the internet if you have account icons or iCloud sync enabled.\n"],
             ["📲 iOS Development Enthusiasts:\n", "LocalPass is an open-source personal project, created by a Computer Science student. If you are an iOS developer and enjoy using LocalPass, consider exploring the codebase, and submit a pull request to enhance the security and features of LocalPass.\n"]
         ]
         
         let plannedFeatures: [[String]] = [
+            ["🌐 iCloud Sync - (Optional):\n", "While your data is protected by encryption on your device, LocalPass will provide the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data will ever be stored in iCloud, just like on your device.\n"],
             ["♻️ Recycle Bin (Optional):\n", "Mistakenly delete something? The recycle bin will help you recover that data securely.\n"],
             ["🔔 Password Change Reminders (Optional):\n", "Stay secure with password change reminders at your chosen frequency.\n"],
             ["📁 Folders:\n", "Help organize your passwords and secure notes with customizable folders.\n"],

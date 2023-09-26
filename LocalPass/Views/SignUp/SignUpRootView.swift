@@ -52,12 +52,16 @@ extension SignUpRootView {
                     .modifier(SignUpButtonStyle(opacity: 0.75))
             }
             
+            /*
+            Add back in when iCloud sync ready:
+             
             NavigationLink {
                 SignUpReturningView()
             } label: {
                 Text("Already Use LocalPass?")
                     .modifier(SignUpButtonStyle(opacity: 0.5))
             }
+            */
             
             Button {
                 showAboutView.toggle()

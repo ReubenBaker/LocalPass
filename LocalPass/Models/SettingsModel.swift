@@ -67,6 +67,28 @@ class Settings: ObservableObject {
         }
     }
     
+    @Published var recycleBin: Bool {
+        didSet {
+            UserDefaults.standard.set(recycleBin, forKey: "recycleBin")
+            
+            if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
+                sharedUserDefaults.set(recycleBin, forKey: "recycleBin")
+                sharedUserDefaults.synchronize()
+            }
+        }
+    }
+    
+    @Published var passwordChangeReminders: Bool  {
+        didSet {
+            UserDefaults.standard.set(passwordChangeReminders, forKey: "passwordChangeReminders")
+            
+            if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
+                sharedUserDefaults.set(passwordChangeReminders, forKey: "passwordChangeReminders")
+                sharedUserDefaults.synchronize()
+            }
+        }
+    }
+    
     init() {
         if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
             self.signedUp = sharedUserDefaults.bool(forKey: "signedUp")
@@ -74,12 +96,16 @@ class Settings: ObservableObject {
             self.showFavicons = sharedUserDefaults.bool(forKey: "showFavicons")
             self.useBiometrics = sharedUserDefaults.bool(forKey: "useBiometrics")
             self.lockVaultOnBackground = sharedUserDefaults.bool(forKey: "lockVaultOnBackground")
+            self.recycleBin = sharedUserDefaults.bool(forKey: "recycleBin")
+            self.passwordChangeReminders = sharedUserDefaults.bool(forKey: "passwordChangeReminders")
         } else {
             self.signedUp = UserDefaults.standard.bool(forKey: "signedUp")
             self.iCloudSync = UserDefaults.standard.bool(forKey: "iCloudSync")
             self.showFavicons = UserDefaults.standard.bool(forKey: "showFavicons")
             self.useBiometrics = UserDefaults.standard.bool(forKey: "useBiometrics")
             self.lockVaultOnBackground = UserDefaults.standard.bool(forKey: "lockVaultOnBackground")
+            self.recycleBin = UserDefaults.standard.bool(forKey: "recycleBin")
+            self.passwordChangeReminders = UserDefaults.standard.bool(forKey: "passwordChangeReminders")
         }
     }
 }
