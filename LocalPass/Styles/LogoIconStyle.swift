@@ -14,6 +14,7 @@ extension Image {
             .resizable()
             .scaledToFit()
             .frame(maxWidth: UIScreen.main.bounds.width / (large ? 2 : 6))
+            .frame(maxWidth: large ? .infinity : 125, maxHeight: large ? .infinity : 125)
             .padding()
     }
 }
