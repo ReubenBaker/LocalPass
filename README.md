@@ -36,7 +36,7 @@ LocalPass is a forever free, ad-free, and open-source solution for managing your
 
 ### Coming Soon:
 
-- **iCloud Sync - (Optional):**
+- **iCloud Sync (Optional):**
   While your data is protected by encryption on your device, LocalPass will provide the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data will ever be stored in iCloud, just like on your device.
 
 - **Recycle Bin (Optional):**
