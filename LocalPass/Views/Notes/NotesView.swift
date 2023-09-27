@@ -112,7 +112,7 @@ extension NotesView {
     
     private var noNoteItem: some View {
         VStack(alignment: .leading) {
-            Text("You have no notes setup yet, time to add your first one! 🤩")
+            Text("You have no notes yet, time to add your first one! 🤩")
                 .font(.title2)
                 .padding()
             

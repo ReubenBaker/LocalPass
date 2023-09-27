@@ -28,6 +28,7 @@ import SwiftUI
 struct LocalPassApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var copyPopupOverlayViewModel = CopyPopupOverlayViewModel()
     @StateObject private var privacyOverlayViewModel = PrivacyOverlayViewModel()
     @StateObject private var authenticationViewModel = AuthenticationViewModel()
@@ -67,6 +68,7 @@ struct LocalPassApp: App {
                     privacyOverlayViewModel.showPrivacyOverlay = true
                     
                     if LocalPassApp.settings.lockVaultOnBackground {
+                        dismiss()
                         authenticationViewModel.authenticated = false
                         authenticationViewModel.authenticatedWithBiometrics = false
                     }
