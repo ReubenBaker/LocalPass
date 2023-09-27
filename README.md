@@ -76,6 +76,5 @@ If you have any questions or concerns about the license or usage of this softwar
 
 - [Buy Me A Coffee](https://buymeacoffee.com/localpass)
 - [Twitter](https://twitter.com/localpassapp)
-- [License](https://github.com/ReubenBaker/LocalPass/blob/main/LICENSE)
 
 ### Thank you for using LocalPass!
