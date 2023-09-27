@@ -2,6 +2,8 @@
 
 LocalPass is a local password manager developed using SwiftUI, designed for devices running iOS 16.0+
 
+[<img src="LocalPassScreenshots/app-store-button-black.svg" height="50">](https://apps.apple.com/us/app/localpass/id6464081036)
+
 ### Why LocalPass?
 
 LocalPass is a forever free, ad-free, and open-source solution for managing your passwords, secure notes, and more, with an unwavering emphasis on data encryption and security. With a range of useful features, LocalPass simplifies your digital life while ensuring your information is kept private and secure.
