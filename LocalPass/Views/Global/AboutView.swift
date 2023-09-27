@@ -21,7 +21,7 @@ struct AboutView: View {
         ]
         
         let plannedFeatures: [[String]] = [
-            ["🌐 iCloud Sync - (Optional):\n", "While your data is protected by encryption on your device, LocalPass will provide the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data will ever be stored in iCloud, just like on your device.\n"],
+            ["🌐 iCloud Sync (Optional):\n", "While your data is protected by encryption on your device, LocalPass will provide the option to sync your encrypted data with iCloud between devices for convenience. Only encrypted data will ever be stored in iCloud, just like on your device.\n"],
             ["♻️ Recycle Bin (Optional):\n", "Mistakenly delete something? The recycle bin will help you recover that data securely.\n"],
             ["🔔 Password Change Reminders (Optional):\n", "Stay secure with password change reminders at your chosen frequency.\n"],
             ["📁 Folders:\n", "Help organize your passwords and secure notes with customizable folders.\n"],
