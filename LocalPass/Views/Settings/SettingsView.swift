@@ -29,7 +29,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("Use Biometrics \(Image(systemName: GlobalHelperDataService.getBiometrySymbol()).symbolRenderingMode(LocalPassApp.settings.useBiometrics ? .multicolor : .monochrome))", isOn: $settings.useBiometrics)
+                    Toggle("Use Biometrics \(Image(systemName: GlobalHelperDataService.biometrySymbol).symbolRenderingMode(LocalPassApp.settings.useBiometrics ? .multicolor : .monochrome))", isOn: $settings.useBiometrics)
                         .onChange(of: Settings.shared.useBiometrics) { newValue in
                             LocalPassApp.settings.useBiometrics = newValue
                             

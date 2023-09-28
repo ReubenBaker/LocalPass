@@ -139,15 +139,6 @@ extension NoteDetailView {
                     focusedTextField = .body
                 }
             }
-            .overlay(alignment: .topLeading) {
-                if newBody == "" {
-                    Text("Enter Note...")
-                        .font(.headline)
-                        .padding()
-                        .padding(8)
-                        .opacity(0.25)
-                }
-            }
             .onAppear {
                 if newBody == nil {
                     newBody = note.body

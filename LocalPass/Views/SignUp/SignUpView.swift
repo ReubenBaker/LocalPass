@@ -47,7 +47,7 @@ extension SignUpView {
     
     private var passwordFieldsItem: some View {
         VStack {
-            SecureField("Enter password...", text: Binding(
+            SecureField("Password...", text: Binding(
                 get: { password ?? "" },
                 set: { password = $0 }
             ))

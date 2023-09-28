@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NoteListItemView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var note: Note
     @State private var showNoteDetailViewSheet: Bool = false
@@ -18,6 +19,15 @@ struct NoteListItemView: View {
             .fullScreenCover(isPresented: $showNoteDetailViewSheet) {
                 NoteDetailView(note: $note)
                     .overlay(PrivacyOverlayView())
+                    .onChange(of: scenePhase) { phase in
+                        withAnimation(.easeOut) {
+                            if phase != .active {
+                                if LocalPassApp.settings.lockVaultOnBackground {
+                                    showNoteDetailViewSheet = false
+                                }
+                            }
+                        }
+                    }
             }
     }
 }

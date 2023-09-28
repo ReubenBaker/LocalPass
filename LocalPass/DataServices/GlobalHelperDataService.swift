@@ -22,6 +22,10 @@ struct GlobalHelperDataService {
         "Date Added Ascending", "Date Added Descending", "Alphabetical"
     ]
     
+    static var biometrySymbol: String {
+        getBiometrySymbol()
+    }
+    
     enum FocusedTextField: Hashable {
         case name, username, password, url, otpSecret
         case title, body

@@ -95,7 +95,7 @@ extension AddAccountView {
             Image(systemName: "person.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("Enter account name...", text: $newName)
+            TextField("Account Name...", text: $newName)
                 .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .name)
                 .onTapGesture {
@@ -112,7 +112,7 @@ extension AddAccountView {
             Image(systemName: "at.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("Enter username...", text: $newUsername)
+            TextField("Username...", text: $newUsername)
                 .modifier(RawTextFieldInputStyle())
                 .modifier(ListItemTextFieldStyle())
                 .focused($focusedTextField, equals: .username)
@@ -131,7 +131,7 @@ extension AddAccountView {
                 .ListItemImageStyle()
             
             if showPassword {
-                TextField("Enter password...", text: $newPassword)
+                TextField("Password...", text: $newPassword)
                     .modifier(RawTextFieldInputStyle())
                     .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
@@ -141,7 +141,7 @@ extension AddAccountView {
                         }
                     }
             } else {
-                SecureField("Enter password...", text: $newPassword)
+                SecureField("Password...", text: $newPassword)
                     .modifier(RawTextFieldInputStyle())
                     .modifier(ListItemTextFieldStyle())
                     .focused($focusedTextField, equals: .password)
@@ -183,7 +183,7 @@ extension AddAccountView {
                     Image(systemName: "link.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("Enter url...", text: $newUrl)
+                    TextField("URL...", text: $newUrl)
                         .modifier(RawTextFieldInputStyle())
                         .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .url)
@@ -222,7 +222,7 @@ extension AddAccountView {
                     Image(systemName: "repeat.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("Enter TOTP key...", text: $newOtpSecret)
+                    TextField("TOTP key...", text: $newOtpSecret)
                         .modifier(RawTextFieldInputStyle())
                         .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .otpSecret)

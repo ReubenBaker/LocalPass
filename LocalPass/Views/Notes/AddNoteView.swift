@@ -71,7 +71,7 @@ extension AddNoteView {
 // Views
 extension AddNoteView {
     private var titleItem: some View {
-        TextField("Enter title...", text: $newTitle)
+        TextField("Title...", text: $newTitle)
             .modifier(TitleTextStyle())
             .tint(.primary)
             .multilineTextAlignment(.center)
@@ -94,10 +94,11 @@ extension AddNoteView {
             }
             .overlay(alignment: .topLeading) {
                 if newBody == "" {
-                    Text("Enter Note...")
+                    Text("Note...")
                         .font(.headline)
                         .padding()
-                        .padding(8)
+                        .padding(4)
+                        .padding(.top, 4)
                         .opacity(0.25)
                 }
             }

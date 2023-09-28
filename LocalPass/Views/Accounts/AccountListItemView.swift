@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AccountListItemView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
     @Binding var account: Account
     @State private var showAccountDetailViewSheet: Bool = false
@@ -18,6 +19,15 @@ struct AccountListItemView: View {
             .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
                 AccountDetailView(account: $account)
                     .overlay(PrivacyOverlayView())
+                    .onChange(of: scenePhase) { phase in
+                        withAnimation(.easeOut) {
+                            if phase != .active {
+                                if LocalPassApp.settings.lockVaultOnBackground {
+                                    showAccountDetailViewSheet = false
+                                }
+                            }
+                        }
+                    }
             }
     }
 }

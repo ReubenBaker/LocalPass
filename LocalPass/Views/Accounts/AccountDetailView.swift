@@ -238,9 +238,6 @@ extension AccountDetailView {
                 Image(systemName: "lock.circle.fill")
                     .ListItemImageStyle()
                 
-//                Text(showPassword ? newPassword ?? account.password : "....")
-//                    .fontWeight(.semibold)
-                
                 if showPassword {
                     Text(newPassword ?? account.password)
                         .fontWeight(.semibold)
@@ -345,7 +342,7 @@ extension AccountDetailView {
                     Image(systemName: "link.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("Enter url...", text: Binding(
+                    TextField("URL...", text: Binding(
                         get: { newUrl ?? "" },
                         set: { newUrl = $0 }
                     ))
@@ -398,7 +395,7 @@ extension AccountDetailView {
             Image(systemName: "link.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("\(newUrl ?? (account.url ?? "Enter url..."))", text: Binding(
+            TextField("\(newUrl ?? (account.url ?? "URL..."))", text: Binding(
                 get: { newUrl ?? (account.url ?? "") },
                 set: { newUrl = $0 }
             ))
@@ -488,7 +485,7 @@ extension AccountDetailView {
                     Image(systemName: "repeat.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("Enter TOTP key...", text: Binding(
+                    TextField("TOTP key...", text: Binding(
                         get: { newOtpSecret ?? "" },
                         set: { newOtpSecret = $0 }
                     ))
@@ -541,7 +538,7 @@ extension AccountDetailView {
             Image(systemName: "repeat.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("\(newOtpSecret ?? (account.otpSecret ?? "Enter TOTP key..."))", text: Binding(
+            TextField("\(newOtpSecret ?? (account.otpSecret ?? "TOTP key..."))", text: Binding(
                 get: { newOtpSecret ?? (account.otpSecret ?? "") },
                 set: { newOtpSecret = $0 }
             ))

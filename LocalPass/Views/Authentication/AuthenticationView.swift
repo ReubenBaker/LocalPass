@@ -97,7 +97,7 @@ extension AuthenticationView {
                 }
             }
         } label: {
-            Image(systemName: GlobalHelperDataService.getBiometrySymbol())
+            Image(systemName: GlobalHelperDataService.biometrySymbol)
                 .LogoIconStyle()
         }
     }
