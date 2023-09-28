@@ -49,7 +49,7 @@ extension AuthenticationView {
     }
     
     private var passwordFieldItem: some View {
-        SecureField("Enter password...", text: Binding(
+        SecureField("Password...", text: Binding(
             get: { authenticationViewModel.password ?? "" },
             set: { authenticationViewModel.password = $0 }
         ))

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AccountDetailView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @EnvironmentObject private var copyPopupOverlayViewModel: CopyPopupOverlayViewModel
@@ -124,6 +126,15 @@ struct AccountDetailView: View {
             
             if account.otpSecret != nil {
                 showTOTP = true
+            }
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                showPasswordGeneratorSheet = false
+                
+                DispatchQueue.main.async {
+                    dismiss()
+                }
             }
         }
     }
@@ -485,7 +496,7 @@ extension AccountDetailView {
                     Image(systemName: "repeat.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("TOTP key...", text: Binding(
+                    TextField("TOTP Key...", text: Binding(
                         get: { newOtpSecret ?? "" },
                         set: { newOtpSecret = $0 }
                     ))
@@ -538,7 +549,7 @@ extension AccountDetailView {
             Image(systemName: "repeat.circle.fill")
                 .ListItemImageStyle()
             
-            TextField("\(newOtpSecret ?? (account.otpSecret ?? "TOTP key..."))", text: Binding(
+            TextField("\(newOtpSecret ?? (account.otpSecret ?? "TOTP Key..."))", text: Binding(
                 get: { newOtpSecret ?? (account.otpSecret ?? "") },
                 set: { newOtpSecret = $0 }
             ))

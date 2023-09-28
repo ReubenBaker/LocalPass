@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddAccountView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var newName: String = ""
@@ -44,6 +45,16 @@ struct AddAccountView: View {
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: $newPassword)
                 .presentationDetents([.fraction(0.45)])
+                .overlay(PrivacyOverlayView())
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                showPasswordGeneratorSheet = false
+                
+                DispatchQueue.main.async {
+                    dismiss()
+                }
+            }
         }
     }
 }
@@ -222,7 +233,7 @@ extension AddAccountView {
                     Image(systemName: "repeat.circle.fill")
                         .ListItemImageStyle()
                     
-                    TextField("TOTP key...", text: $newOtpSecret)
+                    TextField("TOTP Key...", text: $newOtpSecret)
                         .modifier(RawTextFieldInputStyle())
                         .modifier(ListItemTextFieldStyle())
                         .focused($focusedTextField, equals: .otpSecret)

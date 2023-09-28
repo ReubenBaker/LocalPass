@@ -68,7 +68,6 @@ struct LocalPassApp: App {
                     privacyOverlayViewModel.showPrivacyOverlay = true
                     
                     if LocalPassApp.settings.lockVaultOnBackground {
-                        dismiss()
                         authenticationViewModel.authenticated = false
                         authenticationViewModel.authenticatedWithBiometrics = false
                     }

@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct AboutView: View {
+    
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         let features: [[String]] = [
             ["🔐 Data Encryption:\n", "All of your data is always encrypted, using strong AES encryption. Your sensitive information remains indecipherable to anyone without the encryption key\n"],
@@ -190,6 +194,13 @@ struct AboutView: View {
         .foregroundColor(.white)
         .overlay(alignment: .bottom) {
             CloseButtonView()
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active && LocalPassApp.settings.lockVaultOnBackground && LocalPassApp.settings.signedUp {
+                DispatchQueue.main.async {
+                    dismiss()
+                }
+            }
         }
     }
 }
