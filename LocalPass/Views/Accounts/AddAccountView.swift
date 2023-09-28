@@ -51,7 +51,7 @@ struct AddAccountView: View {
             if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
                 showPasswordGeneratorSheet = false
                 
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     dismiss()
                 }
             }

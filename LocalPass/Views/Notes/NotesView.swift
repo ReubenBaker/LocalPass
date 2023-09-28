@@ -62,6 +62,7 @@ extension NotesView {
             if let notes = notesViewModel.notes {
                 ForEach(notes) { note in
                     NoteListItemView(note: Binding.constant(note))
+                        .environment(\.scenePhase, scenePhase)
                         .modifier(ParentViewListItemStyle())
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {

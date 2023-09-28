@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var accountsViewModel = AccountsViewModel()
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var selectedTab: Int = 0
@@ -40,6 +41,7 @@ extension MainView {
                         Label("Accounts", systemImage: "lock.rectangle.stack.fill")
                     }
                     .environmentObject(accountsViewModel)
+                    .environment(\.scenePhase, scenePhase)
                     .tag(0)
                 
                 NotesView()
@@ -47,12 +49,14 @@ extension MainView {
                         Label("Notes", systemImage: "sparkles.rectangle.stack.fill")
                     }
                     .environmentObject(notesViewModel)
+                    .environment(\.scenePhase, scenePhase)
                     .tag(1)
                 
                 SettingsView()
                     .tabItem {
                         Label("Settings", systemImage: "gear")
                     }
+                    .environment(\.scenePhase, scenePhase)
                     .tag(2)
             }
         }

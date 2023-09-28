@@ -65,7 +65,7 @@ struct NoteDetailView: View {
         }
         .onChange(of: scenePhase) { phase in
             if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     dismiss()
                 }
             }

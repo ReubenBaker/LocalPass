@@ -26,8 +26,15 @@ struct SettingsView: View {
                     }
                     .fullScreenCover(isPresented: $showAboutView) {
                         AboutView()
-                            .environment(\.scenePhase, scenePhase)
                             .overlay(PrivacyOverlayView())
+                            .environment(\.scenePhase, scenePhase)
+                    }
+                    .onChange(of: scenePhase) { phase in
+                        if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                showAboutView = false
+                            }
+                        }
                     }
                 }
                 

@@ -62,6 +62,7 @@ extension AccountsView {
              if let accounts = accountsViewModel.accounts {
                  ForEach(accounts) { account in
                      AccountListItemView(account: Binding.constant(account))
+                         .environment(\.scenePhase, scenePhase)
                          .modifier(ParentViewListItemStyle())
                          .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                              Button {
