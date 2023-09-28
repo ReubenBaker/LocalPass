@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NoteDetailView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.editMode) private var editMode
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @Binding var note: Note
@@ -58,6 +60,13 @@ struct NoteDetailView: View {
                     newUpdatedDateTime = Date()
                     
                     notesViewModel.updateNote(id: note.id, note: updatedNote)
+                }
+            }
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    dismiss()
                 }
             }
         }

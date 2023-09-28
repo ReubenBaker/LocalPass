@@ -19,15 +19,14 @@ struct AccountListItemView: View {
             .fullScreenCover(isPresented: $showAccountDetailViewSheet) {
                 AccountDetailView(account: $account)
                     .overlay(PrivacyOverlayView())
-                    .onChange(of: scenePhase) { phase in
-                        withAnimation(.easeOut) {
-                            if phase != .active {
-                                if LocalPassApp.settings.lockVaultOnBackground {
-                                    showAccountDetailViewSheet = false
-                                }
-                            }
-                        }
+                    .environment(\.scenePhase, scenePhase)
+            }
+            .onChange(of: scenePhase) { phase in
+                if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        showAccountDetailViewSheet = false
                     }
+                }
             }
     }
 }

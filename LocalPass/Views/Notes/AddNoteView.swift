@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddNoteView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @State private var newTitle: String = ""
@@ -30,6 +31,13 @@ struct AddNoteView: View {
         .background(.ultraThinMaterial)
         .alert(isPresented: $showNoteSuccessAlert) {
             getNoteSuccessAlert(noteSuccess: noteSuccess)
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    dismiss()
+                }
+            }
         }
     }
 }

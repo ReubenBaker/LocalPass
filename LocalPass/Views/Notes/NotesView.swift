@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NotesView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var notesViewModel: NotesViewModel
     @State private var showDeleteAlert: Bool = false
     @State private var showNoteDetailSheet: Bool = false
@@ -28,6 +29,7 @@ struct NotesView: View {
         .fullScreenCover(isPresented: $showAddNoteSheet) {
             AddNoteView()
                 .overlay(PrivacyOverlayView())
+                .environment(\.scenePhase, scenePhase)
         }
         .alert(isPresented: $showDeleteAlert) {
             notesViewModel.getDeleteAlert()
@@ -60,6 +62,7 @@ extension NotesView {
             if let notes = notesViewModel.notes {
                 ForEach(notes) { note in
                     NoteListItemView(note: Binding.constant(note))
+                        .environment(\.scenePhase, scenePhase)
                         .modifier(ParentViewListItemStyle())
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {

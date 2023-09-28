@@ -10,6 +10,7 @@ import LocalAuthentication
 
 struct SettingsView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var settings = LocalPassApp.settings
     @State private var showAboutView: Bool = false
     let biometricsEnrolled = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
@@ -25,6 +26,15 @@ struct SettingsView: View {
                     }
                     .fullScreenCover(isPresented: $showAboutView) {
                         AboutView()
+                            .overlay(PrivacyOverlayView())
+                            .environment(\.scenePhase, scenePhase)
+                    }
+                    .onChange(of: scenePhase) { phase in
+                        if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                showAboutView = false
+                            }
+                        }
                     }
                 }
                 

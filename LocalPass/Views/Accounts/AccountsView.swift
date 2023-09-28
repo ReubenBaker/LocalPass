@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AccountsView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var accountsViewModel: AccountsViewModel
     @State private var showDeleteAlert: Bool = false
     @State private var showAccountDetailSheet: Bool = false
@@ -28,6 +29,7 @@ struct AccountsView: View {
         .fullScreenCover(isPresented: $showAddAccountSheet) {
             AddAccountView()
                 .overlay(PrivacyOverlayView())
+                .environment(\.scenePhase, scenePhase)
         }
         .alert(isPresented: $showDeleteAlert) {
             accountsViewModel.getDeleteAlert()
@@ -60,6 +62,7 @@ extension AccountsView {
              if let accounts = accountsViewModel.accounts {
                  ForEach(accounts) { account in
                      AccountListItemView(account: Binding.constant(account))
+                         .environment(\.scenePhase, scenePhase)
                          .modifier(ParentViewListItemStyle())
                          .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                              Button {

@@ -45,6 +45,7 @@ struct LocalPassApp: App {
                                 .environmentObject(copyPopupOverlayViewModel)
                                 .environmentObject(privacyOverlayViewModel)
                                 .environmentObject(authenticationViewModel)
+                                .environment(\.scenePhase, scenePhase)
                         } else {
                             AuthenticationView()
                                 .environmentObject(authenticationViewModel)
@@ -68,9 +69,10 @@ struct LocalPassApp: App {
                     privacyOverlayViewModel.showPrivacyOverlay = true
                     
                     if LocalPassApp.settings.lockVaultOnBackground {
-                        dismiss()
-                        authenticationViewModel.authenticated = false
-                        authenticationViewModel.authenticatedWithBiometrics = false
+                        DispatchQueue.main.async {
+                            authenticationViewModel.authenticated = false
+                            authenticationViewModel.authenticatedWithBiometrics = false
+                        }
                     }
                 } else {
                     privacyOverlayViewModel.showPrivacyOverlay = false
