@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import LocalAuthentication
 
 // Instances
 struct GlobalHelperDataService {
@@ -32,5 +33,19 @@ struct GlobalHelperDataService {
 extension GlobalHelperDataService {
     static func copyToClipboard(_ text: String) {
         UIPasteboard.general.string = text
+    }
+    
+    static func getBiometrySymbol() -> String {
+        let context = LAContext()
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+            if context.biometryType == .faceID {
+                return "faceid"
+            } else if context.biometryType == .touchID {
+                return "touchid"
+            }
+        }
+        
+        return "key.viewfinder"
     }
 }

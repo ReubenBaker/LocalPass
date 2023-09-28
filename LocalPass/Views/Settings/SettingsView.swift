@@ -29,15 +29,14 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Settings")) {
-                    Toggle("Use Biometrics \(Image(systemName: "faceid").symbolRenderingMode(LocalPassApp.settings.useBiometrics ? .multicolor : .monochrome))", isOn: $settings.useBiometrics)
+                    Toggle("Use Biometrics \(Image(systemName: GlobalHelperDataService.getBiometrySymbol()).symbolRenderingMode(LocalPassApp.settings.useBiometrics ? .multicolor : .monochrome))", isOn: $settings.useBiometrics)
                         .onChange(of: Settings.shared.useBiometrics) { newValue in
                             LocalPassApp.settings.useBiometrics = newValue
                             
                             if newValue == true {
                                 let context = LAContext()
-                                var error: NSError?
 
-                                if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                                if biometricsEnrolled {
                                     context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Enable biometric authentication") { success, authenticationError in
                                         DispatchQueue.main.async {
                                             if success {
