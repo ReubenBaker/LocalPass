@@ -21,6 +21,7 @@ struct AuthenticationView: View {
             
             if LocalPassApp.settings.useBiometrics {
                 authenticateWithBiometricsButtonItem
+                    .onAppear(perform: authenticateWithBiometricsButtonPressed)
             }
             
             Spacer()
@@ -99,6 +100,26 @@ extension AuthenticationView {
         } label: {
             Image(systemName: GlobalHelperDataService.biometrySymbol)
                 .LogoIconStyle()
+        }
+    }
+}
+
+// Functions
+extension AuthenticationView {
+    private func authenticateWithBiometricsButtonPressed() {
+        CryptoDataService.authenticateWithBiometrics { success in
+            if success {
+                if let blob = AccountsDataService.getBlob(),
+                   let tag = Bundle.main.bundleIdentifier?.components(separatedBy: ".").dropLast().joined(separator: "."),
+                   let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass"),
+                   let key = CryptoDataService.readKey(tag: tag, iCloudSync: sharedUserDefaults.bool(forKey: "iCloudSync")),
+                   let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
+                    AuthenticationViewModel.shared.authenticatedWithBiometrics = true
+                    AuthenticationViewModel.shared.authenticated = true
+                    authenticationViewModel.authenticatedWithBiometrics = true
+                    authenticationViewModel.authenticated = true
+                }
+            }
         }
     }
 }
