@@ -23,8 +23,8 @@ class AuthenticationViewModel: ObservableObject {
             if let salt = CryptoDataService.generateRandomSalt(),
                let newKey = CryptoDataService.deriveKey(password: password, salt: salt),
                let tag = Bundle.main.bundleIdentifier {
-                    if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync)
-                    && CryptoDataService.setkey(key: newKey, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync) {
+                    if CryptoDataService.deleteKey(tag: tag)
+                    && CryptoDataService.setkey(key: newKey, tag: tag) {
                         AccountsDataService.saveData(accounts, salt: salt)
                         NotesDataService.saveData(notes, salt: salt)
                     }

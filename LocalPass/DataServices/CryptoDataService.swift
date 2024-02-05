@@ -75,11 +75,11 @@ import LocalAuthentication
  
  # Key Handling:
  
- The class has been extended to support key storage and retreival in both the secure enclave and/or the iCloud Keychain. It includes the following functions:
+ The class has been extended to support key storage and retreival in the secure enclave. It includes the following functions:
  
- - `writeKey(key:tag:iCloudSync:)`: Writes a `SymmetricKey` to the secure enclave and/or iCloud Keychain with a specified tag.
- - `readKey(tag:iCloudSync:)`: Reads a `SymmetricKey` from the secure enclave and/or iCloud Keychain using a specified tag.
- - `deleteKey(tag:iCloudSync:)`: Deletes a `SymmetricKey` from the secure enclave and/or iCloud Keychain using a specified tag.
+ - `writeKey(key:tag:)`: Writes a `SymmetricKey` to the secure enclave with a specified tag.
+ - `readKey(tag:)`: Reads a `SymmetricKey` from the secure enclave using a specified tag.
+ - `deleteKey(tag:)`: Deletes a `SymmetricKey` from the secure enclave using a specified tag.
  
  # Biometrics:
  
@@ -87,8 +87,8 @@ import LocalAuthentication
  
  - `authenticateWithBiometrics(completion:)`: Prompts the user for biometric verification, and calls a completion handler with the result (`true` if successful, `false` otherwise).
  
- - Version: 1.0
- - Date: September 22, 2023
+ - Version: 1.1
+ - Date: February 5, 2024
  */
 class CryptoDataService {
     /**
@@ -288,59 +288,40 @@ class CryptoDataService {
 // Key Handling
 extension CryptoDataService {
     /**
-     Writes a `SymmetricKey` to the secure enclave and/or the iCloud Keychain, based on the `iCloudSync` parameter.
+     Writes a `SymmetricKey` to the secure enclave.
      
      - Parameters:
-        - key: The `SymmetricKey` to be stored securely.
-        - tag: A unique identifier for the stored key.
-        - iCloudSync: Writes the key to the iCloud Keychain if `true`.
+     - key: The `SymmetricKey` to be stored securely.
+     - tag: A unique identifier for the stored key.
      
      - Returns: `true` if the key is successfully written, `false` otherwise.
      */
-    static func setkey(key: SymmetricKey, tag: String, iCloudSync: Bool = false) -> Bool {
+    static func setkey(key: SymmetricKey, tag: String) -> Bool {
         let secureEnclaveWriteSuccess = writeKeyToSecureEnclave(key: key, tag: tag)
-        
-        if iCloudSync {
-            let iCloudWriteSuccess = writeKeyToiCloudKeychain(key: key, tag: tag)
-            return secureEnclaveWriteSuccess || iCloudWriteSuccess
-        }
         
         return secureEnclaveWriteSuccess
     }
     
     /**
-     Reads a `SymmetricKey` from the secure enclave and/or the iCloud Keychain, based on the `iCloudSync` parameter.
+     Reads a `SymmetricKey` from the secure enclave.
      
      - Parameters:
-        - tag: A unique identifier for the stored key.
-        - iCloudSync: Reads the key from the iCloud Keychain if `true`.
+     - tag: A unique identifier for the stored key.
      
      - Returns: The stored `SymmetricKey` if it exists, `nil` otherwise.
      */
-    static func readKey(tag: String, iCloudSync: Bool = false) -> SymmetricKey? {
-        if iCloudSync {
-            if let iCloudKey = readKeyFromiCloudKeychain(tag: tag) {
-                return iCloudKey
-            }
-        }
-        
+    static func readKey(tag: String) -> SymmetricKey? {
         return readKeyFromSecureEnclave(tag: tag)
     }
     
     /**
-     Deletes a `Symmetrickey` from the secure enclave and/or the iCloud Keychain, based on the `iCloudSync` parameter.
+     Deletes a `Symmetrickey` from the secure enclave.
      
      - Parameters:
-        - tag: A unique identifier for the stored key.
-        - iCloudSync: Deletes the key from the iCloud Keychain if `true`.
+     - tag: A unique identifier for the stored key.
      */
-    static func deleteKey(tag: String, iCloudSync: Bool = false) -> Bool {
+    static func deleteKey(tag: String) -> Bool {
         let secureEnclaveDeleteSuccess = deleteKeyFromSecureEnclave(tag: tag)
-        
-        if iCloudSync {
-            let iCloudDeleteSuccess = deleteKeyFromiCloudKeychain(tag: tag)
-            return secureEnclaveDeleteSuccess || iCloudDeleteSuccess
-        }
         
         return secureEnclaveDeleteSuccess
     }
@@ -349,8 +330,8 @@ extension CryptoDataService {
      Writes a `SymmetricKey` to the secure enclave with a specified tag.
      
      - Parameters:
-        - key: The `SymmetricKey` to be stored securely.
-        - tag: A unique identifier for the stored key in the secure enclave.
+     - key: The `SymmetricKey` to be stored securely.
+     - tag: A unique identifier for the stored key in the secure enclave.
      
      - Returns: `true` if the key is successfully written to the secure enclave, `false` otherwise.
      */
@@ -377,7 +358,7 @@ extension CryptoDataService {
      Reads a `SymmetricKey` from the secure enclave using a specified tag.
      
      - Parameters:
-        - tag: A unique identifier for the key stored in the secure enclave.
+     - tag: A unique identifier for the key stored in the secure enclave.
      
      - Returns: The stored `SymmetricKey` if it exists, `nil` otherwise.
      */
@@ -406,7 +387,7 @@ extension CryptoDataService {
      Deletes a `SymmetricKey` from the secure enclave using a specified tag.
      
      - Parameters:
-        - tag: A unique identifier for the key stored in the secure enclave.
+     - tag: A unique identifier for the key stored in the secure enclave.
      
      - Returns: `true` if the key is successfully deleted from the secure enclave or if it doesn't exist, `false` otherwise.
      */
@@ -421,88 +402,6 @@ extension CryptoDataService {
         let status = SecItemDelete(query as CFDictionary)
         
         print("Key Delete")
-        return status == errSecSuccess || status == errSecItemNotFound
-    }
-    
-    /**
-     Writes a `SymmetricKey` to the iCloud Keychain with a specified tag.
-     
-     - Parameters:
-        - key: The `SymmetricKey` to be stored securely.
-        - tag: A unique identifier for the stored key in the iCloud Keychain.
-     
-     - Returns: `true` if the key is successfully written to the iCloud Keychain, `false` otherwise.
-     */
-    static func writeKeyToiCloudKeychain(key: SymmetricKey, tag: String) -> Bool {
-        print("Key Set iCloud: \(String(describing: key.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
-        
-        let keyData = key.withUnsafeBytes { Data(Array($0)) }
-        
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassKey,
-            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecAttrKeyClass as String: kSecAttrKeyClassSymmetric,
-            kSecAttrApplicationTag as String: tag,
-            kSecValueData as String: keyData,
-            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked,
-            kSecAttrSynchronizable as String: true
-        ]
-        
-        let status = SecItemAdd(query as CFDictionary, nil)
-        
-        return status == errSecSuccess
-    }
-    
-    /**
-     Reads a `SymmetricKey` from the iCloud Keychain using a specified tag.
-     
-     - Parameters:
-        - tag: A unique identifier for the key stored in the iCloud Keychain.
-     
-     - Returns: The stored `SymmetricKey` if it exists, `nil` otherwise.
-     */
-    static func readKeyFromiCloudKeychain(tag: String) -> SymmetricKey? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassKey,
-            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecAttrKeyClass as String: kSecAttrKeyClassSymmetric,
-            kSecAttrApplicationTag as String: tag,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-            kSecReturnData as String: true,
-            kSecAttrSynchronizable as String: true
-        ]
-        
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-        
-        if status == errSecSuccess, let data = result as? Data {
-            print("Key Get iCloud: \(String(describing: data.withUnsafeBytes{ Data($0) }.base64EncodedString()))")
-            return SymmetricKey(data: data)
-        } else {
-            return nil
-        }
-    }
-    
-    /**
-     Deletes a `SymmetricKey` from the iCloud Keychain using a specified tag.
-     
-     - Parameters:
-        - tag: A unique identifier for the key stored in the iCloud Keychain.
-     
-     - Returns: `true` if the key is successfully deleted from the iCloud Keychain or if it doesn't exist, `false` otherwise.
-     */
-    static func deleteKeyFromiCloudKeychain(tag: String) -> Bool {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassKey,
-            kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
-            kSecAttrKeyClass as String: kSecAttrKeyClassSymmetric,
-            kSecAttrApplicationTag as String: tag,
-            kSecAttrSynchronizable as String: true
-        ]
-        
-        let status = SecItemDelete(query as CFDictionary)
-        
-        print("Key Delete iCloud")
         return status == errSecSuccess || status == errSecItemNotFound
     }
 }

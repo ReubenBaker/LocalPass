@@ -78,30 +78,7 @@ struct SettingsView: View {
                 Section(header: Text("Coming Soon")) {
                     Toggle("iCloud Sync \(Image(systemName: LocalPassApp.settings.iCloudSync ? "icloud.fill" : "icloud").symbolRenderingMode(LocalPassApp.settings.iCloudSync ? .multicolor : .monochrome))", isOn: $settings.iCloudSync)
                         .onChange(of: settings.iCloudSync) { newValue in
-                            let accounts = AccountsDataService.getAccountData()
-                            let notes = NotesDataService.getNoteData()
                             
-                            if let blob = AccountsDataService.getBlob() {
-                                
-                                let salt = blob.prefix(16)
-                                
-                                LocalPassApp.settings.iCloudSync = newValue
-                                
-                                if let tag = Bundle.main.bundleIdentifier {
-                                    if let currentKey = CryptoDataService.readKey(tag: tag) {
-                                        _ = CryptoDataService.deleteKey(tag: tag, iCloudSync: true)
-                                        _ = CryptoDataService.setkey(key: currentKey, tag: tag, iCloudSync: newValue)
-                                    }
-                                }
-                                
-                                if newValue == true {
-                                    AccountsDataService.saveData(accounts, salt: salt)
-                                    NotesDataService.saveData(notes, salt: salt)
-                                } else {
-                                    AccountsDataService.removeiCloudData()
-                                    NotesDataService.removeiCloudData()
-                                }
-                            }
                         }
                         .disabled(true) // Not ready
                         .foregroundColor(.primary.opacity(0.5))

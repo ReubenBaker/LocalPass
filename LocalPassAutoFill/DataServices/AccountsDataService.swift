@@ -9,7 +9,6 @@ import Foundation
 
 class AccountsDataService {
     static private let localPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassaccounts.txt")
-    static private let initializationGroup = DispatchGroup()
     
     static func getBlob() -> Data? {
         var blob: Data?
@@ -18,28 +17,13 @@ class AccountsDataService {
             blob = try? Data(contentsOf: path)
         }
         
-        if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
-            if sharedUserDefaults.bool(forKey: "iCloudSync") {
-                getiCloudPath { iCloudPath in
-                    if let path = iCloudPath {
-                        let iCloudBlob = try? Data(contentsOf: path)
-                        
-                        blob = iCloudBlob ?? blob
-                    }
-                }
-                
-                initializationGroup.wait()
-            }
-        }
-        
         return blob
     }
     
     static func parseData(_ blob: Data?) -> [Account]? {
         if let blob = blob,
            let tag = Bundle.main.bundleIdentifier?.components(separatedBy: ".").dropLast().joined(separator: "."),
-           let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass"),
-           let key = CryptoDataService.readKey(tag: tag, iCloudSync: sharedUserDefaults.bool(forKey: "iCloudSync")),
+           let key = CryptoDataService.readKey(tag: tag),
            let decryptedBlob = CryptoDataService.decryptBlob(blob: blob, key: key) {
             
             if decryptedBlob == "empty" {
@@ -79,19 +63,5 @@ class AccountsDataService {
         }
         
         return nil
-    }
-    
-    static func getiCloudPath(completion: @escaping (URL?) -> Void) {
-        initializationGroup.enter()
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.reuben.LocalPass") {
-                completion(iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassaccounts.txt"))
-            }
-            
-            initializationGroup.leave()
-        }
-        
-        completion(nil)
     }
 }

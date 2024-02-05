@@ -13,7 +13,6 @@
 		1B47EB942ABCF70200739463 /* RawTextFieldInputStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */; };
 		1B47EB962ABCFA1A00739463 /* ListItemImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */; };
 		1B47EB982ABDD75600739463 /* ListItemTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */; };
-		1B47EB9A2ABDD92800739463 /* SignUpReturningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB992ABDD92800739463 /* SignUpReturningView.swift */; };
 		1B47EB9C2ABE210500739463 /* AuthenticationTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB9B2ABE210500739463 /* AuthenticationTextFieldStyle.swift */; };
 		1B523DCF2AAD381F002F94EA /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DCE2AAD381F002F94EA /* SignUpView.swift */; };
 		1B523DD12AAD384B002F94EA /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B523DD02AAD384B002F94EA /* AuthenticationView.swift */; };
@@ -125,7 +124,6 @@
 		1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTextFieldInputStyle.swift; sourceTree = "<group>"; };
 		1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemImageStyle.swift; sourceTree = "<group>"; };
 		1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemTextFieldStyle.swift; sourceTree = "<group>"; };
-		1B47EB992ABDD92800739463 /* SignUpReturningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpReturningView.swift; sourceTree = "<group>"; };
 		1B47EB9B2ABE210500739463 /* AuthenticationTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationTextFieldStyle.swift; sourceTree = "<group>"; };
 		1B523DCE2AAD381F002F94EA /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		1B523DD02AAD384B002F94EA /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
@@ -221,7 +219,6 @@
 			children = (
 				1B523DCE2AAD381F002F94EA /* SignUpView.swift */,
 				1BF94E472ABA6AC300B51BD6 /* SignUpRootView.swift */,
-				1B47EB992ABDD92800739463 /* SignUpReturningView.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -505,7 +502,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					1B562D292ABF5AE0004D37A4 = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -613,7 +610,6 @@
 				1BF1A7F82A8E557800663733 /* SettingsView.swift in Sources */,
 				1B5543432A99252300F0B703 /* PrivacyOverlayView.swift in Sources */,
 				1B65F27A2AA245A100EC2AE8 /* NoteModel.swift in Sources */,
-				1B47EB9A2ABDD92800739463 /* SignUpReturningView.swift in Sources */,
 				1B523DD32AAD39D9002F94EA /* AuthenticationViewModel.swift in Sources */,
 				1B9261A12AB6A0F500EC445D /* AccountDetailViewItemStyle.swift in Sources */,
 				1BEC56BF2A9E5CB8009FE9FA /* PrivacyOverlayViewModel.swift in Sources */,
@@ -666,7 +662,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPassAutoFill/LocalPassAutoFill.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LocalPassAutoFill/Info.plist;
@@ -678,7 +674,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.reuben.LocalPass.LocalPassAutoFill;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -694,7 +690,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPassAutoFill/LocalPassAutoFill.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LocalPassAutoFill/Info.plist;
@@ -706,7 +702,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.reuben.LocalPass.LocalPassAutoFill;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -841,7 +837,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPass/LocalPass.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"LocalPass/Preview Content\"";
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				ENABLE_PREVIEWS = YES;
@@ -860,7 +856,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.reuben.LocalPass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -879,7 +875,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPass/LocalPass.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_ASSET_PATHS = "\"LocalPass/Preview Content\"";
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				ENABLE_PREVIEWS = YES;
@@ -898,7 +894,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.reuben.LocalPass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

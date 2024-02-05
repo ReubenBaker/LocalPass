@@ -9,25 +9,12 @@ import Foundation
 
 class NotesDataService {
     static private let localPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassnotes.txt")
-    static private let initializationGroup = DispatchGroup()
     
     static func getBlob() -> Data? {
         var blob: Data?
         
         if let path = localPath {
             blob = try? Data(contentsOf: path)
-        }
-        
-        if LocalPassApp.settings.iCloudSync {
-            getiCloudPath { iCloudPath in
-                if let path = iCloudPath {
-                    let iCloudBlob = try? Data(contentsOf: path)
-                    
-                    blob = iCloudBlob ?? blob
-                }
-            }
-            
-            initializationGroup.wait()
         }
         
         return blob
@@ -56,7 +43,7 @@ class NotesDataService {
     static func parseData(_ blob: Data?) -> [Note]? {
         if let blob = blob,
            let tag = Bundle.main.bundleIdentifier,
-           let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
+           let key = CryptoDataService.readKey(tag: tag),
            let decryptedBlob = CryptoDataService.decryptBlob(blob: blob, key: key) {
             
             if decryptedBlob == "empty" {
@@ -100,7 +87,7 @@ class NotesDataService {
             let blob = formatForSave(notes)
             
             if let tag = Bundle.main.bundleIdentifier,
-               let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
+               let key = CryptoDataService.readKey(tag: tag),
                let originalData = getBlob() {
                 
                 let salt = salt ?? originalData.prefix(16)
@@ -109,53 +96,10 @@ class NotesDataService {
                    let path = localPath {
                     
                     try encryptedBlob.write(to: path, options: .atomic)
-                    
-                    if LocalPassApp.settings.iCloudSync {
-                        getiCloudPath { iCloudPath in
-                            if let path = iCloudPath {
-                                do {
-                                    try encryptedBlob.write(to: path, options: .atomic)
-                                } catch {
-                                    print("Error syncing iCloud data: \(error)")
-                                }
-                            }
-                        }
-                        
-                        initializationGroup.wait()
-                    }
                 }
             }
         } catch {
             print("Error writing notes data: \(error)")
         }
     }
-    
-    static func getiCloudPath(completion: @escaping (URL?) -> Void) {
-        initializationGroup.enter()
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            if let iCloudUrl = FileManager.default.url(forUbiquityContainerIdentifier: "iCloud.com.reuben.LocalPass") {
-                completion(iCloudUrl.appendingPathComponent("Documents").appendingPathComponent("localpassnotes.txt"))
-            }
-            
-            initializationGroup.leave()
-        }
-        
-        completion(nil)
-    }
-    
-    static func removeiCloudData() {
-        getiCloudPath { iCloudPath in
-            if let path = iCloudPath {
-                do {
-                    try FileManager.default.removeItem(at: path)
-                } catch {
-                    print("Error removing iCloud file: \(error)")
-                }
-            }
-        }
-        
-        initializationGroup.wait()
-    }
 }
-

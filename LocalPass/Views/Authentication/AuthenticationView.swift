@@ -87,7 +87,7 @@ extension AuthenticationView {
                 if success {
                     if let blob = AccountsDataService.getBlob(),
                        let tag = Bundle.main.bundleIdentifier,
-                       let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
+                       let key = CryptoDataService.readKey(tag: tag),
                        let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
                         AuthenticationViewModel.shared.authenticatedWithBiometrics = true
                         AuthenticationViewModel.shared.authenticated = true

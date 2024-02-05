@@ -15,8 +15,8 @@ class SignUpViewModel: ObservableObject {
            let salt = CryptoDataService.generateRandomSalt(),
            let password = password,
            let key = CryptoDataService.deriveKey(password: password, salt: salt) {
-            if CryptoDataService.deleteKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync)
-            && CryptoDataService.setkey(key: key, tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync)
+            if CryptoDataService.deleteKey(tag: tag)
+            && CryptoDataService.setkey(key: key, tag: tag)
             && SignUpViewModel.createFiles(key: key, salt: salt) {
                 AuthenticationViewModel.shared.authenticated = true
                 authenticationViewModel.authenticated = true
@@ -32,7 +32,7 @@ class SignUpViewModel: ObservableObject {
         let notesPath = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.reuben.LocalPass")?.appendingPathComponent("localpassnotes.txt")
         
         if let tag = Bundle.main.bundleIdentifier,
-           let key = CryptoDataService.readKey(tag: tag, iCloudSync: LocalPassApp.settings.iCloudSync),
+           let key = CryptoDataService.readKey(tag: tag),
            let encryptedBlob = CryptoDataService.encryptBlob(blob: blob, key: key, salt: salt) {
             do {
                 if let accountsPath = accountsPath,
@@ -45,16 +45,6 @@ class SignUpViewModel: ObservableObject {
             } catch {
                 print("Error creating files: \(error)")
                 }
-        }
-        
-        return false
-    }
-    
-    static func retrieveiCloudData(_ password: String?) -> Bool {
-        if let password = password,
-           let blob = AccountsDataService.getBlob(),
-           let _ = CryptoDataService.decryptBlob(blob: blob, password: password) {
-            return true
         }
         
         return false
