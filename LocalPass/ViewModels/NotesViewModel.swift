@@ -82,13 +82,14 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    func getDeleteAlert() -> Alert {
+    func getDeleteAlert(completion: @escaping () -> Void) -> Alert {
         let title: Text = Text("Are you sure you want to delete this note?")
         let message: Text = Text("This action cannot be undone!")
         let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
             if let note = self.noteToDelete {
                 self.deleteNote(note)
                 self.noteToDelete = nil
+                completion()
             }
         })
         let cancelButton: Alert.Button = .cancel()

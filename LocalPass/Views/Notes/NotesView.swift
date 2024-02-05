@@ -32,7 +32,7 @@ struct NotesView: View {
                 .environment(\.scenePhase, scenePhase)
         }
         .alert(isPresented: $showDeleteAlert) {
-            notesViewModel.getDeleteAlert()
+            notesViewModel.getDeleteAlert() {}
         }
         .onChange(of: sortSelection) { newValue in
             notesViewModel.sortNotesByOption(&notesViewModel.notes, sortOption: newValue)

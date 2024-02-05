@@ -85,13 +85,14 @@ class AccountsViewModel: ObservableObject {
         }
     }
     
-    func getDeleteAlert() -> Alert {
+    func getDeleteAlert(completion: @escaping () -> Void) -> Alert {
         let title: Text = Text("Are you sure you want to delete this account?")
         let message: Text = Text("This action cannot be undone!")
         let deleteButton: Alert.Button = .destructive(Text("Delete"), action: {
             if let account = self.accountToDelete {
                 self.deleteAccount(account)
                 self.accountToDelete = nil
+                completion()
             }
         })
         let cancelButton: Alert.Button = .cancel()

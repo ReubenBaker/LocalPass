@@ -43,7 +43,9 @@ struct NoteDetailView: View {
         .padding(.vertical)
         .background(.ultraThinMaterial)
         .alert(isPresented: $showDeleteAlert) {
-            notesViewModel.getDeleteAlert()
+            notesViewModel.getDeleteAlert() {
+                dismiss()
+            }
         }
         .onChange(of: editMode?.wrappedValue) { mode in
             if mode != .active {

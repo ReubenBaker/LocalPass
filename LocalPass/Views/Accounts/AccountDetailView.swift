@@ -77,7 +77,9 @@ struct AccountDetailView: View {
             CopyPopupOverlayView()
         }
         .alert(isPresented: $showDeleteAlert) {
-            accountsViewModel.getDeleteAlert()
+            accountsViewModel.getDeleteAlert() {
+                dismiss()
+            }
         }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: Binding(

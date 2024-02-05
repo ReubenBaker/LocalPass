@@ -32,7 +32,7 @@ struct AccountsView: View {
                 .environment(\.scenePhase, scenePhase)
         }
         .alert(isPresented: $showDeleteAlert) {
-            accountsViewModel.getDeleteAlert()
+            accountsViewModel.getDeleteAlert() {}
         }
         .onChange(of: sortOption) { newValue in
             accountsViewModel.sortAccountsByOption(&accountsViewModel.accounts, sortOption: newValue)
