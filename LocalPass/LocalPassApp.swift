@@ -49,6 +49,7 @@ struct LocalPassApp: App {
                         } else {
                             AuthenticationView()
                                 .environmentObject(authenticationViewModel)
+                                .environment(\.scenePhase, scenePhase)
                         }
                     }
                     .animation(.easeInOut, value: authenticationViewModel.authenticated)

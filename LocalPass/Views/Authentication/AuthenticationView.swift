@@ -9,8 +9,10 @@ import SwiftUI
 
 struct AuthenticationView: View {
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject private var authenticationViewModel: AuthenticationViewModel
     @State private var showIncorrectPasswordAlert: Bool = false
+    @State private var hasAttemptedBiometricAuthentication: Bool = false
     @FocusState private var textFieldFocused: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
@@ -29,6 +31,24 @@ struct AuthenticationView: View {
         .alert(isPresented: $showIncorrectPasswordAlert) {
             AuthenticationViewModel.getIncorrectPasswordAlert()
         }
+        .onAppear {
+            if LocalPassApp.settings.useBiometrics && !hasAttemptedBiometricAuthentication {
+                DispatchQueue.main.async {
+                    authenticateWithBiometrics()
+                }
+            }
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase == .active && LocalPassApp.settings.useBiometrics && !hasAttemptedBiometricAuthentication {
+                DispatchQueue.main.async {
+                    authenticateWithBiometrics()
+                }
+            }
+            
+            if phase == .background {
+                hasAttemptedBiometricAuthentication = false
+            }
+        }
     }
 }
 
@@ -38,6 +58,27 @@ struct AuthenticationView_Previews: PreviewProvider {
         
         AuthenticationView()
             .environmentObject(authenticationViewModel)
+    }
+}
+
+// Functions
+extension AuthenticationView {
+    private func authenticateWithBiometrics() {
+        hasAttemptedBiometricAuthentication = true
+        
+        CryptoDataService.authenticateWithBiometrics { success in
+            if success {
+                if let blob = AccountsDataService.getBlob(),
+                   let tag = Bundle.main.bundleIdentifier,
+                   let key = CryptoDataService.readKey(tag: tag),
+                   let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
+                    AuthenticationViewModel.shared.authenticatedWithBiometrics = true
+                    AuthenticationViewModel.shared.authenticated = true
+                    authenticationViewModel.authenticatedWithBiometrics = true
+                    authenticationViewModel.authenticated = true
+                }
+            }
+        }
     }
 }
 
@@ -83,19 +124,7 @@ extension AuthenticationView {
     
     private var authenticateWithBiometricsButtonItem: some View {
         Button {
-            CryptoDataService.authenticateWithBiometrics { success in
-                if success {
-                    if let blob = AccountsDataService.getBlob(),
-                       let tag = Bundle.main.bundleIdentifier,
-                       let key = CryptoDataService.readKey(tag: tag),
-                       let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
-                        AuthenticationViewModel.shared.authenticatedWithBiometrics = true
-                        AuthenticationViewModel.shared.authenticated = true
-                        authenticationViewModel.authenticatedWithBiometrics = true
-                        authenticationViewModel.authenticated = true
-                    }
-                }
-            }
+            authenticateWithBiometrics()
         } label: {
             Image(systemName: GlobalHelperDataService.biometrySymbol)
                 .LogoIconStyle()

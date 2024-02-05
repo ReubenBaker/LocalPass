@@ -31,6 +31,34 @@ struct AuthenticationView: View {
         .alert(isPresented: $showIncorrectPasswordAlert) {
             AuthenticationViewModel.getIncorrectPasswordAlert()
         }
+        .onAppear {
+            if let sharedUserDefaults = UserDefaults(suiteName: "group.com.reuben.LocalPass") {
+                if sharedUserDefaults.bool(forKey: "useBiometrics") {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        authenticateWithBiometrics()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Functions
+extension AuthenticationView {
+    private func authenticateWithBiometrics() {
+        CryptoDataService.authenticateWithBiometrics { success in
+            if success {
+                if let blob = AccountsDataService.getBlob(),
+                   let tag = Bundle.main.bundleIdentifier?.components(separatedBy: ".").dropLast().joined(separator: "."),
+                   let key = CryptoDataService.readKey(tag: tag),
+                   let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
+                    AuthenticationViewModel.shared.authenticatedWithBiometrics = true
+                    AuthenticationViewModel.shared.authenticated = true
+                    authenticationViewModel.authenticatedWithBiometrics = true
+                    authenticationViewModel.authenticated = true
+                }
+            }
+        }
     }
 }
 
@@ -75,19 +103,7 @@ extension AuthenticationView {
     
     private var authenticateWithBiometricsButtonItem: some View {
         Button {
-            CryptoDataService.authenticateWithBiometrics { success in
-                if success {
-                    if let blob = AccountsDataService.getBlob(),
-                       let tag = Bundle.main.bundleIdentifier?.components(separatedBy: ".").dropLast().joined(separator: "."),
-                       let key = CryptoDataService.readKey(tag: tag),
-                       let _ = CryptoDataService.decryptBlob(blob: blob, key: key) {
-                        AuthenticationViewModel.shared.authenticatedWithBiometrics = true
-                        AuthenticationViewModel.shared.authenticated = true
-                        authenticationViewModel.authenticatedWithBiometrics = true
-                        authenticationViewModel.authenticated = true
-                    }
-                }
-            }
+            authenticateWithBiometrics()
         } label: {
             Image(systemName: "faceid")
                 .LogoIconStyle()
