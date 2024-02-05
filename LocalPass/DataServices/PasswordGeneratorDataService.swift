@@ -11,7 +11,7 @@ class PasswordGeneratorDataService {
     func generatePassword(characterCount: Int, numericalCount: Int, specialCount: Int) -> String {
         let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let numbers = "0123456789"
-        let specials = "!@#$%^&*()_-+=[]{}|;:'\",.<>?/\\~"
+        let specials = "!@#$%^&*()_-+=[]{}|;:'\",.<>?/\\~`"
         var password = ""
         
         for _ in 0..<numericalCount {
