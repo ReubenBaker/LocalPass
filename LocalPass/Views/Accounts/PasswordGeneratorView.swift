@@ -29,7 +29,7 @@ struct PasswordGeneratorView: View {
             
             Button("Generate") {
                 withAnimation {
-                    password = PasswordGeneratorDataService().generatePassword(
+                    password = PasswordDataService().generatePassword(
                         characterCount: characterCount,
                         numericalCount: numericalCount,
                         specialCount: specialCount

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		1B42D4232A9E767300763016 /* AccountsDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4222A9E767300763016 /* AccountsDataService.swift */; };
 		1B42D4272A9ED87B00763016 /* TOTPGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */; };
-		1B42D4292A9FBE5700763016 /* PasswordGeneratorDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */; };
+		1B42D4292A9FBE5700763016 /* PasswordDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B42D4282A9FBE5700763016 /* PasswordDataService.swift */; };
 		1B47EB942ABCF70200739463 /* RawTextFieldInputStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */; };
 		1B47EB962ABCFA1A00739463 /* ListItemImageStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */; };
 		1B47EB982ABDD75600739463 /* ListItemTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */; };
@@ -120,7 +120,7 @@
 /* Begin PBXFileReference section */
 		1B42D4222A9E767300763016 /* AccountsDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsDataService.swift; sourceTree = "<group>"; };
 		1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPGeneratorDataService.swift; sourceTree = "<group>"; };
-		1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorDataService.swift; sourceTree = "<group>"; };
+		1B42D4282A9FBE5700763016 /* PasswordDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordDataService.swift; sourceTree = "<group>"; };
 		1B47EB932ABCF70200739463 /* RawTextFieldInputStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawTextFieldInputStyle.swift; sourceTree = "<group>"; };
 		1B47EB952ABCFA1A00739463 /* ListItemImageStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemImageStyle.swift; sourceTree = "<group>"; };
 		1B47EB972ABDD75600739463 /* ListItemTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemTextFieldStyle.swift; sourceTree = "<group>"; };
@@ -446,7 +446,7 @@
 				1BF1A7F32A8E511600663733 /* AccountTestDataService.swift */,
 				1B42D4222A9E767300763016 /* AccountsDataService.swift */,
 				1B42D4262A9ED87B00763016 /* TOTPGeneratorDataService.swift */,
-				1B42D4282A9FBE5700763016 /* PasswordGeneratorDataService.swift */,
+				1B42D4282A9FBE5700763016 /* PasswordDataService.swift */,
 				1B65F28B2AA25B6F00EC2AE8 /* NoteTestDataService.swift */,
 				1B65F28D2AA25C6600EC2AE8 /* NotesDataService.swift */,
 				1B58B9D12AA800ED0095A62E /* CryptoDataService.swift */,
@@ -638,7 +638,7 @@
 				1B9261A32AB7CBC100EC445D /* GlobalHelperDataService.swift in Sources */,
 				1B92619B2AB69DDB00EC445D /* TitleTextStyle.swift in Sources */,
 				1B523DD12AAD384B002F94EA /* AuthenticationView.swift in Sources */,
-				1B42D4292A9FBE5700763016 /* PasswordGeneratorDataService.swift in Sources */,
+				1B42D4292A9FBE5700763016 /* PasswordDataService.swift in Sources */,
 				1BEC56B92A9D708E009FE9FA /* PasswordGeneratorView.swift in Sources */,
 				1B47EB982ABDD75600739463 /* ListItemTextFieldStyle.swift in Sources */,
 				1B95602D2AA3D951006F2AA2 /* NoteDetailView.swift in Sources */,
