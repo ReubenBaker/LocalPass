@@ -15,7 +15,6 @@ struct AddNoteView: View {
     @State private var newTitle: String = ""
     @State private var newBody: String = ""
     @State private var noteSuccess: Bool = false
-    @State private var showNoteSuccessAlert: Bool = false
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
     var body: some View {
@@ -29,15 +28,15 @@ struct AddNoteView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical)
         .background(.ultraThinMaterial)
-        .alert(isPresented: $showNoteSuccessAlert) {
-            getNoteSuccessAlert(noteSuccess: noteSuccess)
-        }
         .onChange(of: scenePhase) { phase in
             if phase != .active && LocalPassApp.settings.lockVaultOnBackground {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     dismiss()
                 }
             }
+        }
+        .onChange(of: noteSuccess) { _ in
+            dismiss()
         }
     }
 }
@@ -48,31 +47,6 @@ struct AddNoteView_Previews: PreviewProvider {
         
         AddNoteView()
             .environmentObject(notesViewModel)
-    }
-}
-
-// Functions
-extension AddNoteView {
-    private func getNoteSuccessAlert(noteSuccess: Bool) -> Alert {
-        var title: Text = Text("")
-        
-        if noteSuccess {
-            title = Text("Note successfully created!")
-        } else {
-            title = Text("Note could not be created!")
-        }
-        
-        let dismissButton: Alert.Button = .default(noteSuccess ? Text("🥳") : Text("😢"), action: {
-            if noteSuccess {
-                dismiss()
-            }
-        })
-        
-        return Alert(
-            title: title,
-            message: nil,
-            dismissButton: dismissButton
-        )
     }
 }
 
@@ -118,8 +92,6 @@ extension AddNoteView {
                 title: newTitle,
                 body: newBody
             )
-            
-            showNoteSuccessAlert.toggle()
         } label: {
             Text("Add Note")
         }

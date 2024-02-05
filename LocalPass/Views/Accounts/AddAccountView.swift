@@ -21,7 +21,6 @@ struct AddAccountView: View {
     @State private var urlFieldClicked: Bool = false
     @State private var TOTPFieldClicked: Bool = false
     @State private var accountSuccess: Bool = false
-    @State private var showAccountSuccessAlert: Bool = false
     @State private var showPasswordGeneratorSheet: Bool = false
     @FocusState private var focusedTextField: GlobalHelperDataService.FocusedTextField?
     
@@ -39,9 +38,6 @@ struct AddAccountView: View {
         }
         .padding()
         .background(.ultraThinMaterial)
-        .alert(isPresented: $showAccountSuccessAlert) {
-            getAccountSuccessAlert(accountSuccess: accountSuccess)
-        }
         .sheet(isPresented: $showPasswordGeneratorSheet) {
             PasswordGeneratorView(password: $newPassword)
                 .presentationDetents([.fraction(0.45)])
@@ -56,6 +52,9 @@ struct AddAccountView: View {
                 }
             }
         }
+        .onChange(of: accountSuccess) { _ in
+            dismiss()
+        }
     }
 }
 
@@ -66,31 +65,6 @@ struct AddAccountView_Previews: PreviewProvider {
         
         AddAccountView()
             .environmentObject(accountsViewModel)
-    }
-}
-
-// Functions
-extension AddAccountView {
-    private func getAccountSuccessAlert(accountSuccess: Bool) -> Alert {
-        var title: Text = Text("")
-        
-        if accountSuccess {
-            title = Text("Account successfully created!")
-        } else {
-            title = Text("Account could not be created!")
-        }
-        
-        let dismissButton: Alert.Button = .default(accountSuccess ? Text("🥳") : Text("😢"), action: {
-            if accountSuccess {
-                dismiss()
-            }
-        })
-        
-        return Alert(
-            title: title,
-            message: nil,
-            dismissButton: dismissButton
-        )
     }
 }
 
@@ -269,8 +243,6 @@ extension AddAccountView {
                 url: newUrl != "" ? newUrl : nil,
                 otpSecret: newOtpSecret != "" ? newOtpSecret : nil
             )
-            
-            showAccountSuccessAlert.toggle()
        } label: {
            Text("Add Account")
        }
