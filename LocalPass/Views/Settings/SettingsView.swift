@@ -43,19 +43,19 @@ struct SettingsView: View {
                         .onChange(of: Settings.shared.useBiometrics) { newValue in
                             LocalPassApp.settings.useBiometrics = newValue
                             
-                            if newValue == true {
+                            if newValue {
                                 let context = LAContext()
+                                let lockVaultOnBackground = settings.lockVaultOnBackground
+                                LocalPassApp.settings.lockVaultOnBackground = false
 
                                 if biometricsEnrolled {
                                     context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Enable biometric authentication") { success, authenticationError in
                                         DispatchQueue.main.async {
-                                            if success {
-                                                Settings.shared.useBiometrics = true
-                                            } else {
-                                                Settings.shared.useBiometrics = false
-                                            }
+                                            LocalPassApp.settings.lockVaultOnBackground = lockVaultOnBackground
+                                            
+                                            Settings.shared.useBiometrics = success
                                         }
-                                    }
+                                    }	
                                 }
                             } else {
                                 Settings.shared.useBiometrics = false
