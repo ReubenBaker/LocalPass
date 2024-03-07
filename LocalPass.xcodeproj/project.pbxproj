@@ -662,7 +662,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPassAutoFill/LocalPassAutoFill.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LocalPassAutoFill/Info.plist;
@@ -690,7 +690,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPassAutoFill/LocalPassAutoFill.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LocalPassAutoFill/Info.plist;
@@ -837,7 +837,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPass/LocalPass.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "\"LocalPass/Preview Content\"";
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				ENABLE_PREVIEWS = YES;
@@ -875,7 +875,7 @@
 				CODE_SIGN_ENTITLEMENTS = LocalPass/LocalPass.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "\"LocalPass/Preview Content\"";
 				DEVELOPMENT_TEAM = WAFD9G7398;
 				ENABLE_PREVIEWS = YES;
